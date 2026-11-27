@@ -93,7 +93,7 @@ dt{color:var(--muted);font-size:13px}dd{margin:0;font-weight:500;overflow-wrap:a
       <label data-t="email"></label>
       <input id="lEmail" type="email" autocomplete="username" required>
       <label data-t="password"></label>
-      <input id="lPass" type="password" autocomplete="current-password" required>
+      <div style="position:relative"><input id="lPass" type="password" autocomplete="current-password" required style="padding-right:56px"><button type="button" id="eye" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;font-size:20px;min-width:44px;min-height:44px;cursor:pointer" aria-label="Show password">👁</button></div>
       <button class="btn full" style="margin-top:16px" id="lBtn" data-t="login"></button>
       <p id="lErr" class="center" style="color:var(--bad);font-size:14px"></p>
     </form>
@@ -204,10 +204,11 @@ async function boot(){
   $('loginView').classList.add('hidden');$('appView').classList.remove('hidden');
   renderTabs();go('home');
 }
+$('eye').onclick=()=>{const p=$('lPass');p.type=p.type==='password'?'text':'password'};
 $('loginForm').addEventListener('submit',async e=>{
   e.preventDefault();$('lErr').textContent='';$('lBtn').disabled=true;
   const {error}=await sb.auth.signInWithPassword({email:$('lEmail').value.trim(),password:$('lPass').value});
-  $('lBtn').disabled=false;if(error){$('lErr').textContent=t('wrongLogin');return}boot();
+  $('lBtn').disabled=false;if(error){const m=(error.message||'')+(error.status?' ('+error.status+')':'');$('lErr').textContent=(/invalid login credentials/i.test(m)?t('wrongLogin'):'')+' — '+m;return}boot();
 });
 window.logout=async()=>{await sb.auth.signOut();me=null;location.reload()};
 
