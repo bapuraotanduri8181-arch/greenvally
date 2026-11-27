@@ -127,6 +127,10 @@ fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 8px; min-width:
 .err { background: var(--danger-soft); color: var(--danger); border-radius: 12px; padding: 10px 14px; font-weight: 800; }
 .ok { background: var(--soft); color: var(--accent-ink); border-radius: 12px; padding: 10px 14px; font-weight: 800; }
 .hide { display: none !important; }
+.fwrap > summary { cursor: pointer; font-weight: 800; color: var(--accent-ink); padding: 6px 2px; }
+.fwrap[open] > summary { margin-bottom: 8px; }
+#fq { min-height: 48px; }
+@media (max-width: 600px) { .quick button { flex: 1 1 auto; padding: 8px 12px; font-size: .9rem; } }
 .quick { display: flex; gap: 8px; flex-wrap: wrap; }
 .quick button { border: 1.5px solid var(--line); background: var(--surface); border-radius: 999px; padding: 9px 16px; font-weight: 800; cursor: pointer; min-height: 42px; }
 .quick button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent-press); }
@@ -134,6 +138,12 @@ fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 8px; min-width:
 .chip.bal { background: var(--warn-soft); color: var(--warn); }
 .paybox { border: 1.5px solid #B9D3F5; background: #F3F8FF; border-radius: var(--r); padding: 12px 14px; display: grid; gap: 8px; }
 .balline { font-size: 1.15rem; font-weight: 800; }
+.stagehd { grid-column: 1 / -1; padding-top: 14px !important; color: #123E7A !important; font-weight: 800 !important; font-size: .95rem !important; }
+.remrow { display: grid; gap: 6px; }
+.remrow > .row { padding-left: 4px; }
+.remsec > summary { cursor: pointer; list-style: none; } .remsec > summary::-webkit-details-marker { display: none; }
+.remsec > summary h2::after { content: ' ▾'; color: var(--muted); } .remsec:not([open]) > summary h2::after { content: ' ▸'; }
+.remsec[open] > summary { margin-bottom: 10px; }
 .emphead { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 
 .media { display: grid; gap: 10px; }
@@ -256,14 +266,20 @@ const T = {
     cInsta: 'ఇన్‌స్టాగ్రామ్ లింక్', cWeb: 'వెబ్‌సైట్ లింక్', cOffice: 'ఆఫీస్ ఫోన్ నంబర్', cCompany: 'కంపెనీ పేరు', configSaved: 'సెట్టింగ్స్ సేవ్ అయ్యాయి',
     adminOnly: 'ఈ వివరాలు మీకు (అడ్మిన్) మాత్రమే కనిపిస్తాయి.', employees: 'ఉద్యోగులు', role: 'పాత్ర', admin: 'అడ్మిన్', employee: 'ఉద్యోగి',
     viewAll: 'అన్నీ చూడండి', back: 'వెనక్కి', yes: 'అవును', no: 'కాదు', hrs: 'గం',
-    qAll: 'అన్నీ', qVisit: 'ఈరోజు విజిట్ లిస్ట్', qAdv: 'అడ్వాన్స్ ఇచ్చినవారు', qReg: 'రాబోయే రిజిస్ట్రేషన్‌లు',
+    qAll: 'అన్నీ', qVisit: 'ఈరోజు విజిట్ లిస్ట్', qAdv: 'బుకింగ్ / అడ్వాన్స్ ఇచ్చినవారు', qReg: 'రాబోయే రిజిస్ట్రేషన్‌లు',
     sBook: 'అడ్వాన్స్ / బుకింగ్ వివరాలు', noAdv: 'ఇంకా అడ్వాన్స్ ఇవ్వలేదు', addAdv: 'అడ్వాన్స్ వివరాలు యాడ్ చేయండి', editAdv: 'అడ్వాన్స్ / పేమెంట్ వివరాలు మార్చండి',
-    plotNo: 'ప్లాట్ / ఫ్లాట్ నంబర్', totalPrice: 'మొత్తం ధర (₹)', advAmt: 'అడ్వాన్స్ మొత్తం (₹)', advDate: 'అడ్వాన్స్ కట్టిన తేదీ', regDate: 'రిజిస్ట్రేషన్ తేదీ (తర్వాతి)',
-    balPaid: 'అడ్వాన్స్ తర్వాత కట్టినది (₹)', balance: 'మిగిలిన బ్యాలెన్స్ (₹)', balDue: 'బ్యాలెన్స్ కట్టాల్సిన తేదీ', payNote: 'పేమెంట్ నోట్ (క్యాష్ / UPI / చెక్ వివరాలు)', bkStatus: 'స్థితి',
-    needAdv: 'అడ్వాన్స్ మొత్తం సరిగ్గా రాయండి.', needAdvDate: 'అడ్వాన్స్ కట్టిన తేదీ ఎంచుకోండి.', needTotal: 'మొత్తం ధర రాయండి.', tooMuch: 'అడ్వాన్స్ + కట్టినది, మొత్తం ధర కంటే ఎక్కువ ఉండకూడదు.', regBefore: 'రిజిస్ట్రేషన్ తేదీ అడ్వాన్స్ తేదీ కంటే ముందు ఉండకూడదు.', futureAdv: 'అడ్వాన్స్ తేదీ రాబోయే రోజు కాకూడదు.',
+    plotNo: 'ప్లాట్ / ఫ్లాట్ నంబర్', totalPrice: 'మొత్తం ధర (₹)', advAmt: 'అగ్రిమెంట్ అడ్వాన్స్ (₹)', advDate: 'అడ్వాన్స్ కట్టిన తేదీ', regDate: 'రిజిస్ట్రేషన్ తేదీ (తర్వాతి)',
+    balPaid: 'తర్వాత కట్టిన బ్యాలెన్స్ (₹)', balance: 'మిగిలిన బ్యాలెన్స్ (₹)', balDue: 'బ్యాలెన్స్ కట్టాల్సిన తేదీ', payNote: 'పేమెంట్ నోట్ (క్యాష్ / UPI / చెక్ వివరాలు)', bkStatus: 'స్థితి',
+    needAdv: 'అడ్వాన్స్ మొత్తం సరిగ్గా రాయండి.', needAdvDate: 'అడ్వాన్స్ కట్టిన తేదీ ఎంచుకోండి.', needTotal: 'మొత్తం ధర రాయండి.', tooMuch: 'బుకింగ్ + అడ్వాన్స్ + కట్టినది, మొత్తం ధర కంటే ఎక్కువ ఉండకూడదు.', regBefore: 'రిజిస్ట్రేషన్ తేదీ అడ్వాన్స్ తేదీ కంటే ముందు ఉండకూడదు.', futureAdv: 'అడ్వాన్స్ తేదీ రాబోయే రోజు కాకూడదు.',
     regType: 'రిజిస్ట్రేషన్', balType: 'బ్యాలెన్స్ పేమెంట్', advShort: 'అడ్వాన్స్', regShort: 'రిజి', balShort: 'బ్యాలెన్స్', paidFull: 'పూర్తిగా కట్టారు',
-    lastUpd: 'చివరగా మార్చినవారు', advCount: 'అడ్వాన్స్ కస్టమర్లు', advSum: 'మొత్తం అడ్వాన్స్‌లు', balSum: 'రావాల్సిన బ్యాలెన్స్', regWeek: 'ఈ 7 రోజుల్లో రిజిస్ట్రేషన్',
+    lastUpd: 'చివరగా మార్చినవారు', advCount: 'బుకింగ్ / అడ్వాన్స్ కస్టమర్లు', advSum: 'ఇప్పటివరకు వచ్చిన డబ్బు', balSum: 'రావాల్సిన బ్యాలెన్స్', regWeek: 'ఈ 7 రోజుల్లో రిజిస్ట్రేషన్',
     needSql: 'అడ్వాన్స్ వివరాల కోసం Supabase లో "bookings" టేబుల్ ఇంకా క్రియేట్ కాలేదు. bookings.sql ను Supabase SQL Editor లో రన్ చేయండి.',
+    bookAmt: 'ప్లాట్ బుకింగ్ అమౌంట్ (₹)', bookDate: 'బుకింగ్ తేదీ', agrDate: 'అగ్రిమెంట్ తేదీ', regDateBal: 'రిజిస్ట్రేషన్ తేదీ (బ్యాలెన్స్ అమౌంట్ కట్టే రోజు)', totalPaid: 'మొత్తం కట్టినది (₹)',
+    st1: '1. ప్లాట్ బుకింగ్', st2: '2. అగ్రిమెంట్', st3: '3. రిజిస్ట్రేషన్ – బ్యాలెన్స్', needPay: 'బుకింగ్ అమౌంట్ లేదా అడ్వాన్స్ – ఏదో ఒకటి రాయండి.', needBookDate: 'బుకింగ్ తేదీ ఎంచుకోండి.', agrBefore: 'అగ్రిమెంట్ తేదీ బుకింగ్ తేదీ కంటే ముందు ఉండకూడదు.',
+    agrType: 'అగ్రిమెంట్', bookShort: 'బుకింగ్', agrShort: 'అగ్రి',
+    rem: 'రిమైండర్లు', remTitle: 'ఫాలో-అప్ రిమైండర్లు', remHint: 'తేదీలు గుర్తుచేయడానికి: బటన్ నొక్కితే వివరాలతో WhatsApp మెసేజ్ రెడీగా ఓపెన్ అవుతుంది – Send నొక్కండి చాలు.',
+    toCust: 'కస్టమర్‌కి', toEmp: '{n} కి', noEmpPhone: '{n} ఫోన్ నంబర్ లేదు (యూజర్స్‌లో యాడ్ చేయండి)', sendDay: 'ఈరోజు పనుల లిస్ట్ WhatsApp లో పంపండి', next7: 'రాబోయే 7 రోజులు', later: 'తర్వాత',
+    empPhone: 'ఉద్యోగి WhatsApp నంబర్', editPhone: 'ఫోన్ నంబర్ మార్చండి',
     custOf: '{n} యాడ్ చేసిన కస్టమర్లు', custList: 'కస్టమర్ల లిస్ట్', bkHist: 'అడ్వాన్స్ మార్పుల హిస్టరీ', clear: 'తీసివేయి',
   },
   en: {
@@ -313,14 +329,20 @@ const T = {
     cInsta: 'Instagram link', cWeb: 'Website link', cOffice: 'Office phone number', cCompany: 'Company name', configSaved: 'Settings saved',
     adminOnly: 'Only you (admin) can see this.', employees: 'Employees', role: 'Role', admin: 'Admin', employee: 'Employee',
     viewAll: 'View all', back: 'Back', yes: 'Yes', no: 'No', hrs: 'h',
-    qAll: 'All', qVisit: "Today's visit list", qAdv: 'Advance paid', qReg: 'Upcoming registrations',
+    qAll: 'All', qVisit: "Today's visit list", qAdv: 'Booking / advance paid', qReg: 'Upcoming registrations',
     sBook: 'Advance / booking details', noAdv: 'No advance paid yet', addAdv: 'Add advance details', editAdv: 'Update advance / payment details',
-    plotNo: 'Plot / flat number', totalPrice: 'Total price (₹)', advAmt: 'Advance amount (₹)', advDate: 'Advance paid on', regDate: 'Next registration date',
-    balPaid: 'Paid after advance (₹)', balance: 'Balance remaining (₹)', balDue: 'Balance due date', payNote: 'Payment note (cash / UPI / cheque details)', bkStatus: 'Status',
-    needAdv: 'Enter a valid advance amount.', needAdvDate: 'Choose the date the advance was paid.', needTotal: 'Enter the total price.', tooMuch: 'Advance + paid cannot be more than the total price.', regBefore: 'Registration date cannot be before the advance date.', futureAdv: 'Advance date cannot be in the future.',
+    plotNo: 'Plot / flat number', totalPrice: 'Total price (₹)', advAmt: 'Agreement advance (₹)', advDate: 'Advance paid on', regDate: 'Next registration date',
+    balPaid: 'Balance paid later (₹)', balance: 'Balance remaining (₹)', balDue: 'Balance due date', payNote: 'Payment note (cash / UPI / cheque details)', bkStatus: 'Status',
+    needAdv: 'Enter a valid advance amount.', needAdvDate: 'Choose the date the advance was paid.', needTotal: 'Enter the total price.', tooMuch: 'Booking + advance + paid cannot be more than the total price.', regBefore: 'Registration date cannot be before the advance date.', futureAdv: 'Advance date cannot be in the future.',
     regType: 'Registration', balType: 'Balance payment', advShort: 'Advance', regShort: 'Reg', balShort: 'Balance', paidFull: 'Fully paid',
-    lastUpd: 'Last updated by', advCount: 'Advance customers', advSum: 'Total advances', balSum: 'Balance to collect', regWeek: 'Registrations in next 7 days',
+    lastUpd: 'Last updated by', advCount: 'Booking / advance customers', advSum: 'Money received so far', balSum: 'Balance to collect', regWeek: 'Registrations in next 7 days',
     needSql: 'The "bookings" table for advance details is not in Supabase yet. Run bookings.sql in the Supabase SQL Editor.',
+    bookAmt: 'Plot booking amount (₹)', bookDate: 'Booking date', agrDate: 'Agreement date', regDateBal: 'Registration date (balance amount to be paid)', totalPaid: 'Total paid (₹)',
+    st1: '1. Plot booking', st2: '2. Agreement', st3: '3. Registration – balance', needPay: 'Enter the booking amount or the advance – at least one.', needBookDate: 'Choose the booking date.', agrBefore: 'Agreement date cannot be before the booking date.',
+    agrType: 'Agreement', bookShort: 'Booking', agrShort: 'Agr',
+    rem: 'Reminders', remTitle: 'Follow-up reminders', remHint: 'To remind dates: tap a button and a WhatsApp message opens ready with the details – just press Send.',
+    toCust: 'To customer', toEmp: 'To {n}', noEmpPhone: '{n} has no phone number (add it in Users)', sendDay: "Send today's task list on WhatsApp", next7: 'Next 7 days', later: 'Later',
+    empPhone: 'Employee WhatsApp number', editPhone: 'Change phone number',
     custOf: 'Customers added by {n}', custList: 'Customer list', bkHist: 'Advance change history', clear: 'Clear',
   }
 };
@@ -338,13 +360,15 @@ const OPTS = {
   feel: [['very_interested','చాలా ఆసక్తి','Very interested'],['ok','పర్వాలేదు','Okay'],['not_interested','ఆసక్తి లేదు','Not interested']],
   will_contact: [['yes','అవును','Yes'],['no','కాదు','No']],
   asked_construction: [['yes','అవును','Yes'],['no','కాదు','No']],
-  bk_status: [['advance','అడ్వాన్స్ ఇచ్చారు','Advance paid'],['registered','రిజిస్ట్రేషన్ అయింది','Registered'],['cancelled','క్యాన్సిల్ అయింది','Cancelled']],
+  bk_status: [['booked','ప్లాట్ బుకింగ్ అయింది','Plot booked'],['advance','అడ్వాన్స్ ఇచ్చారు','Advance paid'],['agreement','అగ్రిమెంట్ అయింది','Agreement done'],['registered','రిజిస్ట్రేషన్ అయింది','Registered'],['cancelled','క్యాన్సిల్ అయింది','Cancelled']],
 };
-const BK_FIELDS = ['plot_no','total_price','advance_amount','advance_date','registration_date','balance_paid','balance_due_date','status','payment_note'];
-const BK_LABEL = { plot_no:'plotNo', total_price:'totalPrice', advance_amount:'advAmt', advance_date:'advDate', registration_date:'regDate', balance_paid:'balPaid', balance_due_date:'balDue', status:'bkStatus', payment_note:'payNote' };
+const BK_FIELDS = ['plot_no','total_price','booking_amount','booking_date','agreement_date','advance_amount','advance_date','registration_date','balance_paid','balance_due_date','status','payment_note'];
+const BK_LABEL = { booking_amount:'bookAmt', booking_date:'bookDate', agreement_date:'agrDate', plot_no:'plotNo', total_price:'totalPrice', advance_amount:'advAmt', advance_date:'advDate', registration_date:'regDate', balance_paid:'balPaid', balance_due_date:'balDue', status:'bkStatus', payment_note:'payNote' };
 const money = n => (n == null || n === '' || isNaN(+n)) ? '—' : (+n).toLocaleString('en-IN', { maximumFractionDigits: 2 });
 const toNum = s => { const v = String(s ?? '').replace(/[,\s₹]/g, ''); return v === '' ? null : (isNaN(+v) ? NaN : +v); };
-const balOf = b => (b && b.total_price != null) ? Math.max(0, (+b.total_price) - (+b.advance_amount || 0) - (+b.balance_paid || 0)) : null;
+const paidOf = b => b ? (+b.booking_amount || 0) + (+b.advance_amount || 0) + (+b.balance_paid || 0) : 0;
+const balOf = b => (b && b.total_price != null) ? Math.max(0, (+b.total_price) - paidOf(b)) : null;
+const isOpenBk = b => !!b && b.status !== 'cancelled';
 const FIELDS = ['name','phone','village','mandal','district','occupation','occupation_other','education','financial_status','children_status','children_place','source','source_detail','interest_items','buying_interest','budget','emi','payment_mode','payment_time','vision','feel','stars','will_contact','asked_construction','site_visit_date','follow_up_date','note','audio_path','photo_path'];
 const FIELD_LABEL = { name:'name', phone:'phone', village:'village', mandal:'mandal', district:'district', occupation:'occupation', occupation_other:'occOther', education:'education', financial_status:'financial', children_status:'children', children_place:'childPlace', source:'source', source_detail:'sourcePerson', interest_items:'interestItems', buying_interest:'buying', budget:'budget', emi:'emi', payment_mode:'payment', payment_time:'paymentTime', vision:'vision', feel:'feel', stars:'stars', will_contact:'willContact', asked_construction:'askedConstr', site_visit_date:'siteVisit', follow_up_date:'followUp', note:'note', audio_path:'voiceNote', photo_path:'photo' };
 
@@ -423,7 +447,7 @@ function seed() {
   const now = Date.now(), H = 3.6e6, today = dayStr(), tom = dayStr(new Date(now + 24 * H));
   const users = [
     { id: 'u-admin', login_id: 'tbr', password: 'admin123', full_name: 'TBR', phone: '', role: 'admin', blocked: false, created_at: new Date(now - 30 * 24 * H).toISOString() },
-    { id: 'u-gv01', login_id: 'gv01', password: 'gv1234', full_name: 'Ravi Kumar', phone: '', role: 'employee', blocked: false, created_at: new Date(now - 20 * 24 * H).toISOString() },
+    { id: 'u-gv01', login_id: 'gv01', password: 'gv1234', full_name: 'Ravi Kumar', phone: '9000000011', role: 'employee', blocked: false, created_at: new Date(now - 20 * 24 * H).toISOString() },
     { id: 'u-gv02', login_id: 'gv02', password: 'gv1234', full_name: 'Lakshmi', phone: '', role: 'employee', blocked: false, created_at: new Date(now - 20 * 24 * H).toISOString() },
   ];
   const base = { occupation_other: '', children_place: '', source_detail: '', payment_time: '', note: '', audio_path: null, photo_path: null, photo_lat: null, photo_lng: null, photo_time: null, sample: true };
@@ -454,13 +478,13 @@ function seed() {
       { id: 2, user_id: 'u-gv01', kind: 'field_start', at: new Date(now - 2.9 * H).toISOString(), lat: 19.2991, lng: 79.4110, accuracy_m: 9, photo_path: null, sample: true },
       { id: 3, user_id: 'u-gv02', kind: 'login', at: new Date(now - 6 * H).toISOString(), lat: 19.0571, lng: 79.4911, accuracy_m: 15, photo_path: null, sample: true },
     ],
-    bookings: [{ customer_id: 's-c3', status: 'advance', plot_no: 'Plot 24', total_price: 1200000, advance_amount: 100000, advance_date: dayStr(new Date(now - 48 * H)), balance_paid: 0, registration_date: dayStr(new Date(now + 10 * 24 * H)), balance_due_date: dayStr(new Date(now + 10 * 24 * H)), payment_note: 'UPI', created_by: 'u-gv02', created_at: new Date(now - 48 * H).toISOString(), updated_by: 'u-gv02', updated_at: new Date(now - 48 * H).toISOString(), edit_count: 0 }], bkVersions: [],
+    bookings: [{ customer_id: 's-c3', status: 'advance', plot_no: 'Plot 24', total_price: 1200000, booking_amount: 21000, booking_date: dayStr(new Date(now - 5 * 24 * H)), advance_amount: 100000, advance_date: dayStr(new Date(now - 48 * H)), agreement_date: today, balance_paid: 0, registration_date: dayStr(new Date(now + 10 * 24 * H)), balance_due_date: dayStr(new Date(now + 10 * 24 * H)), payment_note: 'UPI', created_by: 'u-gv02', created_at: new Date(now - 48 * H).toISOString(), updated_by: 'u-gv02', updated_at: new Date(now - 48 * H).toISOString(), edit_count: 0 }], bkVersions: [],
     settings: { instagram_url: '', website_url: '', office_phone: '', company_name: 'Green Valley – Omkara Groups' },
     files: {}, nextAtt: 4,
   };
 }
 const Demo = {
-  key: 'gvcrm-demo-v2', db: null, mem: {},
+  key: 'gvcrm-demo-v3', db: null, mem: {},
   init() { try { const s = localStorage.getItem(this.key); if (s) this.db = JSON.parse(s); } catch (e) {} if (!this.db) { this.db = seed(); this.persist(); } },
   persist() { try { localStorage.setItem(this.key, JSON.stringify(this.db)); } catch (e) { /* storage full or blocked: keep in memory */ } },
   pub(u) { const { password, ...p } = u; return p; },
@@ -520,6 +544,7 @@ const Demo = {
   },
   async setBlocked(id, blocked) { this.guard(); const u = this.db.users.find(x => x.id === id); if (u && u.role !== 'admin') u.blocked = blocked; this.persist(); },
   async resetPassword(id, pw) { this.guard(); const u = this.db.users.find(x => x.id === id); if (u) u.password = pw; this.persist(); },
+  async setPhone(id, phone) { this.guard(); const u = this.db.users.find(x => x.id === id); if (u) u.phone = phone; this.persist(); },
   async settings() { return { ...this.db.settings }; },
   async saveSettings(s) { this.guard(); Object.assign(this.db.settings, s); this.persist(); },
   async bookings() {
@@ -587,6 +612,7 @@ const Live = {
   async createUser(u) { await this.fn({ action: 'create', ...u }); },
   async setBlocked(id, blocked) { await this.fn({ action: 'block', user_id: id, blocked }); },
   async resetPassword(id, pw) { await this.fn({ action: 'reset_password', user_id: id, password: pw }); },
+  async setPhone(id, phone) { const d = this.chk(await this.sb.from('profiles').update({ phone }).eq('id', id).select()); if (!d || !d.length) throw new Error(S.lang === 'te' ? 'ఫోన్ సేవ్ కాలేదు – bookings.sql రన్ చేశారా?' : 'Phone not saved – did you run bookings.sql?'); },
   async settings() { return this.chk(await this.sb.from('settings').select('*').eq('id', 1).single()); },
   async saveSettings(s) { this.chk(await this.sb.from('settings').update(s).eq('id', 1)); },
   // Advance / booking details live in their own table, so they can be updated any time (the 24-hour lock is only for the customer form).
@@ -620,7 +646,7 @@ const I = {
 
 /* ---------------- shell ---------------- */
 const EMP_NAV = [['home', 'home', 'home'], ['add', 'add', 'plus'], ['list', 'customers', 'people'], ['followups', 'followups', 'cal']];
-const ADM_NAV = [['dash', 'dash', 'chart'], ['all', 'customers', 'people'], ['team-day', 'team', 'pin'], ['users', 'users', 'key'], ['a-config', 'config', 'gear']];
+const ADM_NAV = [['dash', 'dash', 'chart'], ['all', 'customers', 'people'], ['rem', 'rem', 'cal'], ['team-day', 'team', 'pin'], ['users', 'users', 'key'], ['a-config', 'config', 'gear']];
 function shell(view, inner) {
   const nav = isAdmin() ? ADM_NAV : EMP_NAV;
   const cur = view.split('-')[0] === 'c' || view.startsWith('edit') || view.startsWith('saved') || view.startsWith('pay-') || view.startsWith('allby-') ? (isAdmin() ? 'all' : 'list') : view.startsWith('staff') ? 'team-day' : view;
@@ -683,10 +709,14 @@ async function viewHome() {
 function bkChip(c) {
   const b = S.bk && S.bk[c.id]; if (!b) return '';
   if (b.status === 'cancelled') return `<span class="chip danger">${esc(opt('bk_status', 'cancelled'))}</span>`;
-  const bal = balOf(b);
-  return `<span class="chip pay">${b.status === 'registered' ? esc(opt('bk_status', 'registered')) : t('advShort')} ₹${money(b.advance_amount)} · ${fmtDate(b.advance_date)}</span>`
-    + (b.registration_date && b.status !== 'registered' ? `<span class="chip pay">${t('regShort')}: ${fmtDate(b.registration_date)}</span>` : '')
-    + (bal != null ? (bal > 0 ? `<span class="chip bal">${t('balShort')} ₹${money(bal)}${b.balance_due_date ? ' · ' + fmtDate(b.balance_due_date) : ''}</span>` : `<span class="chip">${t('paidFull')}</span>`) : '');
+  const bal = balOf(b), out = [];
+  if (b.status === 'registered') out.push(`<span class="chip pay">${esc(opt('bk_status', 'registered'))}</span>`);
+  if (+b.booking_amount) out.push(`<span class="chip pay">${t('bookShort')} ₹${money(b.booking_amount)}${b.booking_date ? ' · ' + fmtDate(b.booking_date) : ''}</span>`);
+  if (+b.advance_amount) out.push(`<span class="chip pay">${t('advShort')} ₹${money(b.advance_amount)}${b.advance_date ? ' · ' + fmtDate(b.advance_date) : ''}</span>`);
+  if (b.agreement_date && b.status !== 'registered') out.push(`<span class="chip pay">${t('agrShort')}: ${fmtDate(b.agreement_date)}</span>`);
+  if (b.registration_date && b.status !== 'registered') out.push(`<span class="chip pay">${t('regShort')}: ${fmtDate(b.registration_date)}</span>`);
+  if (bal != null) out.push(bal > 0 ? `<span class="chip bal">${t('balShort')} ₹${money(bal)}${b.balance_due_date ? ' · ' + fmtDate(b.balance_due_date) : ''}</span>` : `<span class="chip">${t('paidFull')}</span>`);
+  return out.join('');
 }
 function custItem(c, extra = '') {
   extra = extra + bkChip(c);
@@ -702,14 +732,7 @@ async function viewList() {
   <div class="list" id="clist">${cs.length ? cs.map(c => custItem(c)).join('') : `<div class="empty">${t('noCust')}</div>`}</div>`;
 }
 
-async function viewFollowups() {
-  const cs = await DB.customers(); const today = dayStr();
-  const ev = []; cs.forEach(c => { if (c.follow_up_date) ev.push([c, c.follow_up_date, 'fuType']); if (c.site_visit_date) ev.push([c, c.site_visit_date, 'svType']);
-    const b = S.bk[c.id]; if (b && b.status !== 'cancelled') { if (b.registration_date && b.status !== 'registered') ev.push([c, b.registration_date, 'regType']); if (b.balance_due_date && (balOf(b) ?? 1) > 0) ev.push([c, b.balance_due_date, 'balType']); } });
-  const grp = (f) => ev.filter(f).sort((a, b) => a[1].localeCompare(b[1]));
-  const sec = (title, arr) => `<section class="card"><h2>${title} <span class="muted num">(${arr.length})</span></h2><div class="list">${arr.length ? arr.map(([c, d, k]) => custItem(c, `<span class="chip">${t(k)} · ${fmtDate(d)}</span>`)).join('') : `<div class="empty">${t('none')}</div>`}</div></section>`;
-  return `<h1>${t('followups')}</h1>${sec(t('today'), grp(e => e[1] === today))}${sec(t('upcoming'), grp(e => e[1] > today))}${sec(t('overdue'), grp(e => e[1] < today).reverse())}`;
-}
+async function viewFollowups() { return viewRem(); }
 
 /* customer form */
 function chips(name, val, multi = false) {
@@ -872,21 +895,21 @@ async function viewCustomer(id) {
 }
 
 /* ---------- advance / booking ---------- */
+const MONEY_F = ['total_price', 'booking_amount', 'advance_amount', 'balance_paid'];
 function bkCard(c, mine, hist) {
   const b = S.bk[c.id], canEdit = isAdmin() || mine;
   const btn = canEdit && !S.noBkTable ? `<a class="btn ${b ? 'ghost' : ''} block" href="#pay-${esc(c.id)}">₹ ${b ? t('editAdv') : t('addAdv')}</a>` : '';
   if (S.noBkTable) return `<section class="card"><h2>${t('sBook')}</h2><div class="err">${t('needSql')}</div></section>`;
   if (!b) return `<section class="card"><h2>${t('sBook')}</h2><p class="muted">${t('noAdv')}</p>${btn}</section>`;
-  const bal = balOf(b);
+  const bal = balOf(b), d = x => x ? fmtDate(x) : '—', r = x => '₹ ' + money(x || 0);
   const rows = [
     ['bkStatus', `<span class="chip ${b.status === 'cancelled' ? 'danger' : 'pay'}">${esc(opt('bk_status', b.status))}</span>`],
-    ['plotNo', esc(b.plot_no || '—')],
-    ['totalPrice', b.total_price != null ? '₹ ' + money(b.total_price) : '—'],
-    ['advAmt', '₹ ' + money(b.advance_amount)], ['advDate', fmtDate(b.advance_date)],
-    ['balPaid', '₹ ' + money(b.balance_paid || 0)],
+    ['plotNo', esc(b.plot_no || '—')], ['totalPrice', b.total_price != null ? r(b.total_price) : '—'],
+    ['st1', ''], ['bookAmt', r(b.booking_amount)], ['bookDate', d(b.booking_date)],
+    ['st2', ''], ['advAmt', r(b.advance_amount)], ['advDate', d(b.advance_date)], ['agrDate', d(b.agreement_date)],
+    ['st3', ''], ['regDateBal', d(b.registration_date)], ['balPaid', r(b.balance_paid)], ['balDue', d(b.balance_due_date)],
+    ['totalPaid', `<b>${r(paidOf(b))}</b>`],
     ['balance', bal == null ? '—' : bal > 0 ? `<span class="balline" style="color:var(--warn)">₹ ${money(bal)}</span>` : `<span class="chip">${t('paidFull')}</span>`],
-    ['balDue', b.balance_due_date ? fmtDate(b.balance_due_date) : '—'],
-    ['regDate', b.registration_date ? fmtDate(b.registration_date) : '—'],
     ['payNote', esc(b.payment_note || '—')],
     ['lastUpd', `${esc(userName(b.updated_by || b.created_by))} · <span class="num">${fmtDT(b.updated_at)}</span>`],
   ];
@@ -894,57 +917,148 @@ function bkCard(c, mine, hist) {
   if (isAdmin() && hist && hist.length > 1) {
     h = `<details><summary><b>${t('bkHist')} (${hist.length - 1})</b></summary><div class="list" style="margin-top:8px">${hist.slice(1).map((v, i) => {
       const prev = hist[i].data, cur = v.data, ch = BK_FIELDS.filter(f => String(prev[f] ?? '') !== String(cur[f] ?? ''));
-      const fv = (f, x) => x == null || x === '' ? '—' : f.endsWith('_date') ? fmtDate(x) : f === 'status' ? opt('bk_status', x) : ['total_price', 'advance_amount', 'balance_paid'].includes(f) ? '₹ ' + money(x) : String(x);
+      const fv = (f, x) => x == null || x === '' ? '—' : f.endsWith('_date') ? fmtDate(x) : f === 'status' ? opt('bk_status', x) : MONEY_F.includes(f) ? '₹ ' + money(x) : String(x);
       return `<div class="ver"><div class="row between"><b>${t('editN', { n: i + 1 })} · ${esc(userName(v.saved_by))}</b><span class="small muted num">${fmtDT(v.saved_at)}</span></div>
         <div class="diff"><span class="small muted dh">${t('field')}</span><span class="small muted dh">${t('before')}</span><span class="small muted dh">${t('after')}</span>
         ${ch.map(f => `<span class="lbl2">${t(BK_LABEL[f])}</span><span class="old" data-pre="${t('before')}: ">${esc(fv(f, prev[f]))}</span><span class="new" data-pre="${t('after')}: ">${esc(fv(f, cur[f]))}</span>`).join('')}</div></div>`;
     }).join('')}</div></details>`;
   }
-  return `<section class="card"><h2>${t('sBook')}</h2><div class="paybox"><div class="kv">${rows.map(([k, v]) => `<div>${t(k)}</div><div>${v}</div>`).join('')}</div></div>${btn}${h}</section>`;
+  return `<section class="card"><h2>${t('sBook')}</h2><div class="paybox"><div class="kv">${rows.map(([k, v]) => /^st\d$/.test(k) ? `<div class="stagehd">${t(k)}</div>` : `<div>${t(k)}</div><div>${v}</div>`).join('')}</div></div>${btn}${h}</section>`;
 }
 
 async function viewPay(id) {
   const c = await DB.customer(id); if (!c) return `<div class="empty">${t('none')}</div>`;
   if (!isAdmin() && c.created_by !== S.me.id) return `<div class="empty">${t('none')}</div>`;
   if (S.noBkTable) return `<div class="err">${t('needSql')}</div>`;
-  const b = S.bk[id] || { status: 'advance', balance_paid: 0 };
-  const n = v => v == null ? '' : String(v);
+  const b = S.bk[id] || { status: 'booked', balance_paid: 0 };
+  const n = v => v == null ? '' : String(v), num = 'inputmode="decimal" autocomplete="off"';
   return `<div class="row"><a class="btn ghost sm" href="#c-${esc(id)}">← ${t('back')}</a></div>
   <h1>${t('sBook')}</h1><p><b>${esc(c.name)}</b> · <span class="num">${esc(c.phone)}</span></p>
-  <form id="pay-form" class="card" novalidate data-id="${esc(id)}">
-    ${fs('bk_status', 'bkStatus', b.status)}
-    ${inp('plot_no', 'plotNo', b.plot_no)}
-    <div class="grid2">${inp('total_price', 'totalPrice', n(b.total_price), 'text', true, 'inputmode="decimal" autocomplete="off"')}${inp('advance_amount', 'advAmt', n(b.advance_amount), 'text', true, 'inputmode="decimal" autocomplete="off"')}</div>
-    <div class="grid2">${inp('advance_date', 'advDate', b.advance_date, 'date', true, `max="${dayStr()}"`)}${inp('registration_date', 'regDate', b.registration_date, 'date')}</div>
-    <div class="grid2">${inp('balance_paid', 'balPaid', n(b.balance_paid ?? 0), 'text', false, 'inputmode="decimal" autocomplete="off"')}${inp('balance_due_date', 'balDue', b.balance_due_date, 'date')}</div>
-    <div class="paybox"><span class="muted">${t('balance')}</span><span class="balline num" id="bal-live">—</span></div>
-    <div class="field"><label for="f-payment_note">${t('payNote')}</label><textarea id="f-payment_note" name="payment_note">${esc(b.payment_note)}</textarea></div>
+  <form id="pay-form" class="list" novalidate data-id="${esc(id)}">
+    <section class="card">
+      ${fs('bk_status', 'bkStatus', b.status)}
+      <div class="grid2">${inp('plot_no', 'plotNo', b.plot_no)}${inp('total_price', 'totalPrice', n(b.total_price), 'text', true, num)}</div>
+    </section>
+    <section class="card"><h2>${t('st1')}</h2>
+      <div class="grid2">${inp('booking_amount', 'bookAmt', n(b.booking_amount), 'text', false, num)}${inp('booking_date', 'bookDate', b.booking_date, 'date', false, `max="${dayStr()}"`)}</div>
+    </section>
+    <section class="card"><h2>${t('st2')}</h2>
+      <div class="grid2">${inp('advance_amount', 'advAmt', n(b.advance_amount), 'text', false, num)}${inp('advance_date', 'advDate', b.advance_date, 'date', false, `max="${dayStr()}"`)}</div>
+      ${inp('agreement_date', 'agrDate', b.agreement_date, 'date')}
+    </section>
+    <section class="card"><h2>${t('st3')}</h2>
+      ${inp('registration_date', 'regDateBal', b.registration_date, 'date')}
+      <div class="grid2">${inp('balance_paid', 'balPaid', n(b.balance_paid ?? 0), 'text', false, num)}${inp('balance_due_date', 'balDue', b.balance_due_date, 'date')}</div>
+      <div class="paybox"><div class="row between"><span class="muted">${t('totalPaid')}</span><b class="num" id="paid-live">—</b></div><div class="row between"><span class="muted">${t('balance')}</span><span class="balline num" id="bal-live">—</span></div></div>
+    </section>
+    <section class="card"><div class="field"><label for="f-payment_note">${t('payNote')}</label><textarea id="f-payment_note" name="payment_note">${esc(b.payment_note)}</textarea></div></section>
     <div id="pay-err"></div>
     <button class="btn block big" type="submit" id="pay-btn">${t('save')}</button>
   </form>`;
 }
 function payLive() {
   const f = $('#pay-form'); if (!f) return;
-  const tot = toNum(f.total_price.value), adv = toNum(f.advance_amount.value) || 0, paid = toNum(f.balance_paid.value) || 0;
-  $('#bal-live').textContent = (tot == null || isNaN(tot)) ? '—' : '₹ ' + money(Math.max(0, tot - adv - paid));
+  const v = n => toNum(f[n].value), tot = v('total_price');
+  const paid = (v('booking_amount') || 0) + (v('advance_amount') || 0) + (v('balance_paid') || 0);
+  $('#paid-live').textContent = isNaN(paid) ? '—' : '₹ ' + money(paid);
+  $('#bal-live').textContent = (tot == null || isNaN(tot) || isNaN(paid)) ? '—' : '₹ ' + money(Math.max(0, tot - paid));
 }
 async function savePay(f) {
   const g = n => (f[n] && f[n].value || '').trim();
-  const st = (f.querySelector('input[name="bk_status"]:checked') || {}).value || 'advance';
-  const b = { customer_id: f.dataset.id, status: st, plot_no: g('plot_no'), total_price: toNum(g('total_price')), advance_amount: toNum(g('advance_amount')), balance_paid: toNum(g('balance_paid')) || 0,
-    advance_date: g('advance_date') || null, registration_date: g('registration_date') || null, balance_due_date: g('balance_due_date') || null, payment_note: g('payment_note') };
+  const st = (f.querySelector('input[name="bk_status"]:checked') || {}).value || 'booked';
+  const b = { customer_id: f.dataset.id, status: st, plot_no: g('plot_no'), total_price: toNum(g('total_price')),
+    booking_amount: toNum(g('booking_amount')) || 0, booking_date: g('booking_date') || null,
+    advance_amount: toNum(g('advance_amount')) || 0, advance_date: g('advance_date') || null, agreement_date: g('agreement_date') || null,
+    balance_paid: toNum(g('balance_paid')) || 0, registration_date: g('registration_date') || null, balance_due_date: g('balance_due_date') || null, payment_note: g('payment_note') };
+  if (b.registration_date && !b.balance_due_date) b.balance_due_date = b.registration_date;
   const err = $('#pay-err'), fail = (m, id) => { err.innerHTML = `<div class="err" role="alert">${esc(m)}</div>`; const el = $(id); if (el) { el.scrollIntoView({ block: 'center' }); el.focus(); } };
+  const bad = x => isNaN(x) || x < 0, today = dayStr();
   if (b.total_price == null || isNaN(b.total_price) || b.total_price <= 0) return fail(t('needTotal'), '#f-total_price');
-  if (b.advance_amount == null || isNaN(b.advance_amount) || b.advance_amount <= 0) return fail(t('needAdv'), '#f-advance_amount');
-  if (isNaN(b.balance_paid) || b.balance_paid < 0) return fail(t('needAdv'), '#f-balance_paid');
-  if (!b.advance_date) return fail(t('needAdvDate'), '#f-advance_date');
-  if (b.advance_date > dayStr()) return fail(t('futureAdv'), '#f-advance_date');
-  if (b.advance_amount + b.balance_paid > b.total_price) return fail(t('tooMuch'), '#f-advance_amount');
-  if (b.registration_date && b.registration_date < b.advance_date) return fail(t('regBefore'), '#f-registration_date');
+  if (bad(b.booking_amount)) return fail(t('needPay'), '#f-booking_amount');
+  if (bad(b.advance_amount)) return fail(t('needAdv'), '#f-advance_amount');
+  if (bad(b.balance_paid)) return fail(t('needAdv'), '#f-balance_paid');
+  if (!(b.booking_amount > 0) && !(b.advance_amount > 0)) return fail(t('needPay'), '#f-booking_amount');
+  if (b.booking_amount > 0 && !b.booking_date) return fail(t('needBookDate'), '#f-booking_date');
+  if (b.advance_amount > 0 && !b.advance_date) return fail(t('needAdvDate'), '#f-advance_date');
+  if ((b.booking_date && b.booking_date > today) || (b.advance_date && b.advance_date > today)) return fail(t('futureAdv'), b.booking_date > today ? '#f-booking_date' : '#f-advance_date');
+  if (paidOf(b) > b.total_price) return fail(t('tooMuch'), '#f-advance_amount');
+  const first = [b.booking_date, b.advance_date].filter(Boolean).sort()[0];
+  if (b.agreement_date && first && b.agreement_date < first) return fail(t('agrBefore'), '#f-agreement_date');
+  if (b.registration_date && first && b.registration_date < first) return fail(t('regBefore'), '#f-registration_date');
   err.innerHTML = '';
   const btn = $('#pay-btn'); btn.disabled = true; btn.textContent = t('saving');
   try { await DB.saveBooking(b); toast(t('saved')); location.hash = 'c-' + b.customer_id; }
   catch (e) { btn.disabled = false; btn.textContent = t('save'); if (e.message === 'BLOCKED') return handleErr(e); err.innerHTML = `<div class="err" role="alert">${esc(errText(e))}</div>`; }
+}
+
+/* ---------- reminders (dates + one-click WhatsApp) ---------- */
+function remEvents(cs) {
+  const ev = [];
+  cs.forEach(c => {
+    if (c.site_visit_date) ev.push({ c, d: c.site_visit_date, k: 'svType' });
+    if (c.follow_up_date) ev.push({ c, d: c.follow_up_date, k: 'fuType' });
+    const b = S.bk[c.id];
+    if (isOpenBk(b) && b.status !== 'registered') {
+      if (b.agreement_date && b.status !== 'agreement') ev.push({ c, d: b.agreement_date, k: 'agrType' });
+      if (b.registration_date) ev.push({ c, d: b.registration_date, k: 'regType' });
+    }
+    if (isOpenBk(b) && b.balance_due_date && b.balance_due_date !== b.registration_date && (balOf(b) ?? 1) > 0) ev.push({ c, d: b.balance_due_date, k: 'balType' });
+  });
+  return ev;
+}
+function moneyLines(c, te) {
+  const b = S.bk[c.id]; if (!b) return '';
+  const bal = balOf(b), L = [];
+  if (b.plot_no) L.push((te ? 'ప్లాట్: ' : 'Plot: ') + b.plot_no);
+  if (b.total_price != null) L.push((te ? 'మొత్తం ధర: ₹' : 'Total price: ₹') + money(b.total_price));
+  L.push((te ? 'కట్టినది: ₹' : 'Paid: ₹') + money(paidOf(b)));
+  if (bal != null) L.push((te ? 'బ్యాలెన్స్: ₹' : 'Balance: ₹') + money(bal));
+  return '\n' + L.join('\n');
+}
+function custMsg(c, k, d) {
+  const te = S.lang === 'te', nm = c.name.replace(/\s*\(నమూనా\)/, ''), st = S.settings, dt = fmtDate(d);
+  const office = st.office_phone ? (te ? `\nవివరాలకు: ${st.office_phone}` : `\nFor details: ${st.office_phone}`) : '';
+  const head = te ? `నమస్కారం ${nm} గారు, గ్రీన్ వ్యాలీ (ఓంకార గ్రూప్స్) నుండి.\n` : `Hello ${nm}, greetings from Green Valley (Omkara Groups).\n`;
+  const body = {
+    svType: te ? `మీ సైట్ విజిట్ ${dt} న ఉంది. మీకు వీలైన టైం చెప్పండి.` : `Your site visit is on ${dt}. Please tell us a suitable time.`,
+    fuType: te ? `గ్రీన్ వ్యాలీ గురించి ఆలోచించారా? ఏమైనా సందేహాలు ఉంటే చెప్పండి.` : `Have you thought about Green Valley? Let us know if you have any questions.`,
+    agrType: te ? `మీ ప్లాట్ అగ్రిమెంట్ తేదీ ${dt}. దయచేసి ఆ రోజు అవసరమైన డాక్యుమెంట్లతో రండి.` : `Your plot agreement date is ${dt}. Please come with the required documents.`,
+    regType: te ? `మీ ప్లాట్ రిజిస్ట్రేషన్ ${dt} న ఉంది. బ్యాలెన్స్ అమౌంట్ ఆ రోజు కట్టాలి.` : `Your plot registration is on ${dt}. The balance amount is to be paid that day.`,
+    balType: te ? `మీ బ్యాలెన్స్ పేమెంట్ తేదీ ${dt}. దయచేసి గుర్తుంచుకోండి.` : `Your balance payment is due on ${dt}. Kindly remember.`,
+  }[k];
+  return head + body + (['agrType', 'regType', 'balType'].includes(k) ? moneyLines(c, te) : '') + office;
+}
+function empLine(c, k, d, te) {
+  return `• ${t(k)} – ${fmtDate(d)}\n  ${c.name} · ${c.phone}${c.village ? ' · ' + c.village : ''}${['agrType', 'regType', 'balType'].includes(k) ? moneyLines(c, te).replace(/\n/g, '\n  ') : ''}`;
+}
+function empMsg(u, items) {
+  const te = S.lang === 'te';
+  return (te ? `${u.full_name} గారు, గ్రీన్ వ్యాలీ ఫాలో-అప్ రిమైండర్:\n\n` : `${u.full_name}, Green Valley follow-up reminder:\n\n`)
+    + items.map(e => empLine(e.c, e.k, e.d, te)).join('\n\n')
+    + (te ? '\n\nదయచేసి ఫాలో-అప్ చేసి, అప్‌డేట్ యాప్‌లో పెట్టండి. – TBR' : '\n\nPlease follow up and update the app. – TBR');
+}
+const waTo = (phone, msg) => `https://wa.me/${normPhone(phone)}?text=${encodeURIComponent(msg)}`;
+function remItem(e) {
+  const u = S.users.find(x => x.id === e.c.created_by);
+  const custBtn = `<a class="btn wa sm" href="${waTo(e.c.phone, custMsg(e.c, e.k, e.d))}" target="_blank" rel="noopener">${I.wa}${t('toCust')}</a>`;
+  const empBtn = !isAdmin() || !u || u.id === S.me.id ? '' : (u.phone ? `<a class="btn wa sm" href="${waTo(u.phone, empMsg(u, [e]))}" target="_blank" rel="noopener">${I.wa}${esc(t('toEmp', { n: u.full_name }))}</a>` : `<span class="chip warn">${esc(t('noEmpPhone', { n: u.full_name }))}</span>`);
+  return `<div class="remrow">${custItem(e.c, `<span class="chip ${['agrType', 'regType', 'balType'].includes(e.k) ? 'pay' : ''}">${t(e.k)} · ${fmtDate(e.d)}</span>`)}<div class="row">${custBtn}${empBtn}</div></div>`;
+}
+async function viewRem() {
+  const cs = await DB.customers(), today = dayStr(), wk = dayStr(new Date(Date.now() + 7 * 864e5)), past = dayStr(new Date(Date.now() - 30 * 864e5));
+  const ev = remEvents(cs);
+  const grp = f => ev.filter(f).sort((a, b) => a.d.localeCompare(b.d));
+  const tod = grp(e => e.d === today), nxt = grp(e => e.d > today && e.d <= wk), lat = grp(e => e.d > wk), miss = grp(e => e.d < today && e.d >= past).reverse();
+  const sec = (title, arr, open = true) => `<details class="card remsec" ${open ? 'open' : ''}><summary><h2>${title} <span class="muted num">(${arr.length})</span></h2></summary><div class="list">${arr.length ? arr.map(remItem).join('') : `<div class="empty">${t('none')}</div>`}</div></details>`;
+  let perEmp = '';
+  if (isAdmin()) {
+    const byU = {}; tod.forEach(e => { (byU[e.c.created_by] = byU[e.c.created_by] || []).push(e); });
+    const rows = Object.keys(byU).map(id => { const u = S.users.find(x => x.id === id); if (!u || u.role === 'admin') return '';
+      return u.phone ? `<a class="btn wa block" href="${waTo(u.phone, empMsg(u, byU[id]))}" target="_blank" rel="noopener">${I.wa}${esc(u.full_name)} – ${t('sendDay')} (${byU[id].length})</a>` : `<div class="chip warn">${esc(t('noEmpPhone', { n: u.full_name }))}</div>`; }).join('');
+    if (rows) perEmp = `<section class="card soft"><h2>${t('today')} – ${t('employees')}</h2><div class="list">${rows}</div></section>`;
+  }
+  return `<h1>${isAdmin() ? t('remTitle') : t('followups')}</h1><p class="hint">${t('remHint')}</p>${perEmp}
+  ${sec(t('today'), tod)}${sec(t('next7'), nxt)}${sec(t('overdue'), miss, miss.length < 6)}${sec(t('later'), lat, false)}`;
 }
 
 /* ---------- admin ---------- */
@@ -976,10 +1090,10 @@ async function viewDash() {
     const bks = Object.values(S.bk).filter(b => b.status !== 'cancelled'), wk = dayStr(new Date(Date.now() + 7 * 864e5));
     return `<div class="tiles">
       <a class="tile" href="#all" data-quick="adv"><b>${bks.length}</b><span>${t('advCount')}</span></a>
-      <a class="tile" href="#all" data-quick="adv"><b>₹${money(bks.reduce((a, b) => a + (+b.advance_amount || 0) + (+b.balance_paid || 0), 0))}</b><span>${t('advSum')}</span></a>
+      <a class="tile" href="#all" data-quick="adv"><b>₹${money(bks.reduce((a, b) => a + paidOf(b), 0))}</b><span>${t('advSum')}</span></a>
       <a class="tile" href="#all" data-quick="adv"><b>₹${money(bks.reduce((a, b) => a + (balOf(b) || 0), 0))}</b><span>${t('balSum')}</span></a>
       <a class="tile" href="#all" data-quick="reg"><b>${bks.filter(b => b.status !== 'registered' && b.registration_date && b.registration_date >= today && b.registration_date <= wk).length}</b><span>${t('regWeek')}</span></a>
-      <a class="tile" href="#all" data-quick="visit"><b>${cs.filter(c => c.site_visit_date === today).length}</b><span>${t('qVisit')}</span></a>
+      <a class="tile" href="#rem"><b>${remEvents(cs).filter(e => e.d === today).length}</b><span>${t('rem')} – ${t('today')}</span></a>
     </div>`; })()}
   <section class="card"><div class="row between"><h2>${t('byEmp')}</h2><a href="#team-day">${t('viewAll')} →</a></div>
     <div class="tablewrap"><table><thead><tr><th>${t('emp')}</th><th>${t('loginAt')}</th><th>${t('fieldStarted')}</th><th>${t('count')}</th></tr></thead><tbody>
@@ -995,7 +1109,7 @@ async function viewAll(empId) {
   S.allCs = cs; S.filtered = null;
   const today = dayStr(), emp = empId ? S.users.find(u => u.id === empId) : null;
   const base = emp ? cs.filter(c => c.created_by === empId) : cs;
-  const qn = { visit: base.filter(c => c.site_visit_date === today).length, adv: base.filter(c => S.bk[c.id] && S.bk[c.id].status !== 'cancelled').length, reg: base.filter(c => { const b = S.bk[c.id]; return b && b.status !== 'registered' && b.status !== 'cancelled' && b.registration_date && b.registration_date >= today; }).length };
+  const qn = { visit: base.filter(c => c.site_visit_date === today).length, adv: base.filter(c => isOpenBk(S.bk[c.id])).length, reg: base.filter(c => { const b = S.bk[c.id]; return b && b.status !== 'registered' && b.status !== 'cancelled' && b.registration_date && b.registration_date >= today; }).length };
   return `${emp ? `<div class="row"><a class="btn ghost sm" href="#users">← ${t('back')}</a></div>` : ''}
   <div class="row between"><h1>${emp ? esc(t('custOf', { n: emp.full_name })) : t('customers')} <span class="muted num" id="all-n">(${cs.length})</span></h1>
     ${IN_FRAME ? `<span class="hint">${t('exportNote')}</span>` : `<button class="btn soft sm" data-act="csv">${t('export')}</button>`}</div>
@@ -1006,14 +1120,15 @@ async function viewAll(empId) {
     <button type="button" data-act="quick" data-q="reg" aria-pressed="${S.quick === 'reg'}">📝 ${t('qReg')} (${qn.reg})</button>
   </div>
   ${S.noBkTable ? `<div class="err">${t('needSql')}</div>` : ''}
+  <input type="search" id="fq" placeholder="${t('search')}" aria-label="${t('search')}">
+  <details class="fwrap" ${window.innerWidth > 700 ? 'open' : ''}><summary>${S.lang === 'te' ? 'మరిన్ని ఫిల్టర్లు (ఉద్యోగి, స్టార్లు, తేదీ)' : 'More filters (employee, stars, date)'}</summary>
   <div class="filters card">
-    <input type="search" id="fq" placeholder="${t('search')}" aria-label="${t('search')}">
     <select id="femp" aria-label="${t('emp')}"><option value="">${t('allEmp')}</option>${S.users.filter(u => u.role !== 'admin').map(u => `<option value="${esc(u.id)}">${esc(u.full_name)}</option>`).join('')}</select>
     <select id="fstar" aria-label="${t('stars')}"><option value="">${t('allStars')}</option>${[5, 4, 3, 2, 1].map(n => `<option value="${n}">${'★'.repeat(n)}</option>`).join('')}</select>
     <select id="fsrc" aria-label="${t('source')}"><option value="">${t('allSrc')}</option>${OPTS.source.map(([c]) => `<option value="${c}">${esc(opt('source', c))}</option>`).join('')}</select>
     <label class="field small"><span>${t('from')}</span><input type="date" id="ffrom"></label>
     <label class="field small"><span>${t('to')}</span><input type="date" id="fto"></label>
-  </div>
+  </div></details>
   <div class="list" id="alist">${cs.map(c => custItem(c)).join('') || `<div class="empty">${t('noCust')}</div>`}</div>`;
 }
 function filterAll() {
@@ -1022,7 +1137,7 @@ function filterAll() {
   const today = dayStr(), qk = S.quick;
   const quickOk = c => { const b = S.bk[c.id];
     if (qk === 'visit') return c.site_visit_date === today;
-    if (qk === 'adv') return !!b && b.status !== 'cancelled';
+    if (qk === 'adv') return isOpenBk(b);
     if (qk === 'reg') return !!b && b.status !== 'registered' && b.status !== 'cancelled' && !!b.registration_date && b.registration_date >= today;
     return true; };
   let r = S.allCs.filter(c => quickOk(c) && (!q || [c.name, c.phone, c.village, c.mandal, c.district, (S.bk[c.id] || {}).plot_no].join(' ').toLowerCase().includes(q)) && (!e || c.created_by === e) && (!s || String(c.stars) === s) && (!src || c.source === src) && (!qk && f ? localDay(c.created_at) >= f : true) && (!qk && to ? localDay(c.created_at) <= to : true));
@@ -1034,7 +1149,7 @@ function filterAll() {
 function exportCsv() {
   const rows = S.filtered || S.allCs;
   const cols = ['created_at', 'created_by', ...FIELDS.filter(f => !f.endsWith('_path')), 'edit_count', 'saved_lat', 'saved_lng'];
-  const bcols = ['status', 'plot_no', 'total_price', 'advance_amount', 'advance_date', 'balance_paid', 'balance', 'balance_due_date', 'registration_date', 'payment_note'];
+  const bcols = ['status', 'plot_no', 'total_price', 'booking_amount', 'booking_date', 'advance_amount', 'advance_date', 'agreement_date', 'registration_date', 'balance_paid', 'balance_due_date', 'balance', 'payment_note'];
   const head = [...cols.map(c => c === 'created_by' ? t('by') : c === 'created_at' ? t('savedAt') : FIELD_LABEL[c] ? t(FIELD_LABEL[c]) : c), ...bcols.map(c => c === 'balance' ? t('balance') : t(BK_LABEL[c]))];
   const bval = (c, f) => { const b = S.bk[c.id]; if (!b) return ''; if (f === 'balance') { const v = balOf(b); return v == null ? '' : v; } if (f === 'status') return opt('bk_status', b.status); if (f.endsWith('_date')) return b[f] ? fmtDate(b[f]) : ''; return b[f] ?? ''; };
   const val0 = (c, f) => f === 'created_by' ? userName(c[f]) : f === 'created_at' ? fmtDT(c[f]) : fmtVal(f, c[f]);
@@ -1067,6 +1182,13 @@ async function viewUsers(msg) {
   const [us, cs] = await Promise.all([DB.users(), DB.customers().catch(() => [])]);
   S.users = us; const cnt = id => cs.filter(c => c.created_by === id).length;
   return `<h1>${t('users')}</h1>
+  <section class="card"><h2>${t('employees')} <span class="muted num">(${S.users.filter(u => u.role !== 'admin').length})</span></h2>
+  <div class="list">${S.users.map(u => `<div class="item"><div class="t"><b>${esc(u.full_name || u.login_id)}</b>${u.role === 'admin' ? `<span class="chip">${t('admin')}</span>` : u.blocked ? `<span class="chip danger">${t('isBlocked')}</span>` : `<span class="chip">${t('active')}</span>`}</div>
+    <div class="s"><span>ID: ${u.role !== 'admin' ? `<a href="#allby-${esc(u.id)}"><b class="num">${esc(u.login_id)}</b></a>` : `<b class="num">${esc(u.login_id)}</b>`}</span>${u.phone ? `<span class="num">${esc(u.phone)}</span>` : ''}</div>
+    ${u.role !== 'admin' ? `<div class="row"><a class="btn sm" href="#allby-${esc(u.id)}">${t('custList')} (${cnt(u.id)})</a><button class="btn sm ${u.blocked ? '' : 'danger'}" data-act="block" data-id="${esc(u.id)}" data-b="${u.blocked ? 0 : 1}">${u.blocked ? t('unblock') : t('block')}</button><button class="btn sm ghost" data-act="pw" data-id="${esc(u.id)}">${t('resetPw')}</button><button class="btn sm ghost" data-act="ph" data-id="${esc(u.id)}">${t('editPhone')}</button><a class="btn sm ghost" href="#staff-${esc(u.id)}">${t('log')}</a></div>
+    <div class="row hide" id="ph-${esc(u.id)}"><input type="tel" inputmode="numeric" id="phv-${esc(u.id)}" value="${esc(u.phone || '')}" placeholder="${t('empPhone')}" style="flex:1;min-width:0"><button class="btn sm" data-act="phsave" data-id="${esc(u.id)}">${t('save')}</button></div>
+    <div class="row hide" id="pw-${esc(u.id)}"><input type="text" id="pwv-${esc(u.id)}" placeholder="${t('newPw')}" style="flex:1;min-width:0"><button class="btn sm" data-act="pwsave" data-id="${esc(u.id)}">${t('save')}</button></div>` : ''}
+  </div>`).join('')}</div></section>
   <form class="card" id="user-form" autocomplete="off"><h2>${t('addUser')}</h2>
     ${msg ? msg : ''}
     <div class="grid2">
@@ -1076,13 +1198,7 @@ async function viewUsers(msg) {
       <div class="field"><label for="u-pw">${t('password')}</label><input type="text" id="u-pw" required></div>
     </div>
     <button class="btn block" type="submit">${t('create')}</button>
-  </form>
-  <section class="card"><h2>${t('employees')} <span class="muted num">(${S.users.filter(u => u.role !== 'admin').length})</span></h2>
-  <div class="list">${S.users.map(u => `<div class="item"><div class="t"><b>${esc(u.full_name || u.login_id)}</b>${u.role === 'admin' ? `<span class="chip">${t('admin')}</span>` : u.blocked ? `<span class="chip danger">${t('isBlocked')}</span>` : `<span class="chip">${t('active')}</span>`}</div>
-    <div class="s"><span>ID: ${u.role !== 'admin' ? `<a href="#allby-${esc(u.id)}"><b class="num">${esc(u.login_id)}</b></a>` : `<b class="num">${esc(u.login_id)}</b>`}</span>${u.phone ? `<span class="num">${esc(u.phone)}</span>` : ''}</div>
-    ${u.role !== 'admin' ? `<div class="row"><a class="btn sm" href="#allby-${esc(u.id)}">${t('custList')} (${cnt(u.id)})</a><button class="btn sm ${u.blocked ? '' : 'danger'}" data-act="block" data-id="${esc(u.id)}" data-b="${u.blocked ? 0 : 1}">${u.blocked ? t('unblock') : t('block')}</button><button class="btn sm ghost" data-act="pw" data-id="${esc(u.id)}">${t('resetPw')}</button><a class="btn sm ghost" href="#staff-${esc(u.id)}">${t('log')}</a></div>
-    <div class="row hide" id="pw-${esc(u.id)}"><input type="text" id="pwv-${esc(u.id)}" placeholder="${t('newPw')}" style="flex:1;min-width:0"><button class="btn sm" data-act="pwsave" data-id="${esc(u.id)}">${t('save')}</button></div>` : ''}
-  </div>`).join('')}</div></section>`;
+  </form>`;
 }
 
 async function viewConfig() {
@@ -1103,7 +1219,7 @@ const app = $('#app');
 async function show() {
   if (!S.me) { app.innerHTML = viewLogin(); return; }
   let v = (location.hash || '').slice(1) || (isAdmin() ? 'dash' : 'home');
-  const adminViews = ['dash', 'all', 'team-day', 'users', 'a-config'], empViews = ['home', 'add', 'list', 'followups'];
+  const adminViews = ['dash', 'all', 'rem', 'team-day', 'users', 'a-config'], empViews = ['home', 'add', 'list', 'followups'];
   if (isAdmin() && empViews.includes(v)) v = 'dash';
   if (!isAdmin() && (adminViews.includes(v) || v.startsWith('staff-') || v.startsWith('allby-'))) v = 'home';
   app.innerHTML = shell(v, `<div class="loading">…</div>`);
@@ -1119,6 +1235,7 @@ async function show() {
     else if (v.startsWith('saved-')) html = await viewSaved(v.slice(6));
     else if (v === 'dash') html = await viewDash();
     else if (v === 'all') html = await viewAll();
+    else if (v === 'rem') html = await viewRem();
     else if (v.startsWith('allby-')) html = await viewAll(v.slice(6));
     else if (v.startsWith('pay-')) html = await viewPay(v.slice(4));
     else if (v === 'team-day') html = await viewTeam();
@@ -1157,6 +1274,12 @@ document.addEventListener('click', async ev => {
     const u = S.users.find(x => x.id === b.dataset.id), blk = b.dataset.b === '1';
     if (!(await confirmBox(t(blk ? 'confirmBlock' : 'confirmUnblock', { n: u.full_name })))) return;
     try { await DB.setBlocked(u.id, blk); toast(blk ? t('isBlocked') : t('active')); $('#main').innerHTML = await viewUsers(); } catch (e) { toast(errText(e)); }
+    return;
+  }
+  if (act === 'ph') { $('#ph-' + b.dataset.id).classList.toggle('hide'); return; }
+  if (act === 'phsave') {
+    const v = $('#phv-' + b.dataset.id).value.replace(/\D/g, '').replace(/^91(?=\d{10}$)/, ''); if (v.length !== 10) return toast(t('needPhone').replace(S.lang === 'te' ? 'సరైన ' : 'valid ', S.lang === 'te' ? 'సరైన ' : 'valid '));
+    try { await DB.setPhone(b.dataset.id, v); toast(t('saved')); S.users = await DB.users(); $('#main').innerHTML = await viewUsers(); } catch (e) { toast(errText(e)); }
     return;
   }
   if (act === 'pw') { $('#pw-' + b.dataset.id).classList.toggle('hide'); return; }

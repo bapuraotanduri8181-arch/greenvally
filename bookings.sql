@@ -11,11 +11,14 @@ $$;
 -- 2. One booking row per customer (advance, registration, balance)
 create table if not exists public.bookings (
   customer_id       uuid primary key references public.customers(id) on delete cascade,
-  status            text not null default 'advance' check (status in ('advance','registered','cancelled')),
+  status            text not null default 'booked',
   plot_no           text default '',
   total_price       numeric check (total_price is null or total_price > 0),
-  advance_amount    numeric not null check (advance_amount > 0),
-  advance_date      date not null,
+  booking_amount    numeric not null default 0,
+  booking_date      date,
+  advance_amount    numeric not null default 0,
+  advance_date      date,
+  agreement_date    date,
   balance_paid      numeric not null default 0 check (balance_paid >= 0),
   balance_due_date  date,
   registration_date date,
@@ -24,10 +27,28 @@ create table if not exists public.bookings (
   created_at        timestamptz not null default now(),
   updated_by        uuid default auth.uid(),
   updated_at        timestamptz not null default now(),
-  edit_count        int not null default 0,
-  constraint bk_not_over check (total_price is null or advance_amount + balance_paid <= total_price),
-  constraint bk_reg_after check (registration_date is null or registration_date >= advance_date)
+  edit_count        int not null default 0
 );
+
+-- 2b. Columns / rules (also upgrades a table made by an earlier version of this file)
+alter table public.bookings add column if not exists booking_amount numeric not null default 0;
+alter table public.bookings add column if not exists booking_date   date;
+alter table public.bookings add column if not exists agreement_date date;
+alter table public.bookings alter column advance_amount set default 0;
+update public.bookings set advance_amount = 0 where advance_amount is null;
+alter table public.bookings alter column advance_amount set not null;
+alter table public.bookings alter column advance_date drop not null;
+alter table public.bookings alter column status set default 'booked';
+alter table public.bookings drop constraint if exists bookings_status_check;
+alter table public.bookings drop constraint if exists bookings_advance_amount_check;
+alter table public.bookings drop constraint if exists bk_status_ok;
+alter table public.bookings drop constraint if exists bk_amounts_ok;
+alter table public.bookings drop constraint if exists bk_not_over;
+alter table public.bookings drop constraint if exists bk_reg_after;
+alter table public.bookings add constraint bk_status_ok check (status in ('booked','advance','agreement','registered','cancelled'));
+alter table public.bookings add constraint bk_amounts_ok check (booking_amount >= 0 and advance_amount >= 0 and balance_paid >= 0 and (booking_amount > 0 or advance_amount > 0));
+alter table public.bookings add constraint bk_not_over check (total_price is null or booking_amount + advance_amount + balance_paid <= total_price);
+alter table public.bookings add constraint bk_reg_after check (registration_date is null or registration_date >= least(coalesce(booking_date, advance_date), coalesce(advance_date, booking_date)));
 
 -- 3. Every save is kept as a version (admin sees the change history)
 create table if not exists public.booking_versions (
@@ -85,6 +106,12 @@ create policy bkv_select on public.booking_versions for select to authenticated 
 
 grant select, insert, update on public.bookings to authenticated;
 grant select on public.booking_versions to authenticated;
+
+-- 5. Admin can change an employee's WhatsApp phone number from the Users page
+alter table public.profiles add column if not exists phone text;
+drop policy if exists profiles_admin_update on public.profiles;
+create policy profiles_admin_update on public.profiles for update to authenticated
+  using (public.gv_is_admin()) with check (public.gv_is_admin());
 
 -- Tell the API about the new tables right away
 notify pgrst, 'reload schema';
