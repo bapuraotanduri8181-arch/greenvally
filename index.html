@@ -93,8 +93,8 @@ dt{color:var(--muted);font-size:13px}dd{margin:0;font-weight:500;overflow-wrap:a
     <h2 class="center" style="margin-bottom:0">Green Valley</h2>
     <p class="center muted" style="margin-top:2px" data-t="tagline"></p>
     <form id="loginForm">
-      <label data-t="email"></label>
-      <input id="lEmail" type="email" autocomplete="username" required>
+      <label data-t="username"></label>
+      <input id="lEmail" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="gv05" required>
       <label data-t="password"></label>
       <div style="position:relative"><input id="lPass" type="password" autocomplete="current-password" required style="padding-right:56px"><button type="button" id="eye" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;font-size:20px;min-width:44px;min-height:44px;cursor:pointer" aria-label="Show password">👁</button></div>
       <button class="btn full" style="margin-top:16px" id="lBtn" data-t="login"></button>
@@ -125,10 +125,14 @@ dt{color:var(--muted);font-size:13px}dd{margin:0;font-weight:500;overflow-wrap:a
 const SUPABASE_URL = 'https://lbyfvmfhsqdzoszvcmgd.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_9U0cfDOgLXJ3sDLOp_Y60A_g4-7CDBm';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// Usernames: staff type 'gv05'; the app signs in as gv05@greenvalley.app. A full email still works.
+const USER_DOMAIN='greenvalley.app';
+const toEmail=u=>{u=(u||'').trim().toLowerCase();return u.includes('@')?u:u+'@'+USER_DOMAIN};
+const uname=e=>{e=e||'';return e.toLowerCase().endsWith('@'+USER_DOMAIN)?e.split('@')[0]:e};
 
 /* ---------- Language ---------- */
 const T = {
- te:{tagline:'ఓంకార గ్రూప్స్ – ఓపెన్ ప్లాట్స్',email:'ఈమెయిల్',password:'పాస్‌వర్డ్',login:'లాగిన్',logout:'లాగౌట్',
+ te:{tagline:'ఓంకార గ్రూప్స్ – ఓపెన్ ప్లాట్స్',email:'ఈమెయిల్',username:'యూజర్ నేమ్',password:'పాస్‌వర్డ్',login:'లాగిన్',logout:'లాగౌట్',
   home:'హోమ్',customers:'కస్టమర్లు',followups:'ఫాలో-అప్',attendance:'హాజరు',team:'టీమ్',files:'ఫైల్స్',
   hello:'నమస్కారం',metToday:'ఈరోజు కలిసినవారు',dueToday:'ఈరోజు ఫాలో-అప్',hotLeads:'హాట్ లీడ్స్',totalCust:'మొత్తం కస్టమర్లు',
   checkedIn:'హాజరు నమోదైంది',notCheckedIn:'ఇంకా హాజరు వేయలేదు',checkInNow:'సెల్ఫీతో హాజరు వేయండి',
@@ -141,11 +145,11 @@ const T = {
   takeSelfie:'సెల్ఫీ తీయండి',gettingLoc:'లొకేషన్ తీసుకుంటోంది…',locNeeded:'లొకేషన్ అనుమతి ఇవ్వండి – హాజరుకు తప్పనిసరి',
   saved:'సేవ్ అయింది ✓',err:'సమస్య వచ్చింది: ',owner:'ఉద్యోగి',met:'కలిసిన తేదీ',map:'మ్యాప్',upload:'అప్‌లోడ్',
   plot_photo:'ప్లాట్ ఫోటోలు',progress_photo:'డెవలప్‌మెంట్ ఫోటోలు',document:'PDF / డాక్యుమెంట్లు',title:'పేరు / వివరణ',plotNo:'ప్లాట్ నంబర్',
-  rename:'పేరు మార్చు',addUser:'+ కొత్త యూజర్ యాడ్ చేయండి',makeAdmin:'అడ్మిన్ చేయండి',makeEmp:'ఉద్యోగిగా మార్చండి',block:'బ్లాక్',unblock:'అన్‌బ్లాక్',blocked:'బ్లాక్ అయింది',roleL:'పాత్ర',adminR:'అడ్మిన్ (అన్నీ చూస్తారు)',empR:'ఉద్యోగి (తన డేటా మాత్రమే)',createUser:'యూజర్ క్రియేట్ చేయండి',userMade:'యూజర్ క్రియేట్ అయింది ✓ ఈమెయిల్, పాస్‌వర్డ్ ఉద్యోగికి ఇవ్వండి',cfAdmin:'ని అడ్మిన్ చేయాలా? వాళ్ళు అందరి డేటా చూస్తారు.',cfEmp:'ని ఉద్యోగిగా మార్చాలా?',cfBlock:'ని బ్లాక్ చేయాలా? వాళ్ళు లాగిన్ అవ్వలేరు, డేటా అలాగే ఉంటుంది.',cfUnblock:'ని మళ్ళీ యాక్టివ్ చేయాలా?',changePw:'పాస్‌వర్డ్ మార్చు',newPw:'కొత్త పాస్‌వర్డ్',confirmPw:'మళ్ళీ టైప్ చేయండి',pwMismatch:'రెండు పాస్‌వర్డ్‌లు ఒకటి కాదు',pwShort:'కనీసం 6 అక్షరాలు ఉండాలి',pwFor:'పాస్‌వర్డ్ సెట్ చేయండి: ',today:'ఈరోజు',overdue:'ఆలస్యం',wrongLogin:'ఈమెయిల్ లేదా పాస్‌వర్డ్ తప్పు',chooseFile:'ఫైల్ ఎంచుకోండి',edit:'మార్చు',
+  rename:'పేరు మార్చు',addUser:'+ కొత్త యూజర్ యాడ్ చేయండి',makeAdmin:'అడ్మిన్ చేయండి',makeEmp:'ఉద్యోగిగా మార్చండి',block:'బ్లాక్',unblock:'అన్‌బ్లాక్',blocked:'బ్లాక్ అయింది',roleL:'పాత్ర',adminR:'అడ్మిన్ (అన్నీ చూస్తారు)',empR:'ఉద్యోగి (తన డేటా మాత్రమే)',createUser:'యూజర్ క్రియేట్ చేయండి',userMade:'యూజర్ క్రియేట్ అయింది ✓ యూజర్ నేమ్, పాస్‌వర్డ్ ఉద్యోగికి ఇవ్వండి',badUser:'యూజర్ నేమ్‌లో చిన్న ఇంగ్లీష్ అక్షరాలు, అంకెలు మాత్రమే (ఉదా: gv12)',cfAdmin:'ని అడ్మిన్ చేయాలా? వాళ్ళు అందరి డేటా చూస్తారు.',cfEmp:'ని ఉద్యోగిగా మార్చాలా?',cfBlock:'ని బ్లాక్ చేయాలా? వాళ్ళు లాగిన్ అవ్వలేరు, డేటా అలాగే ఉంటుంది.',cfUnblock:'ని మళ్ళీ యాక్టివ్ చేయాలా?',changePw:'పాస్‌వర్డ్ మార్చు',newPw:'కొత్త పాస్‌వర్డ్',confirmPw:'మళ్ళీ టైప్ చేయండి',pwMismatch:'రెండు పాస్‌వర్డ్‌లు ఒకటి కాదు',pwShort:'కనీసం 6 అక్షరాలు ఉండాలి',pwFor:'పాస్‌వర్డ్ సెట్ చేయండి: ',today:'ఈరోజు',overdue:'ఆలస్యం',wrongLogin:'ఈమెయిల్ లేదా పాస్‌వర్డ్ తప్పు',chooseFile:'ఫైల్ ఎంచుకోండి',edit:'మార్చు',
   msgVisit:(c,d,e)=>`నమస్కారం ${c} గారు 🙏\nGreen Valley ఓపెన్ ప్లాట్స్ (గోలేట్, ఆసిఫాబాద్) సైట్ విజిట్ ${d} న ఏర్పాటు చేశాం. దయచేసి రండి.\n– ${e}, ఓంకార గ్రూప్స్`,
   msgResched:(c,d,e)=>`నమస్కారం ${c} గారు 🙏\nమీ Green Valley సైట్ విజిట్ ను ${d} కి మార్చాం. మీకు అనుకూలమేనా?\n– ${e}, ఓంకార గ్రూప్స్`,
   msgFollow:(c,e)=>`నమస్కారం ${c} గారు 🙏\nGreen Valley ఓపెన్ ప్లాట్స్ గురించి మీకు ఇంకా ఏమైనా వివరాలు కావాలా? ప్లాట్లు వేగంగా బుక్ అవుతున్నాయి.\n– ${e}, ఓంకార గ్రూప్స్`},
- en:{tagline:'Omkara Groups – Open Plots',email:'Email',password:'Password',login:'Login',logout:'Logout',
+ en:{tagline:'Omkara Groups – Open Plots',email:'Email',username:'Username',password:'Password',login:'Login',logout:'Logout',
   home:'Home',customers:'Customers',followups:'Follow-ups',attendance:'Attendance',team:'Team',files:'Files',
   hello:'Hello',metToday:'Met today',dueToday:'Follow-ups today',hotLeads:'Hot leads',totalCust:'Total customers',
   checkedIn:'Checked in',notCheckedIn:'Not checked in yet',checkInNow:'Check in with selfie',
@@ -158,7 +162,7 @@ const T = {
   takeSelfie:'Take selfie',gettingLoc:'Getting location…',locNeeded:'Allow location – required for attendance',
   saved:'Saved ✓',err:'Problem: ',owner:'Employee',met:'Met on',map:'Map',upload:'Upload',
   plot_photo:'Plot photos',progress_photo:'Development photos',document:'PDFs / documents',title:'Title',plotNo:'Plot number',
-  rename:'Rename',addUser:'+ Add new user',makeAdmin:'Make admin',makeEmp:'Make employee',block:'Block',unblock:'Unblock',blocked:'Blocked',roleL:'Role',adminR:'Admin (sees everything)',empR:'Employee (own data only)',createUser:'Create user',userMade:'User created ✓ Give the email and password to the employee',cfAdmin:' – make admin? They will see all data.',cfEmp:' – change to employee?',cfBlock:' – block? They cannot log in; their data stays.',cfUnblock:' – make active again?',changePw:'Change password',newPw:'New password',confirmPw:'Type again',pwMismatch:'Passwords do not match',pwShort:'At least 6 characters',pwFor:'Set password for: ',today:'Today',overdue:'Overdue',wrongLogin:'Wrong email or password',chooseFile:'Choose file',edit:'Edit',
+  rename:'Rename',addUser:'+ Add new user',makeAdmin:'Make admin',makeEmp:'Make employee',block:'Block',unblock:'Unblock',blocked:'Blocked',roleL:'Role',adminR:'Admin (sees everything)',empR:'Employee (own data only)',createUser:'Create user',userMade:'User created ✓ Give the username and password to the employee',badUser:'Username: only small English letters and numbers (e.g. gv12)',cfAdmin:' – make admin? They will see all data.',cfEmp:' – change to employee?',cfBlock:' – block? They cannot log in; their data stays.',cfUnblock:' – make active again?',changePw:'Change password',newPw:'New password',confirmPw:'Type again',pwMismatch:'Passwords do not match',pwShort:'At least 6 characters',pwFor:'Set password for: ',today:'Today',overdue:'Overdue',wrongLogin:'Wrong email or password',chooseFile:'Choose file',edit:'Edit',
   msgVisit:(c,d,e)=>`Namaskaram ${c} garu 🙏\nYour site visit to Green Valley open plots (Golet, Asifabad) is fixed for ${d}. Looking forward to seeing you.\n– ${e}, Omkara Groups`,
   msgResched:(c,d,e)=>`Namaskaram ${c} garu 🙏\nWe have moved your Green Valley site visit to ${d}. Is that convenient for you?\n– ${e}, Omkara Groups`,
   msgFollow:(c,e)=>`Namaskaram ${c} garu 🙏\nDo you need any more details about Green Valley open plots? Plots are getting booked fast.\n– ${e}, Omkara Groups`}
@@ -203,15 +207,15 @@ async function boot(){
   const {data,error}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
   if(error||!data){fail(error||'profile missing');return}
   if(!data.is_active){await sb.auth.signOut();$('lErr').textContent='Account disabled';$('loginView').classList.remove('hidden');return}
-  me=data;me.email=session.user.email;me.isAdmin=data.role==='admin';
-  $('who').textContent=(me.full_name||me.email)+(me.isAdmin?' • Admin':'');
+  me=data;me.email=session.user.email;me.username=uname(me.email);me.isAdmin=data.role==='admin';
+  $('who').textContent=(me.full_name||me.username)+(me.isAdmin?' • Admin':'');
   $('loginView').classList.add('hidden');$('appView').classList.remove('hidden');
   renderTabs();go('home');
 }
 $('eye').onclick=()=>{const p=$('lPass');p.type=p.type==='password'?'text':'password'};
 $('loginForm').addEventListener('submit',async e=>{
   e.preventDefault();$('lErr').textContent='';$('lBtn').disabled=true;
-  const {error}=await sb.auth.signInWithPassword({email:$('lEmail').value.trim(),password:$('lPass').value});
+  const {error}=await sb.auth.signInWithPassword({email:toEmail($('lEmail').value),password:$('lPass').value});
   $('lBtn').disabled=false;if(error){const m=(error.message||'')+(error.status?' ('+error.status+')':'');$('lErr').textContent=(/invalid login credentials/i.test(m)?t('wrongLogin'):'')+' — '+m;return}boot();
 });
 window.logout=async()=>{await sb.auth.signOut();me=null;location.reload()};
@@ -413,7 +417,7 @@ async function pTeam(){
    <div class="stat"><b>${(cust.data||[]).filter(c=>c.met_on===todayStr()).length}</b><span>${esc(t('metToday'))}</span></div></div>
   <div class="card list" style="padding:4px">${people.map(p=>{const a=attBy[p.id],s=st(p.id),img=a&&urls[a.selfie_path];
    return `<div class="item" style="cursor:default">${img?`<a href="${esc(img)}" target="_blank" rel="noopener"><img class="thumb" src="${esc(img)}" alt=""></a>`:`<div class="avatar">${initials(p.full_name)}</div>`}
-   <div class="main"><b>${esc(p.full_name)}${p.role==='admin'?' • Admin':''}</b>${p.is_active===false?` <span style="color:var(--bad);font-size:13px">• ${esc(t('blocked'))}</span>`:''}${em[p.id]?`<small class="muted" style="display:block">${esc(em[p.id])}</small>`:''}
+   <div class="main"><b>${esc(p.full_name)}${p.role==='admin'?' • Admin':''}</b>${p.is_active===false?` <span style="color:var(--bad);font-size:13px">• ${esc(t('blocked'))}</span>`:''}${em[p.id]?`<small class="muted" style="display:block">${esc(uname(em[p.id]))}</small>`:''}
    <small>${a?`✅ ${esc(fmtDT(a.check_in_at))} • <a href="https://maps.google.com/?q=${esc(a.latitude)},${esc(a.longitude)}" target="_blank" rel="noopener">📍 ${esc(t('map'))}</a>`:(p.role==='admin'?'':'❌ '+esc(t('notCheckedIn')))}</small><br>
    <small>${esc(t('metToday'))}: <b>${s.today}</b> • ${esc(t('hot'))}: ${s.hot} • ${esc(t('booked'))}: ${s.booked} • ${esc(t('totalCust'))}: ${s.total}</small></div>
    <div style="display:grid;gap:6px"><button class="btn ghost" style="padding:6px 10px;min-height:38px" data-rn="${esc(p.id)}">${esc(t('rename'))}</button>
@@ -435,18 +439,20 @@ function addUserForm(){
   const box=$('addUserBox');if(box.innerHTML){box.innerHTML='';return}
   box.innerHTML=`<form class="card" id="auf" autocomplete="off" style="margin-bottom:12px">
    <label>${esc(t('name'))}</label><input id="auName" required>
-   <label>${esc(t('email'))}</label><input id="auEmail" type="email" inputmode="email" autocapitalize="none" placeholder="gv03@greenvalley.in" required>
+   <label>${esc(t('username'))}</label><input id="auEmail" type="text" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="gv12" required>
    <label>${esc(t('password'))}</label><input id="auPw" type="text" autocomplete="new-password" required>
    <label>${esc(t('roleL'))}</label><select id="auRole"><option value="employee">${esc(t('empR'))}</option><option value="admin">${esc(t('adminR'))}</option></select>
    <p id="auErr" style="color:var(--bad);font-size:14px"></p><button class="btn full" id="auBtn">${esc(t('createUser'))}</button></form>`;
   $('auName').focus();
-  $('auf').addEventListener('submit',async e=>{e.preventDefault();const pw=$('auPw').value.trim(),em=$('auEmail').value.trim();
+  $('auf').addEventListener('submit',async e=>{e.preventDefault();const pw=$('auPw').value.trim(),raw=$('auEmail').value.trim().toLowerCase();
+    if(!/^[a-z0-9._-]{2,30}$/.test(raw)){$('auErr').textContent=t('badUser');return}
+    const em=toEmail(raw);
     if(pw.length<6){$('auErr').textContent=t('pwShort');return}
     $('auBtn').disabled=true;
     const r=await sb.rpc('admin_create_user',{p_email:em,p_password:pw,p_full_name:$('auName').value.trim(),p_role:$('auRole').value});
     $('auBtn').disabled=false;
     if(r.error){$('auErr').textContent=t('err')+(r.error.message||r.error);return}
-    await pTeam();$('addUserBox').innerHTML=`<div class="card" style="margin-bottom:12px;color:var(--ok)"><b>${esc(t('userMade'))}</b><br>${esc(em)} • ${esc(pw)}</div>`});
+    await pTeam();$('addUserBox').innerHTML=`<div class="card" style="margin-bottom:12px;color:var(--ok)"><b>${esc(t('userMade'))}</b><br>${esc(t('username'))}: ${esc(raw)} • ${esc(t('password'))}: ${esc(pw)}</div>`});
 }
 
 /* ---------- Files ---------- */
