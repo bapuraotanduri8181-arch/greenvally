@@ -1,494 +1,1322 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="te">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#F0F8F1">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Green Valley CRM">
-<title>Green Valley CRM</title>
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Noto+Sans+Telugu:wght@500;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#F0F8F1;--card:#FFFFFF;--maroon:#1E5A34;--maroon2:#15291C;--gold:#A9DDB6;--ink:#15291C;--muted:#4C6855;--line:#CDE5D3;--ok:#1E5A34;--warn:#7A5200;--bad:#A8261C;--soft:#E2F2E6;--btn:#A9DDB6;--btnp:#93D2A4}
-*{box-sizing:border-box;min-width:0}
-html,body{margin:0;background:var(--bg);color:var(--ink);font:600 16px/1.5 Inter,"Noto Sans Telugu",system-ui,sans-serif}
-button,input,select,textarea{font:inherit}
-.hidden{display:none!important}
-header{position:sticky;top:0;z-index:20;background:var(--card);color:var(--maroon);border-bottom:3px solid var(--btn);padding:12px 16px;padding-top:max(12px,env(safe-area-inset-top));display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px #1e5a3414}
-header .brand{flex:1;line-height:1.15}
-header .brand b{font-size:18px;display:block}
-header .brand small{opacity:.85;font-size:12px}
-.hbtn{background:var(--soft);color:var(--maroon);border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-height:40px;cursor:pointer}
-main{max-width:860px;margin:0 auto;padding:16px 14px 110px}
-nav.tabs{position:fixed;bottom:0;left:0;right:0;z-index:20;background:var(--card);border-top:2px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom)}
-nav.tabs button{flex:1;background:none;border:0;padding:8px 2px 10px;color:var(--muted);font-size:12px;cursor:pointer;min-height:58px;display:flex;flex-direction:column;align-items:center;gap:2px}
-nav.tabs button svg{width:24px;height:24px}
-nav.tabs button.on{color:var(--maroon);font-weight:600}
-h2{font-size:22px;margin:4px 0 12px;color:var(--maroon2)}
-h3{font-size:17px;margin:18px 0 8px;color:var(--maroon2)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 1px 3px #7a1f2b14}
-.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px}
-.stat{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--maroon);border-radius:14px;padding:12px}
-.stat b{font-size:28px;color:var(--maroon);display:block;line-height:1.1}
-.stat span{font-size:13px;color:var(--muted)}
-label{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
-input,select,textarea{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:12px;background:#fff;font-size:16px;color:var(--ink)}
-input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);border-color:var(--gold)}
-.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--btn);color:var(--maroon2);border:0;border-radius:12px;padding:12px 18px;min-height:48px;font-weight:600;cursor:pointer;text-decoration:none}
-.btn:active{transform:scale(.98);background:var(--btnp)}
-.btn.full{width:100%}
-.btn.ghost{background:#fff;color:var(--maroon);border:1.5px solid var(--maroon)}
-.btn.wa{background:#25A35A;color:#fff}
-.btn.gold{background:var(--soft);color:var(--maroon);border:1.5px solid var(--btn)}
-.btn:disabled{opacity:.55}
-.list .item{display:flex;gap:12px;align-items:center;padding:12px;border-bottom:1px solid var(--line);cursor:pointer}
-.list .item:last-child{border-bottom:0}
-.avatar{width:44px;height:44px;border-radius:50%;background:var(--soft);color:var(--maroon);border:2px solid var(--btn);display:grid;place-items:center;font-weight:700;flex:none}
-.item .main{flex:1}
-.item .main b{display:block}
-.item .main small{color:var(--muted)}
-.pill{display:inline-block;font-size:12px;padding:3px 9px;border-radius:99px;background:var(--soft);color:var(--maroon2);white-space:nowrap}
-.pill.hot{background:#fde0dc;color:var(--bad)}.pill.warm{background:#fff0cc;color:var(--warn)}.pill.cold{background:#e3eef9;color:#1d4f8a}
-.pill.ok{background:var(--soft);color:var(--ok)}
-.search{display:flex;gap:8px;margin-bottom:10px}
-.toast{position:fixed;left:50%;bottom:86px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;z-index:60;max-width:90vw;text-align:center}
-.sheet{position:fixed;inset:0;background:#0006;z-index:40;display:flex;align-items:flex-end;justify-content:center}
-.sheet .panel{background:var(--bg);width:100%;max-width:720px;max-height:92vh;overflow:auto;border-radius:20px 20px 0 0;padding:18px 16px calc(24px + env(safe-area-inset-bottom))}
-.sheet .top{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.x{background:none;border:0;font-size:28px;line-height:1;color:var(--maroon);cursor:pointer;min-width:44px;min-height:44px}
-dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;margin:8px 0}
-dt{color:var(--muted);font-size:13px}dd{margin:0;font-weight:500;overflow-wrap:anywhere}
-.btns{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-top:10px}
-.login{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(160deg,var(--soft) 0 38%,var(--bg) 38%)}
-.login .card{width:100%;max-width:400px;padding:26px}
-.logo{width:70px;height:70px;border-radius:18px;background:var(--btn);display:grid;place-items:center;margin:0 auto 10px}
-.center{text-align:center}
-.muted{color:var(--muted);font-size:14px}
-.selfie{width:100%;max-width:260px;border-radius:14px;display:block;margin:10px auto;border:3px solid var(--gold)}
-.thumb{width:56px;height:56px;border-radius:10px;object-fit:cover;flex:none;background:#eee}
-.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-.gallery a{display:block;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;color:var(--ink);text-decoration:none;font-size:13px}
-.gallery img{width:100%;height:120px;object-fit:cover;display:block}
-.gallery .pdf{height:120px;display:grid;place-items:center;background:var(--soft);color:var(--maroon);font-weight:700;font-size:22px}
-.gallery span{display:block;padding:6px 8px}
-.empty{text-align:center;color:var(--muted);padding:24px 10px}
-.seg{display:flex;gap:6px;overflow-x:auto;margin-bottom:10px}
-.seg button{border:1.5px solid var(--line);background:#fff;color:var(--maroon);border-radius:99px;padding:6px 14px;white-space:nowrap;cursor:pointer;min-height:38px}
-.seg button.on{background:var(--btn);color:var(--maroon2);border-color:var(--btn)}
-@media(max-width:420px){.row{grid-template-columns:minmax(0,1fr)}}
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="robots" content="noindex">
 </head>
 <body>
+<title>Green Valley CRM</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Noto+Sans+Telugu:wght@500;600;700;800&display=swap">
+<style>
+/* Layout: one mobile-first column for field officers; wider two-column grid for the admin on a laptop.
+   Plain, cool, very light green. Text is bold everywhere. */
+:root {
+  --bg: #F0F8F1;          /* very light green page */
+  --surface: #FFFFFF;
+  --soft: #E2F2E6;        /* light green fill */
+  --softer: #F6FBF7;
+  --line: #CDE5D3;
+  --accent: #A9DDB6;      /* light green buttons */
+  --accent-press: #93D2A4;
+  --accent-ink: #1E5A34;  /* dark green for links / focus */
+  --ink: #15291C;
+  --muted: #4C6855;
+  --danger: #A8261C; --danger-soft: #FBE7E4;
+  --warn: #7A5200;   --warn-soft: #FFF2D2;
+  --star: #D99A00;
+  --font: "Inter", "Noto Sans Telugu", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --r: 14px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--bg); color: var(--ink); }
+body { font-family: var(--font); font-weight: 600; font-size: 16px; line-height: 1.45; -webkit-tap-highlight-color: transparent; }
+h1, h2, h3 { font-weight: 800; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+h1 { font-size: 1.45rem; } h2 { font-size: 1.15rem; } h3 { font-size: 1rem; }
+p { margin: 0; }
+a { color: var(--accent-ink); }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--accent-ink); outline-offset: 2px; }
+.num { font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+.small { font-size: .85rem; }
 
-<!-- LOGIN -->
-<section id="loginView" class="login hidden">
-  <div class="card">
-    <div class="logo"><svg width="40" height="40" viewBox="0 0 40 40"><path d="M20 4 34 16v18H6V16z" fill="#FFFFFF"/><path d="M15 34V23h10v11" fill="#1E5A34"/></svg></div>
-    <h2 class="center" style="margin-bottom:0">Green Valley</h2>
-    <p class="center muted" style="margin-top:2px" data-t="tagline"></p>
-    <form id="loginForm">
-      <label data-t="username"></label>
-      <input id="lEmail" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="gv05" required>
-      <label data-t="password"></label>
-      <div style="position:relative"><input id="lPass" type="password" autocomplete="current-password" required style="padding-right:56px"><button type="button" id="eye" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;font-size:20px;min-width:44px;min-height:44px;cursor:pointer" aria-label="Show password">👁</button></div>
-      <button class="btn full" style="margin-top:16px" id="lBtn" data-t="login"></button>
-      <p id="lErr" class="center" style="color:var(--bad);font-size:14px"></p>
-    </form>
-    <p class="center"><button class="hbtn" onclick="toggleLang()">తెలుగు / English</button></p>
-  </div>
-</section>
+/* shell */
+.topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--surface); border-bottom: 1px solid var(--line); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--surface); }
+.topbar-in, .wrap { width: 100%; max-width: 640px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+body.admin .topbar-in, body.admin .wrap { max-width: 1080px; }
+.topbar-in { display: flex; align-items: center; gap: 10px; padding-block: 10px; }
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
+.logo { width: 36px; height: 36px; border-radius: 10px; background: var(--soft); display: grid; place-items: center; flex: none; }
+.brand-t { min-width: 0; }
+.brand-t b { display: block; font-weight: 800; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.brand-t span { display: block; font-size: .78rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lang { display: flex; border: 1.5px solid var(--line); border-radius: 999px; overflow: hidden; flex: none; }
+.lang button { border: 0; background: transparent; padding: 6px 10px; font-weight: 800; font-size: .85rem; cursor: pointer; }
+.lang button[aria-pressed="true"] { background: var(--accent); }
+.iconbtn { border: 1.5px solid var(--line); background: var(--surface); border-radius: 10px; width: 38px; height: 38px; display: grid; place-items: center; cursor: pointer; flex: none; }
+.wrap { padding-block: 16px 110px; display: grid; gap: 14px; }
+.demo-bar { background: var(--warn-soft); color: var(--warn); font-size: .82rem; text-align: center; padding: 6px 16px; font-weight: 700; }
 
-<!-- APP -->
-<section id="appView" class="hidden">
-  <header>
-    <div class="brand"><b>Green Valley CRM</b><small id="who"></small></div>
-    <button class="hbtn" onclick="toggleLang()">తె/En</button>
-    <button class="hbtn" onclick="myPassword()" aria-label="Change password">🔑</button>
-    <button class="hbtn" onclick="logout()" data-t="logout"></button>
-  </header>
-  <main id="page"></main>
-  <nav class="tabs" id="tabs"></nav>
-</section>
+.bottomnav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--surface); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
+.bottomnav-in { max-width: 640px; margin: 0 auto; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; }
+body.admin .bottomnav-in { max-width: 1080px; }
+.bottomnav a { text-decoration: none; color: var(--muted); display: grid; justify-items: center; gap: 2px; padding: 8px 2px 10px; font-size: .74rem; font-weight: 800; text-align: center; }
+.bottomnav a svg { width: 24px; height: 24px; }
+.bottomnav a[aria-current="page"] { color: var(--ink); }
+.bottomnav a[aria-current="page"] .ni { background: var(--accent); }
+.ni { padding: 3px 16px; border-radius: 999px; display: grid; place-items: center; }
 
-<div id="sheet" class="sheet hidden"><div class="panel" id="sheetPanel"></div></div>
-<div id="toast" class="toast hidden"></div>
+/* blocks */
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; display: grid; gap: 12px; min-width: 0; }
+.card.soft { background: var(--soft); border-color: transparent; }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.row.between { justify-content: space-between; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; display: grid; gap: 2px; text-decoration: none; color: inherit; }
+.tile b { font-size: 1.6rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.tile span { font-size: .82rem; color: var(--muted); }
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
+.btn { appearance: none; border: 0; border-radius: 12px; min-height: 50px; padding: 12px 18px; font-weight: 800; font-size: 1rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; color: var(--ink); background: var(--accent); }
+.btn:active { background: var(--accent-press); }
+.btn.block { width: 100%; }
+.btn.big { min-height: 60px; font-size: 1.08rem; }
+.btn.ghost { background: var(--surface); border: 1.5px solid var(--line); }
+.btn.soft { background: var(--soft); }
+.btn.danger { background: var(--danger-soft); color: var(--danger); }
+.btn.wa { background: #DDF5E3; border: 1.5px solid #B5E3C2; }
+.btn.sm { min-height: 40px; padding: 8px 12px; font-size: .9rem; border-radius: 10px; }
+.btn[disabled] { opacity: .55; cursor: not-allowed; }
+.btn svg { width: 20px; height: 20px; flex: none; }
+
+.chip { display: inline-flex; align-items: center; gap: 4px; border-radius: 999px; padding: 3px 10px; font-size: .78rem; font-weight: 800; background: var(--soft); color: var(--accent-ink); white-space: nowrap; }
+.chip.warn { background: var(--warn-soft); color: var(--warn); }
+.chip.danger { background: var(--danger-soft); color: var(--danger); }
+.chip.plain { background: var(--softer); color: var(--muted); border: 1px solid var(--line); }
+.stars { color: var(--star); letter-spacing: 1px; font-size: 1rem; white-space: nowrap; }
+.stars .off { color: #D5DDD7; }
+
+/* forms */
+.field { display: grid; gap: 6px; min-width: 0; }
+.field > label, .field > .lbl, fieldset > legend { font-weight: 800; font-size: .95rem; }
+.req { color: var(--danger); }
+input[type=text], input[type=tel], input[type=password], input[type=date], input[type=url], input[type=search], select, textarea {
+  width: 100%; border: 1.5px solid var(--line); background: var(--surface); border-radius: 12px; padding: 12px 14px; font-weight: 700; min-height: 50px; }
+textarea { min-height: 96px; resize: vertical; }
+input:focus, select:focus, textarea:focus { border-color: var(--accent-ink); outline: none; box-shadow: 0 0 0 3px var(--soft); }
+fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 8px; min-width: 0; }
+.opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.opt { position: relative; }
+.opt input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.opt span { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 14px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--surface); font-weight: 800; font-size: .93rem; }
+.opt input:checked + span { background: var(--accent); border-color: var(--accent-press); }
+.opt input:focus-visible + span { outline: 3px solid var(--accent-ink); outline-offset: 2px; }
+.starpick { display: flex; gap: 6px; flex-wrap: wrap; }
+.starpick .opt span { font-size: 1.3rem; min-width: 52px; justify-content: center; color: #C9D3CC; padding: 6px 10px; }
+.starpick .opt input:checked + span { color: var(--star); background: var(--warn-soft); border-color: #F0D28A; }
+.starpick .opt.lit span { color: var(--star); }
+.hint { font-size: .82rem; color: var(--muted); }
+.section-t { font-size: .8rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.err { background: var(--danger-soft); color: var(--danger); border-radius: 12px; padding: 10px 14px; font-weight: 800; }
+.ok { background: var(--soft); color: var(--accent-ink); border-radius: 12px; padding: 10px 14px; font-weight: 800; }
+.hide { display: none !important; }
+.quick { display: flex; gap: 8px; flex-wrap: wrap; }
+.quick button { border: 1.5px solid var(--line); background: var(--surface); border-radius: 999px; padding: 9px 16px; font-weight: 800; cursor: pointer; min-height: 42px; }
+.quick button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent-press); }
+.chip.pay { background: #DDEBFF; color: #123E7A; }
+.chip.bal { background: var(--warn-soft); color: var(--warn); }
+.paybox { border: 1.5px solid #B9D3F5; background: #F3F8FF; border-radius: var(--r); padding: 12px 14px; display: grid; gap: 8px; }
+.balline { font-size: 1.15rem; font-weight: 800; }
+.emphead { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+.media { display: grid; gap: 10px; }
+.media img { width: 100%; max-height: 320px; object-fit: cover; border-radius: 12px; border: 1px solid var(--line); background: var(--soft); }
+.thumb { width: 64px; height: 64px; border-radius: 10px; object-fit: cover; border: 1px solid var(--line); background: var(--soft); flex: none; }
+audio { width: 100%; }
+.rec-on { background: var(--danger-soft) !important; color: var(--danger) !important; }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--danger); animation: blink 1s infinite; }
+@keyframes blink { 50% { opacity: .2; } }
+@media (prefers-reduced-motion: reduce) { .dot { animation: none; } }
+
+/* lists */
+.list { display: grid; gap: 10px; }
+.item { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; display: grid; gap: 6px; text-decoration: none; color: inherit; min-width: 0; }
+.item:active { background: var(--softer); }
+.item .t { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.item .t b { font-weight: 800; font-size: 1.02rem; min-width: 0; overflow-wrap: anywhere; }
+.item .s { font-size: .85rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.empty { text-align: center; padding: 26px 16px; color: var(--muted); border: 1.5px dashed var(--line); border-radius: var(--r); }
+
+.kv { display: grid; grid-template-columns: minmax(120px, 40%) 1fr; gap: 0; border-top: 1px solid var(--line); }
+.kv > div { padding: 9px 0; border-bottom: 1px solid var(--line); min-width: 0; overflow-wrap: anywhere; }
+.kv > div:nth-child(odd) { color: var(--muted); font-size: .9rem; padding-right: 10px; }
+.kv > div:nth-child(even) { font-weight: 800; }
+
+.bars { display: grid; gap: 8px; }
+.bar { display: grid; grid-template-columns: 120px 1fr 36px; gap: 10px; align-items: center; font-size: .88rem; }
+.bar .track { background: var(--softer); border: 1px solid var(--line); border-radius: 8px; height: 18px; overflow: hidden; }
+.bar .fill { background: var(--accent); height: 100%; border-radius: 0 6px 6px 0; }
+.bar b { text-align: right; font-variant-numeric: tabular-nums; }
+
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: .9rem; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { background: var(--softer); font-weight: 800; color: var(--muted); font-size: .8rem; }
+tr:last-child td { border-bottom: 0; }
+
+.ver { border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: grid; gap: 8px; background: var(--softer); }
+.diff { display: grid; grid-template-columns: minmax(110px, 30%) 1fr 1fr; gap: 6px 10px; font-size: .88rem; }
+.diff .old { color: var(--danger); text-decoration: line-through; overflow-wrap: anywhere; }
+.diff .new { color: var(--accent-ink); font-weight: 800; overflow-wrap: anywhere; }
+
+.login { min-height: 100%; display: grid; place-items: center; padding-block: 32px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.login .card { width: 100%; max-width: 420px; gap: 16px; padding: 22px; }
+.login-head { display: grid; justify-items: center; gap: 6px; text-align: center; }
+.login-head .logo { width: 64px; height: 64px; border-radius: 18px; }
+
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(86px + env(safe-area-inset-bottom, 0px)); z-index: 50; background: var(--ink); color: #fff; padding: 12px 18px; border-radius: 12px; font-weight: 800; max-width: calc(100% - 32px); box-shadow: 0 8px 24px rgba(0,0,0,.15); }
+.confirm { position: fixed; inset: 0; z-index: 60; background: rgba(21,41,28,.35); display: grid; place-items: center; padding: 16px; }
+.confirm .card { max-width: 400px; width: 100%; }
+.loading { padding: 40px; text-align: center; color: var(--muted); }
+.filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+.filters input, .filters select { min-height: 44px; padding: 8px 12px; }
+@media (max-width: 420px) { .bar { grid-template-columns: 92px 1fr 30px; } .diff { grid-template-columns: 1fr; gap: 2px; } .diff .dh { display: none; } .diff .lbl2 { font-weight: 800; margin-top: 8px; } .diff .old::before, .diff .new::before { content: attr(data-pre); color: var(--muted); font-weight: 600; display: inline-block; text-decoration: none; } }
+</style>
+
+<div id="app"><div class="loading">Loading…</div></div>
+
 <script>
-{
-const SUPABASE_URL = 'https://lbyfvmfhsqdzoszvcmgd.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_9U0cfDOgLXJ3sDLOp_Y60A_g4-7CDBm';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-// Usernames: staff type 'gv05'; the app signs in as gv05@greenvalley.app. A full email still works.
-const USER_DOMAIN='greenvalley.app';
-const toEmail=u=>{u=(u||'').trim().toLowerCase();return u.includes('@')?u:u+'@'+USER_DOMAIN};
-const uname=e=>{e=e||'';return e.toLowerCase().endsWith('@'+USER_DOMAIN)?e.split('@')[0]:e};
-
-/* ---------- Language ---------- */
-const T = {
- te:{tagline:'ఓంకార గ్రూప్స్ – ఓపెన్ ప్లాట్స్',email:'ఈమెయిల్',username:'యూజర్ నేమ్',password:'పాస్‌వర్డ్',login:'లాగిన్',logout:'లాగౌట్',
-  home:'హోమ్',customers:'కస్టమర్లు',followups:'ఫాలో-అప్',attendance:'హాజరు',team:'టీమ్',files:'ఫైల్స్',
-  hello:'నమస్కారం',metToday:'ఈరోజు కలిసినవారు',dueToday:'ఈరోజు ఫాలో-అప్',hotLeads:'హాట్ లీడ్స్',totalCust:'మొత్తం కస్టమర్లు',
-  checkedIn:'హాజరు నమోదైంది',notCheckedIn:'ఇంకా హాజరు వేయలేదు',checkInNow:'సెల్ఫీతో హాజరు వేయండి',
-  addCustomer:'+ కొత్త కస్టమర్',name:'పేరు',phone:'ఫోన్ నంబర్',village:'ఊరు',profession:'వృత్తి',fin:'ఆర్థిక స్థితి',
-  interest:'ఆసక్తి',level:'ఆసక్తి స్థాయి',visitDate:'సైట్ విజిట్ తేదీ',notes:'నోట్స్',save:'సేవ్ చేయండి',status:'స్థితి',
-  low:'తక్కువ',middle:'మధ్యస్థ',good:'బాగుంది',high:'ఎక్కువ',plot:'ప్లాట్',flat:'ఫ్లాట్',both:'రెండూ',not_interested:'ఆసక్తి లేదు',undecided:'ఇంకా తేల్చలేదు',
-  hot:'హాట్',warm:'వార్మ్',cold:'కోల్డ్',new:'కొత్త',follow_up:'ఫాలో-అప్',site_visit_scheduled:'విజిట్ ఫిక్స్',site_visited:'విజిట్ అయింది',booked:'బుక్ అయింది',lost:'పోయింది',
-  search:'పేరు / ఊరు / ఫోన్ వెతకండి',all:'అన్నీ',waVisit:'సైట్ విజిట్ ఆహ్వానం',waResched:'విజిట్ మార్పు',waFollow:'ఫాలో-అప్ మెసేజ్',
-  when:'తేదీ & సమయం',nextFollow:'తర్వాత ఫాలో-అప్ తేదీ',setReminder:'రిమైండర్ పెట్టండి',done:'పూర్తయింది',noData:'ఇంకా ఏమీ లేదు',
-  takeSelfie:'సెల్ఫీ తీయండి',gettingLoc:'లొకేషన్ తీసుకుంటోంది…',locNeeded:'లొకేషన్ అనుమతి ఇవ్వండి – హాజరుకు తప్పనిసరి',
-  saved:'సేవ్ అయింది ✓',err:'సమస్య వచ్చింది: ',owner:'ఉద్యోగి',met:'కలిసిన తేదీ',map:'మ్యాప్',upload:'అప్‌లోడ్',
-  plot_photo:'ప్లాట్ ఫోటోలు',progress_photo:'డెవలప్‌మెంట్ ఫోటోలు',document:'PDF / డాక్యుమెంట్లు',title:'పేరు / వివరణ',plotNo:'ప్లాట్ నంబర్',
-  rename:'పేరు మార్చు',addUser:'+ కొత్త యూజర్ యాడ్ చేయండి',makeAdmin:'అడ్మిన్ చేయండి',makeEmp:'ఉద్యోగిగా మార్చండి',block:'బ్లాక్',unblock:'అన్‌బ్లాక్',blocked:'బ్లాక్ అయింది',roleL:'పాత్ర',adminR:'అడ్మిన్ (అన్నీ చూస్తారు)',empR:'ఉద్యోగి (తన డేటా మాత్రమే)',createUser:'యూజర్ క్రియేట్ చేయండి',userMade:'యూజర్ క్రియేట్ అయింది ✓ యూజర్ నేమ్, పాస్‌వర్డ్ ఉద్యోగికి ఇవ్వండి',badUser:'యూజర్ నేమ్‌లో చిన్న ఇంగ్లీష్ అక్షరాలు, అంకెలు మాత్రమే (ఉదా: gv12)',cfAdmin:'ని అడ్మిన్ చేయాలా? వాళ్ళు అందరి డేటా చూస్తారు.',cfEmp:'ని ఉద్యోగిగా మార్చాలా?',cfBlock:'ని బ్లాక్ చేయాలా? వాళ్ళు లాగిన్ అవ్వలేరు, డేటా అలాగే ఉంటుంది.',cfUnblock:'ని మళ్ళీ యాక్టివ్ చేయాలా?',changePw:'పాస్‌వర్డ్ మార్చు',newPw:'కొత్త పాస్‌వర్డ్',confirmPw:'మళ్ళీ టైప్ చేయండి',pwMismatch:'రెండు పాస్‌వర్డ్‌లు ఒకటి కాదు',pwShort:'కనీసం 6 అక్షరాలు ఉండాలి',pwFor:'పాస్‌వర్డ్ సెట్ చేయండి: ',today:'ఈరోజు',overdue:'ఆలస్యం',wrongLogin:'ఈమెయిల్ లేదా పాస్‌వర్డ్ తప్పు',chooseFile:'ఫైల్ ఎంచుకోండి',edit:'మార్చు',
-  msgVisit:(c,d,e)=>`నమస్కారం ${c} గారు 🙏\nGreen Valley ఓపెన్ ప్లాట్స్ (గోలేట్, ఆసిఫాబాద్) సైట్ విజిట్ ${d} న ఏర్పాటు చేశాం. దయచేసి రండి.\n– ${e}, ఓంకార గ్రూప్స్`,
-  msgResched:(c,d,e)=>`నమస్కారం ${c} గారు 🙏\nమీ Green Valley సైట్ విజిట్ ను ${d} కి మార్చాం. మీకు అనుకూలమేనా?\n– ${e}, ఓంకార గ్రూప్స్`,
-  msgFollow:(c,e)=>`నమస్కారం ${c} గారు 🙏\nGreen Valley ఓపెన్ ప్లాట్స్ గురించి మీకు ఇంకా ఏమైనా వివరాలు కావాలా? ప్లాట్లు వేగంగా బుక్ అవుతున్నాయి.\n– ${e}, ఓంకార గ్రూప్స్`},
- en:{tagline:'Omkara Groups – Open Plots',email:'Email',username:'Username',password:'Password',login:'Login',logout:'Logout',
-  home:'Home',customers:'Customers',followups:'Follow-ups',attendance:'Attendance',team:'Team',files:'Files',
-  hello:'Hello',metToday:'Met today',dueToday:'Follow-ups today',hotLeads:'Hot leads',totalCust:'Total customers',
-  checkedIn:'Checked in',notCheckedIn:'Not checked in yet',checkInNow:'Check in with selfie',
-  addCustomer:'+ New customer',name:'Name',phone:'Phone number',village:'Village',profession:'Profession',fin:'Financial status',
-  interest:'Interest',level:'Interest level',visitDate:'Site visit date',notes:'Notes',save:'Save',status:'Status',
-  low:'Low',middle:'Middle',good:'Good',high:'High',plot:'Plot',flat:'Flat',both:'Both',not_interested:'Not interested',undecided:'Undecided',
-  hot:'Hot',warm:'Warm',cold:'Cold',new:'New',follow_up:'Follow-up',site_visit_scheduled:'Visit fixed',site_visited:'Visited',booked:'Booked',lost:'Lost',
-  search:'Search name / village / phone',all:'All',waVisit:'Site visit invite',waResched:'Reschedule visit',waFollow:'Follow-up message',
-  when:'Date & time',nextFollow:'Next follow-up date',setReminder:'Set reminder',done:'Done',noData:'Nothing yet',
-  takeSelfie:'Take selfie',gettingLoc:'Getting location…',locNeeded:'Allow location – required for attendance',
-  saved:'Saved ✓',err:'Problem: ',owner:'Employee',met:'Met on',map:'Map',upload:'Upload',
-  plot_photo:'Plot photos',progress_photo:'Development photos',document:'PDFs / documents',title:'Title',plotNo:'Plot number',
-  rename:'Rename',addUser:'+ Add new user',makeAdmin:'Make admin',makeEmp:'Make employee',block:'Block',unblock:'Unblock',blocked:'Blocked',roleL:'Role',adminR:'Admin (sees everything)',empR:'Employee (own data only)',createUser:'Create user',userMade:'User created ✓ Give the username and password to the employee',badUser:'Username: only small English letters and numbers (e.g. gv12)',cfAdmin:' – make admin? They will see all data.',cfEmp:' – change to employee?',cfBlock:' – block? They cannot log in; their data stays.',cfUnblock:' – make active again?',changePw:'Change password',newPw:'New password',confirmPw:'Type again',pwMismatch:'Passwords do not match',pwShort:'At least 6 characters',pwFor:'Set password for: ',today:'Today',overdue:'Overdue',wrongLogin:'Wrong email or password',chooseFile:'Choose file',edit:'Edit',
-  msgVisit:(c,d,e)=>`Namaskaram ${c} garu 🙏\nYour site visit to Green Valley open plots (Golet, Asifabad) is fixed for ${d}. Looking forward to seeing you.\n– ${e}, Omkara Groups`,
-  msgResched:(c,d,e)=>`Namaskaram ${c} garu 🙏\nWe have moved your Green Valley site visit to ${d}. Is that convenient for you?\n– ${e}, Omkara Groups`,
-  msgFollow:(c,e)=>`Namaskaram ${c} garu 🙏\nDo you need any more details about Green Valley open plots? Plots are getting booked fast.\n– ${e}, Omkara Groups`}
+/* ============ CONFIG – Supabase project "Greenvally" ============ */
+window.GV_CONFIG = window.GV_CONFIG || {
+  SUPABASE_URL: "https://lbyfvmfhsqdzoszvcmgd.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_9U0cfDOgLXJ3sDLOp_Y60A_g4-7CDBm"
 };
-let lang='te'; try{lang=localStorage.getItem('gv_lang')||'te'}catch(e){}
-const t=k=>T[lang][k]??k;
-function applyStatic(){document.querySelectorAll('[data-t]').forEach(el=>el.textContent=t(el.dataset.t))}
-window.toggleLang=()=>{lang=lang==='te'?'en':'te';try{localStorage.setItem('gv_lang',lang)}catch(e){}applyStatic();if(me){renderTabs();go(cur)}};
-
-/* ---------- Helpers ---------- */
-const $=id=>document.getElementById(id);
-const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const todayStr=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
-const startOfDay=()=>{const d=new Date();d.setHours(0,0,0,0);return d.toISOString()};
-const endOfDay=()=>{const d=new Date();d.setHours(23,59,59,999);return d.toISOString()};
-const fmtDT=s=>s?new Date(s).toLocaleString(lang==='te'?'te-IN':'en-IN',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}):'';
-const fmtD=s=>s?new Date(s+(s.length===10?'T00:00':'')).toLocaleDateString(lang==='te'?'te-IN':'en-IN',{day:'numeric',month:'short',year:'numeric'}):'';
-function toast(msg){const el=$('toast');el.textContent=msg;el.classList.remove('hidden');clearTimeout(toast._t);toast._t=setTimeout(()=>el.classList.add('hidden'),2800)}
-const fail=e=>{console.error(e);toast(t('err')+(e?.message||e))};
-const initials=n=>esc((n||'?').trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase());
-function waLink(phone,msg){let p=String(phone||'').replace(/\D/g,'');if(p.length===10)p='91'+p;if(p.length===11&&p[0]==='0')p='91'+p.slice(1);return 'https://wa.me/'+p+'?text='+encodeURIComponent(msg)}
-function openSheet(html){$('sheetPanel').innerHTML=html;$('sheet').classList.remove('hidden')}
-window.closeSheet=()=>$('sheet').classList.add('hidden');
-$('sheet').addEventListener('click',e=>{if(e.target.id==='sheet')closeSheet()});
-const opt=(list,sel)=>list.map(v=>`<option value="${v}" ${v===sel?'selected':''}>${esc(t(v))}</option>`).join('');
-async function shrinkImage(file,max=1280,q=.78){
-  const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=URL.createObjectURL(file)});
-  const s=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement('canvas');
-  c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-  return await new Promise(r=>c.toBlob(r,'image/jpeg',q));
-}
-const icons={home:'<path d="M3 11 12 3l9 8v10h-6v-6H9v6H3z"/>',customers:'<circle cx="9" cy="8" r="4"/><path d="M1 21c0-4 4-7 8-7s8 3 8 7z"/><circle cx="18" cy="7" r="3"/>',
- followups:'<path d="M12 2a10 10 0 1 0 .01 0zM11 6h2v6l4 2-1 2-5-3z"/>',attendance:'<path d="M9 3h6l2 3h4v14H3V6h4zM12 9a4 4 0 1 0 .01 0z"/>',
- team:'<path d="M4 4h16v4H4zM4 10h16v4H4zM4 16h16v4H4z"/>',files:'<path d="M3 5h7l2 2h9v12H3z"/>'};
-
-/* ---------- Auth ---------- */
-let me=null,cur='home';
-async function boot(){
-  applyStatic();
-  const {data:{session}}=await sb.auth.getSession();
-  if(!session){$('loginView').classList.remove('hidden');$('appView').classList.add('hidden');return}
-  const {data,error}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
-  if(error||!data){fail(error||'profile missing');return}
-  if(!data.is_active){await sb.auth.signOut();$('lErr').textContent='Account disabled';$('loginView').classList.remove('hidden');return}
-  me=data;me.email=session.user.email;me.username=uname(me.email);me.isAdmin=data.role==='admin';
-  $('who').textContent=(me.full_name||me.username)+(me.isAdmin?' • Admin':'');
-  $('loginView').classList.add('hidden');$('appView').classList.remove('hidden');
-  renderTabs();go('home');
-}
-$('eye').onclick=()=>{const p=$('lPass');p.type=p.type==='password'?'text':'password'};
-$('loginForm').addEventListener('submit',async e=>{
-  e.preventDefault();$('lErr').textContent='';$('lBtn').disabled=true;
-  const {error}=await sb.auth.signInWithPassword({email:toEmail($('lEmail').value),password:$('lPass').value});
-  $('lBtn').disabled=false;if(error){const m=(error.message||'')+(error.status?' ('+error.status+')':'');$('lErr').textContent=(/invalid login credentials/i.test(m)?t('wrongLogin'):'')+' — '+m;return}boot();
-});
-window.logout=async()=>{await sb.auth.signOut();me=null;location.reload()};
-
-/* ---------- Navigation ---------- */
-function tabList(){return me.isAdmin?['home','customers','followups','team','files']:['home','customers','followups','attendance','files']}
-function renderTabs(){$('tabs').innerHTML=tabList().map(k=>`<button data-k="${k}" class="${k===cur?'on':''}"><svg viewBox="0 0 24 24" fill="currentColor">${icons[k]}</svg>${esc(t(k))}</button>`).join('')}
-$('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)go(b.dataset.k)});
-window.go=k=>{cur=k;renderTabs();window.scrollTo(0,0);({home:pHome,customers:pCustomers,followups:pFollowups,attendance:pAttendance,team:pTeam,files:pFiles})[k]().catch(fail)};
-const own=q=>me.isAdmin?q:q.eq('owner_id',me.id);
-
-/* ---------- Home ---------- */
-async function pHome(){
-  const page=$('page');page.innerHTML=`<p class="muted">…</p>`;
-  const [met,due,hot,tot,att]=await Promise.all([
-    own(sb.from('customers').select('id',{count:'exact',head:true})).eq('met_on',todayStr()),
-    own(sb.from('follow_ups').select('id',{count:'exact',head:true})).eq('status','pending').lte('scheduled_at',endOfDay()),
-    own(sb.from('customers').select('id',{count:'exact',head:true})).eq('interest_level','hot').not('status','in','(booked,lost)'),
-    own(sb.from('customers').select('id',{count:'exact',head:true})),
-    sb.from('attendance').select('check_in_at').eq('user_id',me.id).gte('check_in_at',startOfDay()).order('check_in_at').limit(1)
-  ]);
-  const a=att.data?.[0];
-  page.innerHTML=`<h2>${esc(t('hello'))}, ${esc(me.full_name||'')} 🙏</h2>
-  ${me.isAdmin?'':`<div class="card" style="display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap">
-    <div><b>${esc(t('attendance'))}</b><br>${a?`<span class="pill ok">${esc(t('checkedIn'))} • ${esc(fmtDT(a.check_in_at))}</span>`:`<span class="pill hot">${esc(t('notCheckedIn'))}</span>`}</div>
-    ${a?'':`<button class="btn" onclick="go('attendance')">${esc(t('checkInNow'))}</button>`}</div>`}
-  <div class="stats">
-    <div class="stat"><b>${met.count??0}</b><span>${esc(t('metToday'))}</span></div>
-    <div class="stat"><b>${due.count??0}</b><span>${esc(t('dueToday'))}</span></div>
-    <div class="stat"><b>${hot.count??0}</b><span>${esc(t('hotLeads'))}</span></div>
-    <div class="stat"><b>${tot.count??0}</b><span>${esc(t('totalCust'))}</span></div>
-  </div>
-  <button class="btn full" onclick="customerForm()">${esc(t('addCustomer'))}</button>
-  ${me.isAdmin?`<button class="btn ghost full" style="margin-top:8px" onclick="go('team')">${esc(t('team'))} →</button>`:''}`;
-}
-
-/* ---------- Customers ---------- */
-let custCache=[],custFilter='all',profilesMap={};
-async function loadProfiles(){if(!me.isAdmin)return;const {data}=await sb.from('profiles').select('id,full_name,role,is_active').order('full_name');profilesMap={};(data||[]).forEach(p=>profilesMap[p.id]=p);return data||[]}
-async function pCustomers(){
-  const page=$('page');page.innerHTML=`<p class="muted">…</p>`;
-  await loadProfiles();
-  const {data,error}=await own(sb.from('customers').select('*')).order('created_at',{ascending:false}).limit(1000);
-  if(error)throw error;custCache=data||[];
-  page.innerHTML=`<h2>${esc(t('customers'))} (${custCache.length})</h2>
-  <button class="btn full" style="margin-bottom:10px" onclick="customerForm()">${esc(t('addCustomer'))}</button>
-  <div class="search"><input id="cq" placeholder="${esc(t('search'))}"></div>
-  <div class="seg" id="cseg">${['all','hot','warm','cold','site_visit_scheduled','booked'].map(k=>`<button data-k="${k}" class="${k===custFilter?'on':''}">${esc(t(k))}</button>`).join('')}</div>
-  <div class="card list" id="clist" style="padding:4px"></div>`;
-  $('cq').addEventListener('input',drawCust);
-  $('cseg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;custFilter=b.dataset.k;[...$('cseg').children].forEach(x=>x.classList.toggle('on',x===b));drawCust()});
-  drawCust();
-}
-function drawCust(){
-  const q=($('cq')?.value||'').toLowerCase();
-  const rows=custCache.filter(c=>(custFilter==='all'||c.interest_level===custFilter||c.status===custFilter)&&(!q||[c.name,c.village,c.phone,c.profession].join(' ').toLowerCase().includes(q)));
-  $('clist').innerHTML=rows.length?rows.map(c=>`<div class="item" data-id="${esc(c.id)}"><div class="avatar">${initials(c.name)}</div>
-   <div class="main"><b>${esc(c.name)}</b><small>${esc(c.village||'')} • ${esc(c.phone)}${me.isAdmin&&profilesMap[c.owner_id]?' • '+esc(profilesMap[c.owner_id].full_name):''}</small></div>
-   <div style="text-align:right">${c.interest_level?`<span class="pill ${esc(c.interest_level)}">${esc(t(c.interest_level))}</span><br>`:''}<small class="muted">${esc(t(c.status))}</small></div></div>`).join(''):`<div class="empty">${esc(t('noData'))}</div>`;
-  $('clist').onclick=e=>{const it=e.target.closest('.item');if(it)customerView(it.dataset.id)};
-}
-window.customerForm=(id)=>{
-  const c=custCache.find(x=>x.id===id)||{};
-  openSheet(`<div class="top"><h2>${esc(id?t('edit'):t('addCustomer'))}</h2><button class="x" onclick="closeSheet()">×</button></div>
-  <form id="cf">
-   <label>${esc(t('name'))} *</label><input name="name" required value="${esc(c.name)}">
-   <div class="row"><div><label>${esc(t('phone'))} *</label><input name="phone" type="tel" inputmode="numeric" required value="${esc(c.phone)}"></div>
-   <div><label>${esc(t('village'))}</label><input name="village" value="${esc(c.village)}"></div></div>
-   <div class="row"><div><label>${esc(t('profession'))}</label><input name="profession" value="${esc(c.profession)}"></div>
-   <div><label>${esc(t('fin'))}</label><select name="financial_status"><option value=""></option>${opt(['low','middle','good','high'],c.financial_status)}</select></div></div>
-   <div class="row"><div><label>${esc(t('interest'))}</label><select name="interest"><option value=""></option>${opt(['plot','flat','both','undecided','not_interested'],c.interest)}</select></div>
-   <div><label>${esc(t('level'))}</label><select name="interest_level"><option value=""></option>${opt(['hot','warm','cold'],c.interest_level)}</select></div></div>
-   <div class="row"><div><label>${esc(t('visitDate'))}</label><input name="site_visit_date" type="date" value="${esc(c.site_visit_date)}"></div>
-   <div><label>${esc(t('status'))}</label><select name="status">${opt(['new','follow_up','site_visit_scheduled','site_visited','booked','lost'],c.status||'new')}</select></div></div>
-   <label>${esc(t('notes'))}</label><textarea name="notes" rows="3">${esc(c.notes)}</textarea>
-   <button class="btn full" style="margin-top:14px">${esc(t('save'))}</button>
-  </form>`);
-  $('cf').addEventListener('submit',async e=>{
-    e.preventDefault();const f=Object.fromEntries(new FormData(e.target));
-    for(const k in f)if(f[k]==='')f[k]=null;
-    if(f.site_visit_date&&(!id||!c.site_visit_date)&&f.status==='new')f.status='site_visit_scheduled';
-    const r=id?await sb.from('customers').update(f).eq('id',id).select().single():await sb.from('customers').insert(f).select().single();
-    if(r.error)return fail(r.error);
-    toast(t('saved'));closeSheet();if(cur==='customers')pCustomers();else go(cur);
-  });
-};
-window.customerView=async id=>{
-  const c=custCache.find(x=>x.id===id)||(await sb.from('customers').select('*').eq('id',id).single()).data;if(!c)return;
-  if(!custCache.find(x=>x.id===id))custCache.push(c);
-  const {data:fu}=await sb.from('follow_ups').select('*').eq('customer_id',id).order('created_at',{ascending:false}).limit(20);
-  const d=(k,v)=>v?`<dt>${esc(t(k))}</dt><dd>${esc(v)}</dd>`:'';
-  openSheet(`<div class="top"><h2>${esc(c.name)}</h2><button class="x" onclick="closeSheet()">×</button></div>
-  <div class="card"><dl>${d('phone',c.phone)}${d('village',c.village)}${d('profession',c.profession)}${d('fin',c.financial_status&&t(c.financial_status))}
-   ${d('interest',c.interest&&t(c.interest))}${d('level',c.interest_level&&t(c.interest_level))}${d('visitDate',fmtD(c.site_visit_date))}${d('status',t(c.status))}
-   ${d('met',fmtD(c.met_on))}${me.isAdmin&&profilesMap[c.owner_id]?d('owner',profilesMap[c.owner_id].full_name):''}${d('notes',c.notes)}</dl>
-   <button class="btn ghost" onclick="customerForm('${esc(c.id)}')">✎ ${esc(t('edit'))}</button></div>
-  <h3>WhatsApp</h3>
-  <div class="card"><label>${esc(t('when'))}</label><input id="waWhen" type="datetime-local">
-   <div class="btns"><button class="btn wa" onclick="sendWA('${esc(c.id)}','site_visit')">${esc(t('waVisit'))}</button>
-   <button class="btn wa" onclick="sendWA('${esc(c.id)}','reschedule')">${esc(t('waResched'))}</button></div>
-   <div class="btns"><button class="btn wa" onclick="sendWA('${esc(c.id)}','follow_up')">${esc(t('waFollow'))}</button></div></div>
-  <h3>${esc(t('nextFollow'))}</h3>
-  <div class="card"><input id="nfDate" type="date"><button class="btn gold full" style="margin-top:8px" onclick="setReminder('${esc(c.id)}')">${esc(t('setReminder'))}</button></div>
-  <h3>${esc(t('followups'))}</h3>
-  <div class="card list" style="padding:4px">${(fu||[]).length?fu.map(f=>`<div class="item" style="cursor:default"><div class="main"><b>${esc(t(f.kind==='site_visit'?'waVisit':f.kind==='reschedule'?'waResched':'waFollow'))}</b>
-   <small>${esc(fmtDT(f.scheduled_at||f.created_at))}</small></div><span class="pill ${f.status==='done'?'ok':''}">${esc(f.status==='done'?t('done'):f.status)}</span></div>`).join(''):`<div class="empty">${esc(t('noData'))}</div>`}</div>`);
-};
-window.sendWA=async(id,kind)=>{
-  const c=custCache.find(x=>x.id===id);const when=$('waWhen').value;
-  if(kind!=='follow_up'&&!when){$('waWhen').focus();toast(t('when')+' ?');return}
-  const dTxt=when?fmtDT(new Date(when).toISOString()):'';const emp=me.full_name||'Green Valley';
-  const msg=kind==='site_visit'?T[lang].msgVisit(c.name,dTxt,emp):kind==='reschedule'?T[lang].msgResched(c.name,dTxt,emp):T[lang].msgFollow(c.name,emp);
-  window.open(waLink(c.phone,msg),'_blank');
-  const row={customer_id:id,owner_id:c.owner_id,kind,message:msg,scheduled_at:when?new Date(when).toISOString():new Date().toISOString(),status:kind==='follow_up'?'done':'pending'};
-  const r=await sb.from('follow_ups').insert(row);if(r.error)return fail(r.error);
-  if(kind!=='follow_up'){const upd={site_visit_date:when.slice(0,10),status:'site_visit_scheduled'};await sb.from('customers').update(upd).eq('id',id);Object.assign(c,upd)}
-  else if(c.status==='new'){await sb.from('customers').update({status:'follow_up'}).eq('id',id);c.status='follow_up'}
-  toast(t('saved'));
-};
-window.setReminder=async id=>{
-  const c=custCache.find(x=>x.id===id);const d=$('nfDate').value;if(!d){$('nfDate').focus();return}
-  const r=await sb.from('follow_ups').insert({customer_id:id,owner_id:c.owner_id,kind:'follow_up',scheduled_at:new Date(d+'T10:00').toISOString(),status:'pending'});
-  if(r.error)return fail(r.error);toast(t('saved'));customerView(id);
-};
-
-/* ---------- Follow-ups ---------- */
-async function pFollowups(){
-  const page=$('page');page.innerHTML=`<p class="muted">…</p>`;await loadProfiles();
-  const {data,error}=await own(sb.from('follow_ups').select('*,customers(name,phone,village)')).eq('status','pending').order('scheduled_at').limit(300);
-  if(error)throw error;const now=Date.now(),eod=new Date(endOfDay()).getTime();
-  page.innerHTML=`<h2>${esc(t('followups'))}</h2><div class="card list" style="padding:4px">${(data||[]).length?data.map(f=>{const ts=new Date(f.scheduled_at).getTime();
-   const tag=ts<now-864e5/2&&ts<new Date(startOfDay()).getTime()?`<span class="pill hot">${esc(t('overdue'))}</span>`:ts<=eod?`<span class="pill warm">${esc(t('today'))}</span>`:'';
-   return `<div class="item" data-c="${esc(f.customer_id)}"><div class="avatar">${initials(f.customers?.name)}</div><div class="main"><b>${esc(f.customers?.name)}</b>
-   <small>${esc(t(f.kind==='site_visit'?'waVisit':f.kind==='reschedule'?'waResched':'follow_up'))} • ${esc(fmtDT(f.scheduled_at))}${me.isAdmin&&profilesMap[f.owner_id]?' • '+esc(profilesMap[f.owner_id].full_name):''}</small><br>${tag}</div>
-   <button class="btn ghost" style="padding:8px 12px;min-height:40px" data-done="${esc(f.id)}">✓ ${esc(t('done'))}</button></div>`}).join(''):`<div class="empty">${esc(t('noData'))}</div>`}</div>`;
-  page.querySelector('.list').onclick=async e=>{
-    const b=e.target.closest('[data-done]');
-    if(b){const r=await sb.from('follow_ups').update({status:'done'}).eq('id',b.dataset.done);if(r.error)return fail(r.error);toast(t('saved'));return pFollowups()}
-    const it=e.target.closest('.item');if(it)customerView(it.dataset.c);
-  };
-}
-
-/* ---------- Attendance (employee) ---------- */
-async function pAttendance(){
-  const page=$('page');
-  const {data}=await sb.from('attendance').select('*').eq('user_id',me.id).order('check_in_at',{ascending:false}).limit(15);
-  const today=(data||[]).find(a=>a.check_in_at>=startOfDay());
-  page.innerHTML=`<h2>${esc(t('attendance'))}</h2>
-  <div class="card center">${today?`<p><span class="pill ok">${esc(t('checkedIn'))} • ${esc(fmtDT(today.check_in_at))}</span></p>
-    <p class="muted">📍 ${esc(today.latitude?.toFixed(5))}, ${esc(today.longitude?.toFixed(5))}</p>`:
-   `<p class="muted">${esc(t('notCheckedIn'))}</p>
-    <label class="btn full" style="margin:0">📷 ${esc(t('takeSelfie'))}<input id="selfieIn" type="file" accept="image/*" capture="user" hidden></label>
-    <img id="selfiePrev" class="selfie hidden" alt=""><p id="attMsg" class="muted"></p>`}</div>
-  <h3>${esc(t('attendance'))}</h3><div class="card list" style="padding:4px">${(data||[]).map(a=>`<div class="item" style="cursor:default"><div class="main"><b>${esc(fmtDT(a.check_in_at))}</b>
-   <small>📍 ${esc(a.latitude?.toFixed(4))}, ${esc(a.longitude?.toFixed(4))}</small></div></div>`).join('')||`<div class="empty">${esc(t('noData'))}</div>`}</div>`;
-  const inp=$('selfieIn');if(!inp)return;
-  inp.addEventListener('change',async()=>{
-    const file=inp.files[0];if(!file)return;
-    $('selfiePrev').src=URL.createObjectURL(file);$('selfiePrev').classList.remove('hidden');$('attMsg').textContent=t('gettingLoc');
-    let pos;try{pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{enableHighAccuracy:true,timeout:20000,maximumAge:0}))}
-    catch(e){$('attMsg').textContent=t('locNeeded');return}
-    try{
-      const blob=await shrinkImage(file,900,.75);const path=`${me.id}/${Date.now()}.jpg`;
-      const up=await sb.storage.from('selfies').upload(path,blob,{contentType:'image/jpeg'});if(up.error)throw up.error;
-      const r=await sb.from('attendance').insert({latitude:pos.coords.latitude,longitude:pos.coords.longitude,selfie_path:path});if(r.error)throw r.error;
-      toast(t('saved'));pAttendance();
-    }catch(e){fail(e);$('attMsg').textContent=''}
-  });
-}
-
-/* ---------- Passwords ---------- */
-function pwForm(title,onSave){
-  openSheet(`<div class="top"><h2>${esc(title)}</h2><button class="x" onclick="closeSheet()">×</button></div>
-  <form id="pwf"><label>${esc(t('newPw'))}</label><input id="pw1" type="text" autocomplete="new-password" required>
-  <label>${esc(t('confirmPw'))}</label><input id="pw2" type="text" autocomplete="new-password" required>
-  <p id="pwErr" style="color:var(--bad);font-size:14px"></p><button class="btn full">${esc(t('save'))}</button></form>`);
-  $('pwf').addEventListener('submit',async e=>{e.preventDefault();const a=$('pw1').value,b=$('pw2').value;
-    if(a.length<6){$('pwErr').textContent=t('pwShort');return}if(a!==b){$('pwErr').textContent=t('pwMismatch');return}
-    const err=await onSave(a);if(err){$('pwErr').textContent=t('err')+(err.message||err);return}toast(t('saved'));closeSheet()});
-}
-window.myPassword=()=>pwForm(t('changePw'),async p=>(await sb.auth.updateUser({password:p})).error);
-window.setUserPassword=id=>{const p=profilesMap[id];pwForm(t('pwFor')+(p?.full_name||''),async pw=>(await sb.rpc('admin_set_password',{target_user:id,new_password:pw})).error)};
-
-/* ---------- Team (admin) ---------- */
-async function pTeam(){
-  const page=$('page');page.innerHTML=`<p class="muted">…</p>`;
-  const people=await loadProfiles();
-  const em={};try{const r=await sb.rpc('admin_user_emails');(r.data||[]).forEach(x=>em[x.id]=x.email)}catch(e){}
-  const [att,cust]=await Promise.all([
-    sb.from('attendance').select('*').gte('check_in_at',startOfDay()).order('check_in_at'),
-    sb.from('customers').select('owner_id,met_on,interest_level,status')]);
-  const attBy={};(att.data||[]).forEach(a=>{if(!attBy[a.user_id])attBy[a.user_id]=a});
-  const paths=Object.values(attBy).map(a=>a.selfie_path).filter(Boolean);let urls={};
-  if(paths.length){const {data}=await sb.storage.from('selfies').createSignedUrls(paths,3600);(data||[]).forEach(u=>{if(u.signedUrl)urls[u.path]=u.signedUrl})}
-  const st=id=>{const mine=(cust.data||[]).filter(c=>c.owner_id===id);return{today:mine.filter(c=>c.met_on===todayStr()).length,total:mine.length,booked:mine.filter(c=>c.status==='booked').length,hot:mine.filter(c=>c.interest_level==='hot').length}};
-  const present=people.filter(p=>attBy[p.id]).length,staff=people.filter(p=>p.role!=='admin').length;
-  page.innerHTML=`<button class="btn full" id="addUserBtn" style="margin-bottom:12px">${esc(t('addUser'))}</button><div id="addUserBox"></div><h2>${esc(t('team'))} – ${esc(t('today'))}</h2>
-  <div class="stats"><div class="stat"><b>${present}/${staff}</b><span>${esc(t('checkedIn'))}</span></div>
-   <div class="stat"><b>${(cust.data||[]).filter(c=>c.met_on===todayStr()).length}</b><span>${esc(t('metToday'))}</span></div></div>
-  <div class="card list" style="padding:4px">${people.map(p=>{const a=attBy[p.id],s=st(p.id),img=a&&urls[a.selfie_path];
-   return `<div class="item" style="cursor:default">${img?`<a href="${esc(img)}" target="_blank" rel="noopener"><img class="thumb" src="${esc(img)}" alt=""></a>`:`<div class="avatar">${initials(p.full_name)}</div>`}
-   <div class="main"><b>${esc(p.full_name)}${p.role==='admin'?' • Admin':''}</b>${p.is_active===false?` <span style="color:var(--bad);font-size:13px">• ${esc(t('blocked'))}</span>`:''}${em[p.id]?`<small class="muted" style="display:block">${esc(uname(em[p.id]))}</small>`:''}
-   <small>${a?`✅ ${esc(fmtDT(a.check_in_at))} • <a href="https://maps.google.com/?q=${esc(a.latitude)},${esc(a.longitude)}" target="_blank" rel="noopener">📍 ${esc(t('map'))}</a>`:(p.role==='admin'?'':'❌ '+esc(t('notCheckedIn')))}</small><br>
-   <small>${esc(t('metToday'))}: <b>${s.today}</b> • ${esc(t('hot'))}: ${s.hot} • ${esc(t('booked'))}: ${s.booked} • ${esc(t('totalCust'))}: ${s.total}</small></div>
-   <div style="display:grid;gap:6px"><button class="btn ghost" style="padding:6px 10px;min-height:38px" data-rn="${esc(p.id)}">${esc(t('rename'))}</button>
-   <button class="btn ghost" style="padding:6px 10px;min-height:38px" data-pw="${esc(p.id)}">🔑 ${esc(t('changePw'))}</button>${p.id!==me.id?`<button class="btn ghost" style="padding:6px 10px;min-height:38px" data-role="${esc(p.id)}">${esc(t(p.role==='admin'?'makeEmp':'makeAdmin'))}</button><button class="btn ghost" style="padding:6px 10px;min-height:38px;color:${p.is_active===false?'var(--ok)':'var(--bad)'}" data-act="${esc(p.id)}">${esc(t(p.is_active===false?'unblock':'block'))}</button>`:''}</div></div>`}).join('')}</div>
-  <div id="rnBox"></div>`;
-  $('addUserBtn').onclick=addUserForm;
-  page.querySelector('.list').onclick=async e=>{const rl=e.target.closest('[data-role]'),ac=e.target.closest('[data-act]');
-    if(rl||ac){const p=profilesMap[(rl||ac).dataset.role||(rl||ac).dataset.act];if(!p)return;
-      if(rl){const mk=p.role!=='admin';if(!confirm(p.full_name+' '+t(mk?'cfAdmin':'cfEmp')))return;const r=await sb.rpc('admin_set_role',{target_user:p.id,make_admin:mk});if(r.error)return fail(r.error)}
-      else{const on=p.is_active===false;if(!confirm(p.full_name+' '+t(on?'cfUnblock':'cfBlock')))return;const r=await sb.rpc('admin_set_active',{target_user:p.id,active:on});if(r.error)return fail(r.error)}
-      toast(t('saved'));return pTeam()}
-    const pw=e.target.closest('[data-pw]');if(pw){setUserPassword(pw.dataset.pw);return}const b=e.target.closest('[data-rn]');if(!b)return;const p=profilesMap[b.dataset.rn];
-    $('rnBox').innerHTML=`<div class="card"><label>${esc(t('name'))}</label><input id="rnIn" value="${esc(p.full_name)}"><button class="btn full" style="margin-top:8px" id="rnSave">${esc(t('save'))}</button></div>`;
-    $('rnIn').focus();$('rnSave').onclick=async()=>{const r=await sb.from('profiles').update({full_name:$('rnIn').value.trim()}).eq('id',p.id);if(r.error)return fail(r.error);
-      if(p.id===me.id){me.full_name=$('rnIn').value.trim();$('who').textContent=me.full_name+' • Admin'}toast(t('saved'));pTeam()}};
-}
-
-function addUserForm(){
-  const box=$('addUserBox');if(box.innerHTML){box.innerHTML='';return}
-  box.innerHTML=`<form class="card" id="auf" autocomplete="off" style="margin-bottom:12px">
-   <label>${esc(t('name'))}</label><input id="auName" required>
-   <label>${esc(t('username'))}</label><input id="auEmail" type="text" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="gv12" required>
-   <label>${esc(t('password'))}</label><input id="auPw" type="text" autocomplete="new-password" required>
-   <label>${esc(t('roleL'))}</label><select id="auRole"><option value="employee">${esc(t('empR'))}</option><option value="admin">${esc(t('adminR'))}</option></select>
-   <p id="auErr" style="color:var(--bad);font-size:14px"></p><button class="btn full" id="auBtn">${esc(t('createUser'))}</button></form>`;
-  $('auName').focus();
-  $('auf').addEventListener('submit',async e=>{e.preventDefault();const pw=$('auPw').value.trim(),raw=$('auEmail').value.trim().toLowerCase();
-    if(!/^[a-z0-9._-]{2,30}$/.test(raw)){$('auErr').textContent=t('badUser');return}
-    const em=toEmail(raw);
-    if(pw.length<6){$('auErr').textContent=t('pwShort');return}
-    $('auBtn').disabled=true;
-    const r=await sb.rpc('admin_create_user',{p_email:em,p_password:pw,p_full_name:$('auName').value.trim(),p_role:$('auRole').value});
-    $('auBtn').disabled=false;
-    if(r.error){$('auErr').textContent=t('err')+(r.error.message||r.error);return}
-    await pTeam();$('addUserBox').innerHTML=`<div class="card" style="margin-bottom:12px;color:var(--ok)"><b>${esc(t('userMade'))}</b><br>${esc(t('username'))}: ${esc(raw)} • ${esc(t('password'))}: ${esc(pw)}</div>`});
-}
-
-/* ---------- Files ---------- */
-let fileCat='plot_photo';
-async function pFiles(){
-  const page=$('page');page.innerHTML=`<p class="muted">…</p>`;
-  const bucket={plot_photo:'plot-photos',progress_photo:'progress-photos',document:'documents'};
-  const {data,error}=await sb.from('media_files').select('*').eq('category',fileCat).order('created_at',{ascending:false}).limit(200);if(error)throw error;
-  const urls={};const byB={};(data||[]).forEach(f=>(byB[f.bucket]=byB[f.bucket]||[]).push(f.path));
-  for(const b in byB){const r=await sb.storage.from(b).createSignedUrls(byB[b],3600);(r.data||[]).forEach(u=>{if(u.signedUrl)urls[b+'/'+u.path]=u.signedUrl})}
-  page.innerHTML=`<h2>${esc(t('files'))}</h2>
-  <div class="seg" id="fseg">${Object.keys(bucket).map(k=>`<button data-k="${k}" class="${k===fileCat?'on':''}">${esc(t(k))}</button>`).join('')}</div>
-  ${me.isAdmin?`<div class="card"><div class="row"><div><label>${esc(t('title'))}</label><input id="fTitle"></div><div><label>${esc(t('plotNo'))}</label><input id="fPlot"></div></div>
-   <label class="btn gold full" style="margin-top:10px">⬆ ${esc(t('upload'))}<input id="fIn" type="file" accept="${fileCat==='document'?'application/pdf,image/*':'image/*'}" multiple hidden></label><p id="fMsg" class="muted"></p></div>`:''}
-  <div class="gallery">${(data||[]).map(f=>{const u=urls[f.bucket+'/'+f.path];const isPdf=/\.pdf$/i.test(f.path);
-   return `<a href="${esc(u||'#')}" target="_blank" rel="noopener">${isPdf?'<div class="pdf">PDF</div>':`<img src="${esc(u||'')}" alt="" loading="lazy">`}<span>${esc(f.title||'')}${f.plot_number?' • #'+esc(f.plot_number):''}<br><small class="muted">${esc(fmtD(f.created_at.slice(0,10)))}</small></span></a>`}).join('')||`<div class="empty">${esc(t('noData'))}</div>`}</div>`;
-  $('fseg').onclick=e=>{const b=e.target.closest('button');if(b){fileCat=b.dataset.k;pFiles().catch(fail)}};
-  const inp=$('fIn');if(!inp)return;
-  inp.onchange=async()=>{
-    const files=[...inp.files];let n=0;
-    for(const file of files){
-      $('fMsg').textContent=`${++n}/${files.length}…`;
-      try{const isPdf=file.type==='application/pdf';const blob=isPdf?file:await shrinkImage(file,1800,.82);
-        const path=`${Date.now()}_${Math.random().toString(36).slice(2,7)}.${isPdf?'pdf':'jpg'}`;
-        const up=await sb.storage.from(bucket[fileCat]).upload(path,blob,{contentType:isPdf?'application/pdf':'image/jpeg'});if(up.error)throw up.error;
-        const r=await sb.from('media_files').insert({category:fileCat,bucket:bucket[fileCat],path,title:$('fTitle').value.trim()||file.name,plot_number:$('fPlot').value.trim()||null});if(r.error)throw r.error;
-      }catch(e){fail(e)}
-    }
-    toast(t('saved'));pFiles().catch(fail);
-  };
-}
-
-sb.auth.onAuthStateChange((ev)=>{if(ev==='SIGNED_OUT'&&me){me=null;location.reload()}});
-boot().catch(fail);
-}
 </script>
-<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}</script>
+<script>
+(() => {
+'use strict';
+const CFG = window.GV_CONFIG || {};
+const LIVE = !!(CFG.SUPABASE_URL && CFG.SUPABASE_ANON_KEY);
+const LOGIN_DOMAIN = 'greenvalley.app';
+const IN_FRAME = (() => { try { return window.self !== window.top; } catch (e) { return true; } })();
+
+/* ---------------- text ---------------- */
+const T = {
+  te: {
+    app: 'గ్రీన్ వ్యాలీ CRM', company: 'ఓంకార గ్రూప్స్',
+    demo: 'డెమో మోడ్ – నమూనా డేటా, ఈ ఫోన్/బ్రౌజర్‌లో మాత్రమే సేవ్ అవుతుంది',
+    loginId: 'యూజర్ ID', password: 'పాస్‌వర్డ్', login: 'లాగిన్', logout: 'లాగౌట్',
+    loginHint: 'లాగిన్ అయినప్పుడు మీ టైం, లొకేషన్ సేవ్ అవుతాయి.',
+    demoUsers: 'డెమో లాగిన్‌లు', wrong: 'యూజర్ ID లేదా పాస్‌వర్డ్ తప్పు.', blocked: 'మీ ఖాతా నిలిపివేయబడింది. అడ్మిన్‌ను సంప్రదించండి.',
+    netErr: 'ఇంటర్నెట్ సమస్య. ఇంటర్నెట్ చెక్ చేసి మళ్ళీ ప్రయత్నించండి.',
+    home: 'హోమ్', add: 'కొత్త కస్టమర్', customers: 'కస్టమర్లు', followups: 'ఫాలో-అప్‌లు',
+    dash: 'డ్యాష్‌బోర్డ్', team: 'టీమ్', users: 'యూజర్లు', config: 'సెట్టింగ్స్',
+    hello: 'నమస్కారం', fieldNotStarted: 'ఈరోజు ఫీల్డ్ వర్క్ ఇంకా మొదలుపెట్టలేదు',
+    startField: 'సెల్ఫీ తీసి ఫీల్డ్ స్టార్ట్ చేయండి', endField: 'సెల్ఫీ తీసి ఫీల్డ్ ముగించండి',
+    fieldStarted: 'ఫీల్డ్ స్టార్ట్', fieldEnded: 'ఫీల్డ్ ముగింపు', loginAt: 'లాగిన్',
+    todayCust: 'ఈరోజు కలిసినవారు', todayFU: 'ఈరోజు ఫాలో-అప్‌లు', todaySV: 'ఈరోజు సైట్ విజిట్‌లు',
+    total: 'మొత్తం కస్టమర్లు', five: '5 స్టార్ కస్టమర్లు', inField: 'ఈరోజు ఫీల్డ్‌లో',
+    gettingLoc: 'లొకేషన్ తీసుకుంటున్నాం…', noLoc: 'లొకేషన్ దొరకలేదు', needGps: 'GPS / లొకేషన్ ఆన్ చేసి, అనుమతి ఇచ్చి మళ్ళీ ప్రయత్నించండి.',
+    saving: 'సేవ్ అవుతోంది…', saved: 'సేవ్ అయింది', save: 'సేవ్ చేయండి', cancel: 'వద్దు', yesDo: 'అవును, చేయండి', close: 'మూసివేయి',
+    sName: 'కస్టమర్ వివరాలు', name: 'పేరు', phone: 'ఫోన్ నంబర్', village: 'ఊరు / విలేజ్', mandal: 'మండలం', district: 'జిల్లా',
+    sAbout: 'కస్టమర్ గురించి', occupation: 'వృత్తి', occOther: 'ఏ వృత్తి?', education: 'చదువు', financial: 'ఆర్థిక స్థితి',
+    children: 'పిల్లలు', childPlace: 'పిల్లలు ఎక్కడ చదువుతున్నారు?', source: 'మన వెంచర్ గురించి ఎలా తెలిసింది?', sourcePerson: 'ఎవరి ద్వారా? (పేరు)', sourceOther: 'ఎలా?',
+    sInterest: 'ఆసక్తి', interestItems: 'ఏది కొనడానికి ఆసక్తి?', buying: 'కొనడానికి ఆసక్తి ఉందా?', budget: 'బడ్జెట్ (₹)', emi: 'EMI లో కొనాలనే ఆలోచన ఉందా?',
+    payment: 'పేమెంట్ విధానం', paymentTime: 'ఎంత టైం?', vision: 'ఆయన ఆలోచన / విజన్', feel: 'మన గురించి చెప్పినప్పుడు ఫీల్',
+    stars: 'కస్టమర్ ఇంట్రెస్ట్ రేటింగ్', starsHint: '1 స్టార్ = ఇంకా ఆలోచిస్తున్నారు · 5 స్టార్ = చాలా ఆసక్తి',
+    willContact: 'కాంటాక్ట్ చేస్తానన్నారా?', askedConstr: 'మన కన్‌స్ట్రక్షన్ ప్లాన్‌ల గురించి అడిగారా?',
+    sNext: 'తర్వాత ఏంటి', siteVisit: 'సైట్ విజిట్ తేదీ', followUp: 'ఫాలో-అప్ తేదీ',
+    sProof: 'ఫోటో & నోట్', photo: 'ఫోటో (GPS తో)', takePhoto: 'ఫోటో తీయండి', retake: 'మళ్ళీ తీయండి',
+    note: 'నోట్', notePh: 'ఇక్కడ టైప్ చేయండి, లేదా కింద మైక్ నొక్కి మాట్లాడండి', mic: 'మైక్ నొక్కి మాట్లాడండి', stop: 'ఆపండి – సేవ్ చేయండి', reRec: 'మళ్ళీ రికార్డ్ చేయండి', voiceNote: 'వాయిస్ నోట్',
+    micDenied: 'మైక్ అనుమతి లేదు. ఆడియో ఫైల్ ఎంచుకోండి.', pickAudio: 'ఆడియో ఫైల్ ఎంచుకోండి',
+    needName: 'కస్టమర్ పేరు రాయండి.', needPhone: 'సరైన 10 అంకెల ఫోన్ నంబర్ రాయండి.', needStars: 'ఇంట్రెస్ట్ రేటింగ్ (స్టార్లు) ఎంచుకోండి.',
+    savedTitle: 'కస్టమర్ సేవ్ అయింది – క్లౌడ్‌లో భద్రంగా ఉంది', sendInsta: 'WhatsApp లో ఇన్‌స్టాగ్రామ్ లింక్ పంపండి', sendWeb: 'వెబ్‌సైట్ అప్‌డేట్ పంపండి',
+    noInsta: 'అడ్మిన్ సెట్టింగ్స్‌లో ఇన్‌స్టాగ్రామ్ లింక్ ఇంకా పెట్టలేదు.', noWeb: 'అడ్మిన్ సెట్టింగ్స్‌లో వెబ్‌సైట్ లింక్ ఇంకా పెట్టలేదు.',
+    addAnother: 'ఇంకో కస్టమర్ యాడ్ చేయండి', goHome: 'హోమ్‌కి వెళ్ళండి',
+    waVisit: 'సైట్ విజిట్ మెసేజ్', waFollow: 'ఫాలో-అప్ మెసేజ్', waInsta: 'ఇన్‌స్టాగ్రామ్ లింక్', waWeb: 'వెబ్‌సైట్ అప్‌డేట్', waTitle: 'WhatsApp లో పంపండి (ఒక్క క్లిక్)',
+    edit: 'ఎడిట్ చేయండి', editLeft: 'ఇంకా {h} గంటలు ఎడిట్ చేయవచ్చు', locked: '24 గంటలు అయిపోయాయి – ఇక ఎడిట్ చేయలేరు', editTitle: 'కస్టమర్ ఎడిట్',
+    edited: 'ఎడిట్ అయింది', sample: 'నమూనా', savedAt: 'సేవ్ చేసిన టైం', by: 'ఎంటర్ చేసినవారు', savedLoc: 'సేవ్ చేసిన చోటు', map: 'మ్యాప్‌లో చూడండి',
+    history: 'ఎడిట్ హిస్టరీ', original: 'మొదట ఎంటర్ చేసినది', editN: 'ఎడిట్ {n}', field: 'వివరం', before: 'ముందు', after: 'తర్వాత', noEdits: 'ఎడిట్‌లు లేవు – మొదట ఎంటర్ చేసినదే ఉంది.',
+    search: 'పేరు / ఫోన్ / ఊరు వెతకండి', none: 'ఇంకా ఏమీ లేదు', noCust: 'ఇంకా కస్టమర్లు లేరు. "కొత్త కస్టమర్" నొక్కి మొదటిది యాడ్ చేయండి.',
+    today: 'ఈరోజు', upcoming: 'రాబోయేవి', overdue: 'మిస్ అయినవి', fuType: 'ఫాలో-అప్', svType: 'సైట్ విజిట్',
+    allEmp: 'అందరు ఉద్యోగులు', allStars: 'అన్ని స్టార్లు', allSrc: 'అన్ని మార్గాలు', from: 'నుండి', to: 'వరకు', export: 'Excel (CSV) డౌన్‌లోడ్', exportNote: 'డౌన్‌లోడ్ అసలు యాప్‌లో పని చేస్తుంది (ప్రివ్యూలో కాదు).',
+    bySource: 'ఏ మార్గం ద్వారా కస్టమర్లు వచ్చారు', byStars: 'ఇంట్రెస్ట్ రేటింగ్ వారీగా', byEmp: 'ఈరోజు ఉద్యోగుల పని',
+    emp: 'ఉద్యోగి', count: 'కస్టమర్లు', notLogged: 'ఈరోజు లాగిన్ కాలేదు', date: 'తేదీ', selfie: 'సెల్ఫీ', log: 'పూర్తి హాజరు రికార్డు',
+    addUser: 'కొత్త ఉద్యోగిని యాడ్ చేయండి', fullName: 'పూర్తి పేరు', create: 'యూజర్ క్రియేట్ చేయండి', userCreated: 'యూజర్ క్రియేట్ అయింది. ID, పాస్‌వర్డ్ ఉద్యోగికి ఇవ్వండి.',
+    block: 'బ్లాక్ చేయండి', unblock: 'అన్‌బ్లాక్ చేయండి', isBlocked: 'బ్లాక్ అయింది', active: 'యాక్టివ్', resetPw: 'పాస్‌వర్డ్ మార్చండి', newPw: 'కొత్త పాస్‌వర్డ్',
+    confirmBlock: '{n} ని బ్లాక్ చేయాలా? వాళ్ళు లాగిన్ అవ్వలేరు. వాళ్ళ డేటా అంతా మీ దగ్గర అలాగే ఉంటుంది.', confirmUnblock: '{n} ని మళ్ళీ యాక్టివ్ చేయాలా?',
+    pwShort: 'పాస్‌వర్డ్ కనీసం 6 అక్షరాలు ఉండాలి.', badId: 'ID లో ఇంగ్లీష్ అక్షరాలు, నంబర్లు మాత్రమే (ఉదా: gv01).', idTaken: 'ఈ ID ఇప్పటికే ఉంది.',
+    cInsta: 'ఇన్‌స్టాగ్రామ్ లింక్', cWeb: 'వెబ్‌సైట్ లింక్', cOffice: 'ఆఫీస్ ఫోన్ నంబర్', cCompany: 'కంపెనీ పేరు', configSaved: 'సెట్టింగ్స్ సేవ్ అయ్యాయి',
+    adminOnly: 'ఈ వివరాలు మీకు (అడ్మిన్) మాత్రమే కనిపిస్తాయి.', employees: 'ఉద్యోగులు', role: 'పాత్ర', admin: 'అడ్మిన్', employee: 'ఉద్యోగి',
+    viewAll: 'అన్నీ చూడండి', back: 'వెనక్కి', yes: 'అవును', no: 'కాదు', hrs: 'గం',
+    qAll: 'అన్నీ', qVisit: 'ఈరోజు విజిట్ లిస్ట్', qAdv: 'అడ్వాన్స్ ఇచ్చినవారు', qReg: 'రాబోయే రిజిస్ట్రేషన్‌లు',
+    sBook: 'అడ్వాన్స్ / బుకింగ్ వివరాలు', noAdv: 'ఇంకా అడ్వాన్స్ ఇవ్వలేదు', addAdv: 'అడ్వాన్స్ వివరాలు యాడ్ చేయండి', editAdv: 'అడ్వాన్స్ / పేమెంట్ వివరాలు మార్చండి',
+    plotNo: 'ప్లాట్ / ఫ్లాట్ నంబర్', totalPrice: 'మొత్తం ధర (₹)', advAmt: 'అడ్వాన్స్ మొత్తం (₹)', advDate: 'అడ్వాన్స్ కట్టిన తేదీ', regDate: 'రిజిస్ట్రేషన్ తేదీ (తర్వాతి)',
+    balPaid: 'అడ్వాన్స్ తర్వాత కట్టినది (₹)', balance: 'మిగిలిన బ్యాలెన్స్ (₹)', balDue: 'బ్యాలెన్స్ కట్టాల్సిన తేదీ', payNote: 'పేమెంట్ నోట్ (క్యాష్ / UPI / చెక్ వివరాలు)', bkStatus: 'స్థితి',
+    needAdv: 'అడ్వాన్స్ మొత్తం సరిగ్గా రాయండి.', needAdvDate: 'అడ్వాన్స్ కట్టిన తేదీ ఎంచుకోండి.', needTotal: 'మొత్తం ధర రాయండి.', tooMuch: 'అడ్వాన్స్ + కట్టినది, మొత్తం ధర కంటే ఎక్కువ ఉండకూడదు.', regBefore: 'రిజిస్ట్రేషన్ తేదీ అడ్వాన్స్ తేదీ కంటే ముందు ఉండకూడదు.', futureAdv: 'అడ్వాన్స్ తేదీ రాబోయే రోజు కాకూడదు.',
+    regType: 'రిజిస్ట్రేషన్', balType: 'బ్యాలెన్స్ పేమెంట్', advShort: 'అడ్వాన్స్', regShort: 'రిజి', balShort: 'బ్యాలెన్స్', paidFull: 'పూర్తిగా కట్టారు',
+    lastUpd: 'చివరగా మార్చినవారు', advCount: 'అడ్వాన్స్ కస్టమర్లు', advSum: 'మొత్తం అడ్వాన్స్‌లు', balSum: 'రావాల్సిన బ్యాలెన్స్', regWeek: 'ఈ 7 రోజుల్లో రిజిస్ట్రేషన్',
+    needSql: 'అడ్వాన్స్ వివరాల కోసం Supabase లో "bookings" టేబుల్ ఇంకా క్రియేట్ కాలేదు. bookings.sql ను Supabase SQL Editor లో రన్ చేయండి.',
+    custOf: '{n} యాడ్ చేసిన కస్టమర్లు', custList: 'కస్టమర్ల లిస్ట్', bkHist: 'అడ్వాన్స్ మార్పుల హిస్టరీ', clear: 'తీసివేయి',
+  },
+  en: {
+    app: 'Green Valley CRM', company: 'Omkara Groups',
+    demo: 'Demo mode – sample data, saved only in this phone/browser',
+    loginId: 'User ID', password: 'Password', login: 'Login', logout: 'Logout',
+    loginHint: 'Your login time and location are recorded.',
+    demoUsers: 'Demo logins', wrong: 'Wrong user ID or password.', blocked: 'Your account is blocked. Contact the admin.',
+    netErr: 'Internet problem. Check your connection and try again.',
+    home: 'Home', add: 'New customer', customers: 'Customers', followups: 'Follow-ups',
+    dash: 'Dashboard', team: 'Team', users: 'Users', config: 'Settings',
+    hello: 'Hello', fieldNotStarted: 'Field work not started today',
+    startField: 'Take selfie & start field work', endField: 'Take selfie & end field work',
+    fieldStarted: 'Field start', fieldEnded: 'Field end', loginAt: 'Login',
+    todayCust: 'Met today', todayFU: 'Follow-ups today', todaySV: 'Site visits today',
+    total: 'Total customers', five: '5-star customers', inField: 'In field today',
+    gettingLoc: 'Getting location…', noLoc: 'Location not found', needGps: 'Turn on GPS / location, allow it, and try again.',
+    saving: 'Saving…', saved: 'Saved', save: 'Save', cancel: 'Cancel', yesDo: 'Yes, do it', close: 'Close',
+    sName: 'Customer details', name: 'Name', phone: 'Phone number', village: 'Village', mandal: 'Mandal', district: 'District',
+    sAbout: 'About the customer', occupation: 'Occupation', occOther: 'Which occupation?', education: 'Education', financial: 'Financial status',
+    children: 'Children', childPlace: 'Where are the children studying?', source: 'How did they hear about our venture?', sourcePerson: 'Through whom? (name)', sourceOther: 'How?',
+    sInterest: 'Interest', interestItems: 'Interested in buying', buying: 'Interested in buying?', budget: 'Budget (₹)', emi: 'Wants to buy on EMI?',
+    payment: 'Payment mode', paymentTime: 'How much time?', vision: 'His thinking / vision', feel: 'Feeling when we explained',
+    stars: 'Customer interest rating', starsHint: '1 star = still thinking · 5 stars = very interested',
+    willContact: 'Said he will contact us?', askedConstr: 'Asked about our construction plans?',
+    sNext: 'Next steps', siteVisit: 'Site visit date', followUp: 'Follow-up date',
+    sProof: 'Photo & note', photo: 'Photo (with GPS)', takePhoto: 'Take photo', retake: 'Retake',
+    note: 'Note', notePh: 'Type here, or tap the mic below and speak', mic: 'Tap mic and speak', stop: 'Stop – save', reRec: 'Record again', voiceNote: 'Voice note',
+    micDenied: 'Mic permission denied. Choose an audio file.', pickAudio: 'Choose audio file',
+    needName: 'Enter the customer name.', needPhone: 'Enter a valid 10-digit phone number.', needStars: 'Choose the interest rating (stars).',
+    savedTitle: 'Customer saved – safe in the cloud', sendInsta: 'Send Instagram link on WhatsApp', sendWeb: 'Send website update',
+    noInsta: 'Admin has not set the Instagram link in Settings yet.', noWeb: 'Admin has not set the website link in Settings yet.',
+    addAnother: 'Add another customer', goHome: 'Go home',
+    waVisit: 'Site visit message', waFollow: 'Follow-up message', waInsta: 'Instagram link', waWeb: 'Website update', waTitle: 'Send on WhatsApp (one click)',
+    edit: 'Edit', editLeft: '{h} hours left to edit', locked: '24 hours passed – editing is locked', editTitle: 'Edit customer',
+    edited: 'Edited', sample: 'Sample', savedAt: 'Saved at', by: 'Entered by', savedLoc: 'Saved location', map: 'View on map',
+    history: 'Edit history', original: 'First entry (original)', editN: 'Edit {n}', field: 'Field', before: 'Before', after: 'After', noEdits: 'No edits – the original entry is unchanged.',
+    search: 'Search name / phone / village', none: 'Nothing yet', noCust: 'No customers yet. Tap "New customer" to add the first one.',
+    today: 'Today', upcoming: 'Upcoming', overdue: 'Missed', fuType: 'Follow-up', svType: 'Site visit',
+    allEmp: 'All employees', allStars: 'All stars', allSrc: 'All sources', from: 'From', to: 'To', export: 'Download Excel (CSV)', exportNote: 'Download works in the real app (not in this preview).',
+    bySource: 'Where customers came from', byStars: 'By interest rating', byEmp: "Today's team activity",
+    emp: 'Employee', count: 'Customers', notLogged: 'Not logged in today', date: 'Date', selfie: 'Selfie', log: 'Full attendance record',
+    addUser: 'Add new employee', fullName: 'Full name', create: 'Create user', userCreated: 'User created. Give the ID and password to the employee.',
+    block: 'Block', unblock: 'Unblock', isBlocked: 'Blocked', active: 'Active', resetPw: 'Change password', newPw: 'New password',
+    confirmBlock: 'Block {n}? They will not be able to log in. All their data stays with you.', confirmUnblock: 'Make {n} active again?',
+    pwShort: 'Password must be at least 6 characters.', badId: 'ID can have English letters and numbers only (e.g. gv01).', idTaken: 'This ID already exists.',
+    cInsta: 'Instagram link', cWeb: 'Website link', cOffice: 'Office phone number', cCompany: 'Company name', configSaved: 'Settings saved',
+    adminOnly: 'Only you (admin) can see this.', employees: 'Employees', role: 'Role', admin: 'Admin', employee: 'Employee',
+    viewAll: 'View all', back: 'Back', yes: 'Yes', no: 'No', hrs: 'h',
+    qAll: 'All', qVisit: "Today's visit list", qAdv: 'Advance paid', qReg: 'Upcoming registrations',
+    sBook: 'Advance / booking details', noAdv: 'No advance paid yet', addAdv: 'Add advance details', editAdv: 'Update advance / payment details',
+    plotNo: 'Plot / flat number', totalPrice: 'Total price (₹)', advAmt: 'Advance amount (₹)', advDate: 'Advance paid on', regDate: 'Next registration date',
+    balPaid: 'Paid after advance (₹)', balance: 'Balance remaining (₹)', balDue: 'Balance due date', payNote: 'Payment note (cash / UPI / cheque details)', bkStatus: 'Status',
+    needAdv: 'Enter a valid advance amount.', needAdvDate: 'Choose the date the advance was paid.', needTotal: 'Enter the total price.', tooMuch: 'Advance + paid cannot be more than the total price.', regBefore: 'Registration date cannot be before the advance date.', futureAdv: 'Advance date cannot be in the future.',
+    regType: 'Registration', balType: 'Balance payment', advShort: 'Advance', regShort: 'Reg', balShort: 'Balance', paidFull: 'Fully paid',
+    lastUpd: 'Last updated by', advCount: 'Advance customers', advSum: 'Total advances', balSum: 'Balance to collect', regWeek: 'Registrations in next 7 days',
+    needSql: 'The "bookings" table for advance details is not in Supabase yet. Run bookings.sql in the Supabase SQL Editor.',
+    custOf: 'Customers added by {n}', custList: 'Customer list', bkHist: 'Advance change history', clear: 'Clear',
+  }
+};
+const OPTS = {
+  occupation: [['farmer','రైతు','Farmer'],['govt','ప్రభుత్వ ఉద్యోగి','Govt employee'],['private','ప్రైవేట్ ఉద్యోగి','Private employee'],['business','బిజినెస్','Business'],['other','ఇతర','Other']],
+  education: [['educated','చదువుకున్నవారు','Educated'],['not_educated','చదువుకోనివారు','Not educated']],
+  financial_status: [['low','తక్కువ','Low'],['middle','మధ్యస్థం','Middle'],['good','బాగుంది','Good'],['high','ఎక్కువ','High']],
+  children_status: [['studying','చదువుకుంటున్నారు','Studying'],['govt_job','ప్రభుత్వ ఉద్యోగం','Govt job'],['private_job','ప్రైవేట్ ఉద్యోగం','Private job'],['business','బిజినెస్','Business'],['small','చిన్న పిల్లలు','Young kids'],['none','పిల్లలు లేరు','No children']],
+  children_place: [['local','ఊరిలోనే','In the village'],['hyderabad','హైదరాబాద్','Hyderabad'],['other_city','ఇతర పట్టణం','Other city'],['abroad','విదేశం','Abroad']],
+  source: [['instagram','ఇన్‌స్టాగ్రామ్ రీల్స్','Instagram reels'],['youtube','యూట్యూబ్','YouTube'],['facebook','ఫేస్‌బుక్','Facebook'],['whatsapp','వాట్సాప్','WhatsApp'],['website','వెబ్‌సైట్','Website'],['person','వ్యక్తి ద్వారా','Through a person'],['field_officer','ఫీల్డ్ ఆఫీసర్','Field officer'],['other','ఇతర','Other']],
+  interest_items: [['plot','ప్లాట్','Plot'],['flat','ఫ్లాట్','Flat'],['house','ఇల్లు','House']],
+  buying_interest: [['yes','అవును','Yes'],['thinking','ఆలోచిస్తున్నారు','Thinking'],['no','కాదు','No']],
+  emi: [['yes','అవును','Yes'],['no','కాదు','No']],
+  payment_mode: [['spot','స్పాట్ పేమెంట్','Spot payment'],['time','టైం తీసుకుంటారు','Will take time']],
+  feel: [['very_interested','చాలా ఆసక్తి','Very interested'],['ok','పర్వాలేదు','Okay'],['not_interested','ఆసక్తి లేదు','Not interested']],
+  will_contact: [['yes','అవును','Yes'],['no','కాదు','No']],
+  asked_construction: [['yes','అవును','Yes'],['no','కాదు','No']],
+  bk_status: [['advance','అడ్వాన్స్ ఇచ్చారు','Advance paid'],['registered','రిజిస్ట్రేషన్ అయింది','Registered'],['cancelled','క్యాన్సిల్ అయింది','Cancelled']],
+};
+const BK_FIELDS = ['plot_no','total_price','advance_amount','advance_date','registration_date','balance_paid','balance_due_date','status','payment_note'];
+const BK_LABEL = { plot_no:'plotNo', total_price:'totalPrice', advance_amount:'advAmt', advance_date:'advDate', registration_date:'regDate', balance_paid:'balPaid', balance_due_date:'balDue', status:'bkStatus', payment_note:'payNote' };
+const money = n => (n == null || n === '' || isNaN(+n)) ? '—' : (+n).toLocaleString('en-IN', { maximumFractionDigits: 2 });
+const toNum = s => { const v = String(s ?? '').replace(/[,\s₹]/g, ''); return v === '' ? null : (isNaN(+v) ? NaN : +v); };
+const balOf = b => (b && b.total_price != null) ? Math.max(0, (+b.total_price) - (+b.advance_amount || 0) - (+b.balance_paid || 0)) : null;
+const FIELDS = ['name','phone','village','mandal','district','occupation','occupation_other','education','financial_status','children_status','children_place','source','source_detail','interest_items','buying_interest','budget','emi','payment_mode','payment_time','vision','feel','stars','will_contact','asked_construction','site_visit_date','follow_up_date','note','audio_path','photo_path'];
+const FIELD_LABEL = { name:'name', phone:'phone', village:'village', mandal:'mandal', district:'district', occupation:'occupation', occupation_other:'occOther', education:'education', financial_status:'financial', children_status:'children', children_place:'childPlace', source:'source', source_detail:'sourcePerson', interest_items:'interestItems', buying_interest:'buying', budget:'budget', emi:'emi', payment_mode:'payment', payment_time:'paymentTime', vision:'vision', feel:'feel', stars:'stars', will_contact:'willContact', asked_construction:'askedConstr', site_visit_date:'siteVisit', follow_up_date:'followUp', note:'note', audio_path:'voiceNote', photo_path:'photo' };
+
+/* ---------------- state & helpers ---------------- */
+const S = { lang: 'te', me: null, users: [], settings: {}, draft: {}, rec: null, bk: {}, quick: '' };
+try { const l = localStorage.getItem('gvcrm-lang'); if (l === 'en' || l === 'te') S.lang = l; } catch (e) {}
+const t = (k, v) => { let s = (T[S.lang][k] ?? T.en[k] ?? k); if (v) for (const x in v) s = s.replace('{' + x + '}', v[x]); return s; };
+const opt = (g, code) => { const o = (OPTS[g] || []).find(x => x[0] === code); return o ? (S.lang === 'te' ? o[1] : o[2]) : (code || ''); };
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+const $ = (sel, root = document) => root.querySelector(sel);
+const pad = n => String(n).padStart(2, '0');
+const dayStr = (d = new Date()) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const localDay = iso => dayStr(new Date(iso));
+const fmtTime = iso => iso ? new Date(iso).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true }) : '';
+const fmtDT = iso => iso ? new Date(iso).toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }) : '';
+const fmtDate = d => d ? new Date(d + 'T00:00:00').toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+const mapUrl = (lat, lng) => `https://www.google.com/maps?q=${lat},${lng}`;
+const mapLink = (lat, lng) => (lat != null && lng != null) ? `<a href="${mapUrl(lat, lng)}" target="_blank" rel="noopener">${t('map')} ↗</a> <span class="muted small num">${(+lat).toFixed(5)}, ${(+lng).toFixed(5)}</span>` : `<span class="chip warn">${t('noLoc')}</span>`;
+const starsView = n => `<span class="stars" aria-label="${n || 0}/5">${'★'.repeat(n || 0)}<span class="off">${'★'.repeat(5 - (n || 0))}</span></span>`;
+const hoursLeft = c => 24 - (Date.now() - new Date(c.created_at).getTime()) / 3.6e6;
+const userName = id => (S.users.find(u => u.id === id) || {}).full_name || (S.me && S.me.id === id ? S.me.full_name : '—');
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : 'id-' + Date.now().toString(36) + Math.random().toString(36).slice(2));
+const isAdmin = () => S.me && S.me.role === 'admin';
+const normPhone = p => { const d = String(p || '').replace(/\D/g, ''); return d.length === 10 ? '91' + d : d; };
+
+function toast(msg, ms = 2600) {
+  const el = document.createElement('div'); el.className = 'toast'; el.setAttribute('role', 'status'); el.textContent = msg;
+  document.body.appendChild(el); setTimeout(() => el.remove(), ms);
+}
+function confirmBox(msg) {
+  return new Promise(res => {
+    const w = document.createElement('div'); w.className = 'confirm';
+    w.innerHTML = `<div class="card" role="dialog" aria-modal="true"><p>${esc(msg)}</p><div class="row"><button class="btn" id="cf-yes">${t('yesDo')}</button><button class="btn ghost" id="cf-no">${t('cancel')}</button></div></div>`;
+    document.body.appendChild(w);
+    const done = v => { w.remove(); res(v); };
+    $('#cf-yes', w).onclick = () => done(true); $('#cf-no', w).onclick = () => done(false);
+    $('#cf-yes', w).focus();
+  });
+}
+function getGeo(timeout = 12000) {
+  return new Promise(res => {
+    try {
+      if (!navigator.geolocation) return res(null);
+      navigator.geolocation.getCurrentPosition(
+        p => res({ lat: p.coords.latitude, lng: p.coords.longitude, acc: Math.round(p.coords.accuracy || 0) }),
+        () => res(null), { enableHighAccuracy: true, timeout, maximumAge: 30000 });
+    } catch (e) { res(null); }
+  });
+}
+// Draws date, time, GPS and name onto the photo, like a GPS camera.
+async function stampPhoto(file, geo, label) {
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((ok, bad) => { const i = new Image(); i.onload = () => ok(i); i.onerror = bad; i.src = url; });
+    const max = 1280, sc = Math.min(1, max / Math.max(img.width, img.height));
+    const w = Math.round(img.width * sc), h = Math.round(img.height * sc);
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    const g = c.getContext('2d'); g.drawImage(img, 0, 0, w, h);
+    const fs = Math.max(14, Math.round(w / 34)), lines = [
+      'Green Valley CRM · ' + label,
+      new Date().toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true }),
+      geo ? `GPS ${geo.lat.toFixed(6)}, ${geo.lng.toFixed(6)}  (±${geo.acc} m)` : 'GPS: not available'
+    ];
+    const bh = fs * 1.45 * lines.length + fs;
+    g.fillStyle = 'rgba(0,0,0,.55)'; g.fillRect(0, h - bh, w, bh);
+    g.fillStyle = '#fff'; g.font = `700 ${fs}px Inter, sans-serif`; g.textBaseline = 'top';
+    lines.forEach((l, i) => g.fillText(l, fs * .6, h - bh + fs * .5 + i * fs * 1.45));
+    const blob = await new Promise(ok => c.toBlob(ok, 'image/jpeg', .78));
+    return blob;
+  } finally { URL.revokeObjectURL(url); }
+}
+const blobToDataURL = b => new Promise(ok => { const r = new FileReader(); r.onload = () => ok(r.result); r.readAsDataURL(b); });
+
+/* ---------------- DEMO store (no internet, sample data) ---------------- */
+function seed() {
+  const now = Date.now(), H = 3.6e6, today = dayStr(), tom = dayStr(new Date(now + 24 * H));
+  const users = [
+    { id: 'u-admin', login_id: 'tbr', password: 'admin123', full_name: 'TBR', phone: '', role: 'admin', blocked: false, created_at: new Date(now - 30 * 24 * H).toISOString() },
+    { id: 'u-gv01', login_id: 'gv01', password: 'gv1234', full_name: 'Ravi Kumar', phone: '', role: 'employee', blocked: false, created_at: new Date(now - 20 * 24 * H).toISOString() },
+    { id: 'u-gv02', login_id: 'gv02', password: 'gv1234', full_name: 'Lakshmi', phone: '', role: 'employee', blocked: false, created_at: new Date(now - 20 * 24 * H).toISOString() },
+  ];
+  const base = { occupation_other: '', children_place: '', source_detail: '', payment_time: '', note: '', audio_path: null, photo_path: null, photo_lat: null, photo_lng: null, photo_time: null, sample: true };
+  const c1 = { ...base, id: 's-c1', created_by: 'u-gv01', created_at: new Date(now - 2 * H).toISOString(), updated_at: new Date(now - 2 * H).toISOString(), edit_count: 0,
+    name: 'Ramesh (నమూనా)', phone: '9000000001', village: 'Golet', mandal: 'Rebbena', district: 'Komaram Bheem Asifabad', occupation: 'farmer', education: 'educated', financial_status: 'good',
+    children_status: 'studying', children_place: 'hyderabad', source: 'instagram', interest_items: ['plot'], buying_interest: 'yes', budget: '8,00,000', emi: 'no', payment_mode: 'spot',
+    vision: 'Wants a plot for his son near the main road', feel: 'very_interested', stars: 5, will_contact: 'yes', asked_construction: 'yes', site_visit_date: tom, follow_up_date: today, saved_lat: 19.3021, saved_lng: 79.4138 };
+  const c2v1 = { ...base, id: 's-c2', created_by: 'u-gv01', created_at: new Date(now - 30 * H).toISOString(), updated_at: new Date(now - 30 * H).toISOString(), edit_count: 0,
+    name: 'Srinivas (నమూనా)', phone: '9000000002', village: 'Kagaznagar', mandal: 'Kagaznagar', district: 'Komaram Bheem Asifabad', occupation: 'govt', education: 'educated', financial_status: 'middle',
+    children_status: 'govt_job', source: 'youtube', interest_items: ['flat'], buying_interest: 'thinking', budget: '15,00,000', emi: 'yes', payment_mode: 'time', payment_time: '6 months',
+    vision: 'Wants a flat after retirement', feel: 'ok', stars: 2, will_contact: 'yes', asked_construction: 'no', site_visit_date: null, follow_up_date: dayStr(new Date(now - 24 * H)), saved_lat: 19.3317, saved_lng: 79.4661 };
+  const c2 = { ...c2v1, edit_count: 1, updated_at: new Date(now - 27 * H).toISOString(), budget: '20,00,000', stars: 3 };
+  const c3 = { ...base, id: 's-c3', created_by: 'u-gv02', created_at: new Date(now - 5 * H).toISOString(), updated_at: new Date(now - 5 * H).toISOString(), edit_count: 0,
+    name: 'Padma (నమూనా)', phone: '9000000003', village: 'Bellampalli', mandal: 'Bellampalli', district: 'Mancherial', occupation: 'business', education: 'educated', financial_status: 'high',
+    children_status: 'private_job', source: 'person', source_detail: 'Raju', interest_items: ['house', 'plot'], buying_interest: 'yes', budget: '30,00,000', emi: 'yes', payment_mode: 'time', payment_time: '3 months',
+    vision: 'Wants a ready house for family', feel: 'very_interested', stars: 4, will_contact: 'yes', asked_construction: 'yes', site_visit_date: today, follow_up_date: tom, saved_lat: 19.0556, saved_lng: 79.4932 };
+  const snap = c => { const o = { ...c }; delete o.sample; return o; };
+  return {
+    users, customers: [c1, c2, c3],
+    versions: [
+      { customer_id: 's-c1', version: 1, saved_at: c1.created_at, data: snap(c1) },
+      { customer_id: 's-c2', version: 1, saved_at: c2v1.created_at, data: snap(c2v1) },
+      { customer_id: 's-c2', version: 2, saved_at: c2.updated_at, data: snap(c2) },
+      { customer_id: 's-c3', version: 1, saved_at: c3.created_at, data: snap(c3) },
+    ],
+    attendance: [
+      { id: 1, user_id: 'u-gv01', kind: 'login', at: new Date(now - 3 * H).toISOString(), lat: 19.2988, lng: 79.4102, accuracy_m: 12, photo_path: null, sample: true },
+      { id: 2, user_id: 'u-gv01', kind: 'field_start', at: new Date(now - 2.9 * H).toISOString(), lat: 19.2991, lng: 79.4110, accuracy_m: 9, photo_path: null, sample: true },
+      { id: 3, user_id: 'u-gv02', kind: 'login', at: new Date(now - 6 * H).toISOString(), lat: 19.0571, lng: 79.4911, accuracy_m: 15, photo_path: null, sample: true },
+    ],
+    bookings: [{ customer_id: 's-c3', status: 'advance', plot_no: 'Plot 24', total_price: 1200000, advance_amount: 100000, advance_date: dayStr(new Date(now - 48 * H)), balance_paid: 0, registration_date: dayStr(new Date(now + 10 * 24 * H)), balance_due_date: dayStr(new Date(now + 10 * 24 * H)), payment_note: 'UPI', created_by: 'u-gv02', created_at: new Date(now - 48 * H).toISOString(), updated_by: 'u-gv02', updated_at: new Date(now - 48 * H).toISOString(), edit_count: 0 }], bkVersions: [],
+    settings: { instagram_url: '', website_url: '', office_phone: '', company_name: 'Green Valley – Omkara Groups' },
+    files: {}, nextAtt: 4,
+  };
+}
+const Demo = {
+  key: 'gvcrm-demo-v2', db: null, mem: {},
+  init() { try { const s = localStorage.getItem(this.key); if (s) this.db = JSON.parse(s); } catch (e) {} if (!this.db) { this.db = seed(); this.persist(); } },
+  persist() { try { localStorage.setItem(this.key, JSON.stringify(this.db)); } catch (e) { /* storage full or blocked: keep in memory */ } },
+  pub(u) { const { password, ...p } = u; return p; },
+  meRow() { return this.db.users.find(u => u.id === (S.me && S.me.id)); },
+  guard() { const m = this.meRow(); if (!m || m.blocked) throw new Error('BLOCKED'); return m; },
+  async restore() { let id = null; try { id = localStorage.getItem('gvcrm-demo-session'); } catch (e) {} const u = this.db.users.find(x => x.id === id); return u && !u.blocked ? this.pub(u) : null; },
+  async login(id, pw) {
+    const u = this.db.users.find(x => x.login_id === id.trim().toLowerCase());
+    if (!u || u.password !== pw) throw new Error('WRONG');
+    if (u.blocked) throw new Error('BLOCKED');
+    try { localStorage.setItem('gvcrm-demo-session', u.id); } catch (e) {}
+    return this.pub(u);
+  },
+  async logout() { try { localStorage.removeItem('gvcrm-demo-session'); } catch (e) {} },
+  async upload(kind, blob) {
+    this.guard();
+    const path = `${S.me.id}/${kind}/${Date.now()}.${blob.type.includes('audio') ? (blob.type.includes('mp4') ? 'm4a' : 'webm') : 'jpg'}`;
+    const data = await blobToDataURL(blob);
+    this.db.files[path] = data; this.mem[path] = data;
+    try { localStorage.setItem(this.key, JSON.stringify(this.db)); } catch (e) { delete this.db.files[path]; }
+    return path;
+  },
+  async fileUrl(path) { return path ? (this.mem[path] || this.db.files[path] || null) : null; },
+  async addEvent(kind, geo, photo_path) {
+    this.guard();
+    this.db.attendance.push({ id: this.db.nextAtt++, user_id: S.me.id, kind, at: new Date().toISOString(), lat: geo ? geo.lat : null, lng: geo ? geo.lng : null, accuracy_m: geo ? geo.acc : null, photo_path: photo_path || null });
+    this.persist();
+  },
+  async events() { const m = this.guard(); return this.db.attendance.filter(a => m.role === 'admin' || a.user_id === m.id).slice().sort((a, b) => b.at.localeCompare(a.at)); },
+  async customers() { const m = this.guard(); return this.db.customers.filter(c => m.role === 'admin' || c.created_by === m.id).slice().sort((a, b) => b.created_at.localeCompare(a.created_at)); },
+  async customer(id) { return (await this.customers()).find(c => c.id === id) || null; },
+  async addCustomer(rec) {
+    this.guard();
+    const now = new Date().toISOString();
+    const c = { ...rec, id: uid(), created_by: S.me.id, created_at: now, updated_at: now, edit_count: 0 };
+    this.db.customers.push(c); this.db.versions.push({ customer_id: c.id, version: 1, saved_at: now, data: { ...c } });
+    this.persist(); return c;
+  },
+  async updateCustomer(id, patch) {
+    this.guard();
+    const c = this.db.customers.find(x => x.id === id);
+    if (!c || c.created_by !== S.me.id) throw new Error('NOT_ALLOWED');
+    if (hoursLeft(c) <= 0) throw new Error('EDIT_WINDOW_CLOSED');
+    Object.assign(c, patch, { id: c.id, created_by: c.created_by, created_at: c.created_at, updated_at: new Date().toISOString(), edit_count: c.edit_count + 1 });
+    const snap = { ...c }; delete snap.sample;
+    this.db.versions.push({ customer_id: id, version: c.edit_count + 1, saved_at: c.updated_at, data: snap });
+    this.persist(); return c;
+  },
+  async history(id) { this.guard(); if (!isAdmin()) return []; return this.db.versions.filter(v => v.customer_id === id).sort((a, b) => a.version - b.version); },
+  async users() { const m = this.guard(); return this.db.users.filter(u => m.role === 'admin' || u.id === m.id).map(u => this.pub(u)); },
+  async createUser({ login_id, password, full_name, phone }) {
+    this.guard();
+    const id = login_id.trim().toLowerCase();
+    if (this.db.users.some(u => u.login_id === id)) throw new Error('ID_TAKEN');
+    this.db.users.push({ id: 'u-' + uid(), login_id: id, password, full_name, phone, role: 'employee', blocked: false, created_at: new Date().toISOString() });
+    this.persist();
+  },
+  async setBlocked(id, blocked) { this.guard(); const u = this.db.users.find(x => x.id === id); if (u && u.role !== 'admin') u.blocked = blocked; this.persist(); },
+  async resetPassword(id, pw) { this.guard(); const u = this.db.users.find(x => x.id === id); if (u) u.password = pw; this.persist(); },
+  async settings() { return { ...this.db.settings }; },
+  async saveSettings(s) { this.guard(); Object.assign(this.db.settings, s); this.persist(); },
+  async bookings() {
+    const m = this.guard(); this.db.bookings = this.db.bookings || [];
+    const mineIds = new Set(this.db.customers.filter(c => m.role === 'admin' || c.created_by === m.id).map(c => c.id));
+    return this.db.bookings.filter(b => mineIds.has(b.customer_id));
+  },
+  async saveBooking(b) {
+    const m = this.guard(); this.db.bookings = this.db.bookings || []; this.db.bkVersions = this.db.bkVersions || [];
+    const c = this.db.customers.find(x => x.id === b.customer_id);
+    if (!c || (m.role !== 'admin' && c.created_by !== m.id)) throw new Error('NOT_ALLOWED');
+    const now = new Date().toISOString(); let row = this.db.bookings.find(x => x.customer_id === b.customer_id);
+    if (row) Object.assign(row, b, { updated_by: m.id, updated_at: now, edit_count: (row.edit_count || 0) + 1 });
+    else { row = { ...b, created_by: m.id, created_at: now, updated_by: m.id, updated_at: now, edit_count: 0 }; this.db.bookings.push(row); }
+    this.db.bkVersions.push({ customer_id: b.customer_id, version: row.edit_count + 1, saved_at: now, saved_by: m.id, data: { ...row } });
+    this.persist(); return row;
+  },
+  async bookingHistory(id) { this.guard(); if (!isAdmin()) return []; return (this.db.bkVersions || []).filter(v => v.customer_id === id).sort((a, b) => a.version - b.version); },
+};
+
+/* ---------------- LIVE store (Supabase cloud) ---------------- */
+const Live = {
+  sb: null, urls: {},
+  async init() {
+    if (!window.supabase) {
+      await new Promise((ok, bad) => { const s = document.createElement('script'); s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js'; s.onload = ok; s.onerror = bad; document.head.appendChild(s); });
+    }
+    this.sb = window.supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
+  },
+  chk(r) { if (r.error) { const m = r.error.message || ''; if (/EDIT_WINDOW_CLOSED/.test(m)) throw new Error('EDIT_WINDOW_CLOSED'); if (/fetch|network/i.test(m)) throw new Error('NET'); throw new Error(m); } return r.data; },
+  async profile(id) { const p = this.chk(await this.sb.from('profiles').select('*').eq('id', id).single()); if (p.blocked) { await this.sb.auth.signOut(); throw new Error('BLOCKED'); } return p; },
+  async restore() { const { data } = await this.sb.auth.getSession(); if (!data.session) return null; try { return await this.profile(data.session.user.id); } catch (e) { return null; } },
+  async login(id, pw) {
+    const v = id.trim().toLowerCase();
+    const r = await this.sb.auth.signInWithPassword({ email: v.includes('@') ? v : `${v}@${LOGIN_DOMAIN}`, password: pw });
+    if (r.error) { const m = r.error.message || ''; if (/banned/i.test(m)) throw new Error('BLOCKED'); if (/invalid/i.test(m)) throw new Error('WRONG'); throw new Error('NET'); }
+    return this.profile(r.data.user.id);
+  },
+  async logout() { await this.sb.auth.signOut(); },
+  async upload(kind, blob) {
+    const ext = blob.type.includes('audio') ? (blob.type.includes('mp4') ? 'm4a' : 'webm') : 'jpg';
+    const path = `${S.me.id}/${kind}/${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${ext}`;
+    this.chk(await this.sb.storage.from('gv-files').upload(path, blob, { contentType: blob.type || 'application/octet-stream', upsert: false }));
+    return path;
+  },
+  async fileUrl(path) {
+    if (!path) return null;
+    const c = this.urls[path]; if (c && c.exp > Date.now()) return c.url;
+    const r = await this.sb.storage.from('gv-files').createSignedUrl(path, 3600);
+    if (r.error) return null; this.urls[path] = { url: r.data.signedUrl, exp: Date.now() + 3.3e6 }; return r.data.signedUrl;
+  },
+  async addEvent(kind, geo, photo_path) { this.chk(await this.sb.from('attendance').insert({ user_id: S.me.id, kind, lat: geo ? geo.lat : null, lng: geo ? geo.lng : null, accuracy_m: geo ? geo.acc : null, photo_path: photo_path || null, device: navigator.userAgent.slice(0, 120) })); },
+  async events() { const since = new Date(Date.now() - 62 * 864e5).toISOString(); return this.chk(await this.sb.from('attendance').select('*').gte('at', since).order('at', { ascending: false }).limit(5000)); },
+  async customers() { return this.chk(await this.sb.from('customers').select('*').order('created_at', { ascending: false }).limit(5000)); },
+  async customer(id) { return this.chk(await this.sb.from('customers').select('*').eq('id', id).maybeSingle()); },
+  async addCustomer(rec) { return this.chk(await this.sb.from('customers').insert({ ...rec, created_by: S.me.id }).select().single()); },
+  async updateCustomer(id, patch) { const d = this.chk(await this.sb.from('customers').update(patch).eq('id', id).select()); if (!d || !d.length) throw new Error('EDIT_WINDOW_CLOSED'); return d[0]; },
+  async history(id) { return this.chk(await this.sb.from('customer_versions').select('*').eq('customer_id', id).order('version')); },
+  async users() { return this.chk(await this.sb.from('profiles').select('*').order('created_at')); },
+  async fn(body) {
+    const r = await this.sb.functions.invoke('admin-users', { body });
+    if (r.error) { let m = r.error.message; try { const j = await r.error.context.json(); m = j.error || m; } catch (e) {} if (/already|registered|exists/i.test(m)) throw new Error('ID_TAKEN'); throw new Error(m); }
+    return r.data;
+  },
+  async createUser(u) { await this.fn({ action: 'create', ...u }); },
+  async setBlocked(id, blocked) { await this.fn({ action: 'block', user_id: id, blocked }); },
+  async resetPassword(id, pw) { await this.fn({ action: 'reset_password', user_id: id, password: pw }); },
+  async settings() { return this.chk(await this.sb.from('settings').select('*').eq('id', 1).single()); },
+  async saveSettings(s) { this.chk(await this.sb.from('settings').update(s).eq('id', 1)); },
+  // Advance / booking details live in their own table, so they can be updated any time (the 24-hour lock is only for the customer form).
+  async bookings() {
+    const r = await this.sb.from('bookings').select('*').limit(5000);
+    if (r.error) { if (/bookings|relation|schema cache|does not exist/i.test(r.error.message || '')) { S.noBkTable = true; return []; } return this.chk(r); }
+    S.noBkTable = false; return r.data;
+  },
+  async saveBooking(b) { return this.chk(await this.sb.from('bookings').upsert(b, { onConflict: 'customer_id' }).select().single()); },
+  async bookingHistory(id) { const r = await this.sb.from('booking_versions').select('*').eq('customer_id', id).order('version'); return r.error ? [] : r.data; },
+};
+async function loadBk() { try { const rows = await DB.bookings(); S.bk = {}; rows.forEach(b => { S.bk[b.customer_id] = b; }); } catch (e) { S.bk = S.bk || {}; } return S.bk; }
+const DB = LIVE ? Live : Demo;
+
+/* ---------------- icons ---------------- */
+const I = {
+  home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>',
+  plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>',
+  people: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14c2.3 0 4 1.4 4.6 4"/></svg>',
+  cal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>',
+  chart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+  pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
+  key: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/></svg>',
+  gear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
+  cam: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/></svg>',
+  mic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+  wa: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 20.5l1.3-4.2A8.5 8.5 0 1 1 8 19.4z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1.2-1.6-2.1-1-1 .9c-1.2-.5-2.3-1.6-2.8-2.8l.9-1-1-2.1z"/></svg>',
+  out: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4M10 16l-4-4 4-4M6 12h10"/></svg>',
+  leaf: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#2E7D4A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-13 15-14-1 10-6 15-14 15"/><path d="M5 19l7-7"/></svg>',
+};
+
+/* ---------------- shell ---------------- */
+const EMP_NAV = [['home', 'home', 'home'], ['add', 'add', 'plus'], ['list', 'customers', 'people'], ['followups', 'followups', 'cal']];
+const ADM_NAV = [['dash', 'dash', 'chart'], ['all', 'customers', 'people'], ['team-day', 'team', 'pin'], ['users', 'users', 'key'], ['a-config', 'config', 'gear']];
+function shell(view, inner) {
+  const nav = isAdmin() ? ADM_NAV : EMP_NAV;
+  const cur = view.split('-')[0] === 'c' || view.startsWith('edit') || view.startsWith('saved') || view.startsWith('pay-') || view.startsWith('allby-') ? (isAdmin() ? 'all' : 'list') : view.startsWith('staff') ? 'team-day' : view;
+  document.body.classList.toggle('admin', isAdmin());
+  return `
+  ${!LIVE ? `<div class="demo-bar">${t('demo')}</div>` : ''}
+  <header class="topbar"><div class="topbar-in">
+    <div class="brand"><div class="logo">${I.leaf}</div><div class="brand-t"><b>${t('app')}</b><span>${esc(S.me.full_name)} · ${isAdmin() ? t('admin') : esc(S.me.login_id)}</span></div></div>
+    <div class="lang" role="group" aria-label="Language"><button data-act="lang" data-v="te" aria-pressed="${S.lang === 'te'}">తె</button><button data-act="lang" data-v="en" aria-pressed="${S.lang === 'en'}">EN</button></div>
+    <button class="iconbtn" data-act="logout" title="${t('logout')}" aria-label="${t('logout')}">${I.out}</button>
+  </div></header>
+  <main class="wrap" id="main">${inner}</main>
+  <nav class="bottomnav" aria-label="Main"><div class="bottomnav-in">
+    ${nav.map(([v, k, ic]) => `<a href="#${v}" ${cur === v ? 'aria-current="page"' : ''}><span class="ni">${I[ic]}</span>${t(k)}</a>`).join('')}
+  </div></nav>`;
+}
+
+/* ---------------- views ---------------- */
+function viewLogin(err) {
+  document.body.classList.remove('admin');
+  return `<div class="login"><form class="card" id="login-form" autocomplete="on">
+    <div class="login-head"><div class="logo">${I.leaf.replace('width="22" height="22"', 'width="34" height="34"')}</div><h1>${t('app')}</h1><p class="muted">${t('company')}</p></div>
+    <div class="row" style="justify-content:center"><div class="lang" role="group" aria-label="Language"><button type="button" data-act="lang" data-v="te" aria-pressed="${S.lang === 'te'}">తెలుగు</button><button type="button" data-act="lang" data-v="en" aria-pressed="${S.lang === 'en'}">English</button></div></div>
+    ${err ? `<div class="err" role="alert">${esc(err)}</div>` : ''}
+    <div class="field"><label for="l-id">${t('loginId')}</label><input type="text" id="l-id" name="userid" autocapitalize="none" autocomplete="username" required></div>
+    <div class="field"><label for="l-pw">${t('password')}</label><input type="password" id="l-pw" name="pw" autocomplete="current-password" required></div>
+    <button class="btn block big" type="submit" id="l-btn">${t('login')}</button>
+    <p class="hint">${t('loginHint')}</p>
+    ${!LIVE ? `<div class="card soft"><b>${t('demoUsers')}</b><div class="small num">${t('admin')}: <b>tbr</b> / admin123<br>${t('employee')}: <b>gv01</b> / gv1234 · <b>gv02</b> / gv1234</div></div>` : ''}
+  </form></div>`;
+}
+
+async function viewHome() {
+  const [cs, ev] = await Promise.all([DB.customers(), DB.events()]);
+  const today = dayStr();
+  const mine = ev.filter(e => e.user_id === S.me.id && localDay(e.at) === today);
+  const start = mine.filter(e => e.kind === 'field_start').pop();
+  const end = mine.find(e => e.kind === 'field_end' && (!start || e.at > start.at));
+  const login = mine.filter(e => e.kind === 'login').pop();
+  const cToday = cs.filter(c => localDay(c.created_at) === today).length;
+  const fu = cs.filter(c => c.follow_up_date === today), sv = cs.filter(c => c.site_visit_date === today);
+  return `
+  <h1>${t('hello')}, ${esc(S.me.full_name)}</h1>
+  <section class="card ${start && !end ? 'soft' : ''}" aria-label="Field work">
+    ${!start ? `<p><b>${t('fieldNotStarted')}</b></p>` : `<div class="row between"><span>${t('fieldStarted')}: <b class="num">${fmtTime(start.at)}</b></span>${start.lat != null ? '' : `<span class="chip warn">${t('noLoc')}</span>`}</div>${end ? `<div>${t('fieldEnded')}: <b class="num">${fmtTime(end.at)}</b></div>` : ''}`}
+    ${login ? `<div class="small muted">${t('loginAt')}: <span class="num">${fmtTime(login.at)}</span></div>` : ''}
+    <label class="btn block big" for="selfie-in">${I.cam}${!start || end ? t('startField') : t('endField')}</label>
+    <input type="file" id="selfie-in" accept="image/*" capture="user" class="hide" data-kind="${!start || end ? 'field_start' : 'field_end'}">
+    <div id="selfie-msg"></div>
+  </section>
+  <div class="tiles">
+    <a class="tile" href="#list"><b>${cToday}</b><span>${t('todayCust')}</span></a>
+    <a class="tile" href="#followups"><b>${fu.length}</b><span>${t('todayFU')}</span></a>
+    <a class="tile" href="#followups"><b>${sv.length}</b><span>${t('todaySV')}</span></a>
+  </div>
+  <a class="btn block big" href="#add">${I.plus}${t('add')}</a>
+  ${(fu.length || sv.length) ? `<section class="card"><h2>${t('today')}</h2><div class="list">${[...sv.map(c => [c, 'svType']), ...fu.map(c => [c, 'fuType'])].map(([c, k]) => custItem(c, `<span class="chip">${t(k)}</span>`)).join('')}</div></section>` : ''}`;
+}
+
+function bkChip(c) {
+  const b = S.bk && S.bk[c.id]; if (!b) return '';
+  if (b.status === 'cancelled') return `<span class="chip danger">${esc(opt('bk_status', 'cancelled'))}</span>`;
+  const bal = balOf(b);
+  return `<span class="chip pay">${b.status === 'registered' ? esc(opt('bk_status', 'registered')) : t('advShort')} ₹${money(b.advance_amount)} · ${fmtDate(b.advance_date)}</span>`
+    + (b.registration_date && b.status !== 'registered' ? `<span class="chip pay">${t('regShort')}: ${fmtDate(b.registration_date)}</span>` : '')
+    + (bal != null ? (bal > 0 ? `<span class="chip bal">${t('balShort')} ₹${money(bal)}${b.balance_due_date ? ' · ' + fmtDate(b.balance_due_date) : ''}</span>` : `<span class="chip">${t('paidFull')}</span>`) : '');
+}
+function custItem(c, extra = '') {
+  extra = extra + bkChip(c);
+  return `<a class="item" href="#c-${esc(c.id)}"><div class="t"><b>${esc(c.name)}</b>${starsView(c.stars)}</div>
+    <div class="s"><span>${esc([c.village, c.mandal].filter(Boolean).join(', '))}</span><span class="num">${esc(c.phone)}</span>${isAdmin() ? `<span>${t('by')}: <b>${esc(userName(c.created_by))}</b></span>` : ''}<span class="num">${fmtDT(c.created_at)}</span></div>
+    ${(extra || c.edit_count > 0 || c.sample) ? `<div class="row">${extra}${c.edit_count > 0 ? `<span class="chip warn">${t('edited')} ×${c.edit_count}</span>` : ''}${c.sample ? `<span class="chip plain">${t('sample')}</span>` : ''}</div>` : ''}</a>`;
+}
+
+async function viewList() {
+  const cs = await DB.customers();
+  return `<h1>${t('customers')} <span class="muted num">(${cs.length})</span></h1>
+  <input type="search" id="q" placeholder="${t('search')}" aria-label="${t('search')}">
+  <div class="list" id="clist">${cs.length ? cs.map(c => custItem(c)).join('') : `<div class="empty">${t('noCust')}</div>`}</div>`;
+}
+
+async function viewFollowups() {
+  const cs = await DB.customers(); const today = dayStr();
+  const ev = []; cs.forEach(c => { if (c.follow_up_date) ev.push([c, c.follow_up_date, 'fuType']); if (c.site_visit_date) ev.push([c, c.site_visit_date, 'svType']);
+    const b = S.bk[c.id]; if (b && b.status !== 'cancelled') { if (b.registration_date && b.status !== 'registered') ev.push([c, b.registration_date, 'regType']); if (b.balance_due_date && (balOf(b) ?? 1) > 0) ev.push([c, b.balance_due_date, 'balType']); } });
+  const grp = (f) => ev.filter(f).sort((a, b) => a[1].localeCompare(b[1]));
+  const sec = (title, arr) => `<section class="card"><h2>${title} <span class="muted num">(${arr.length})</span></h2><div class="list">${arr.length ? arr.map(([c, d, k]) => custItem(c, `<span class="chip">${t(k)} · ${fmtDate(d)}</span>`)).join('') : `<div class="empty">${t('none')}</div>`}</div></section>`;
+  return `<h1>${t('followups')}</h1>${sec(t('today'), grp(e => e[1] === today))}${sec(t('upcoming'), grp(e => e[1] > today))}${sec(t('overdue'), grp(e => e[1] < today).reverse())}`;
+}
+
+/* customer form */
+function chips(name, val, multi = false) {
+  const vals = multi ? (val || []) : [val];
+  return `<div class="opts">${OPTS[name].map(([code, te, en]) => `<label class="opt"><input type="${multi ? 'checkbox' : 'radio'}" name="${name}" value="${code}" ${vals.includes(code) ? 'checked' : ''}><span>${S.lang === 'te' ? te : en}</span></label>`).join('')}</div>`;
+}
+function fs(name, labelKey, val, multi, req) { return `<fieldset id="fs-${name}"><legend>${t(labelKey)}${req ? ' <span class="req">*</span>' : ''}</legend>${chips(name, val, multi)}</fieldset>`; }
+function inp(name, labelKey, val, type = 'text', req = false, extra = '') { return `<div class="field" id="w-${name}"><label for="f-${name}">${t(labelKey)}${req ? ' <span class="req">*</span>' : ''}</label><input type="${type}" id="f-${name}" name="${name}" value="${esc(val || '')}" ${extra}></div>`; }
+
+async function viewForm(c) {
+  const v = c || {};
+  S.draft = { photo: null, audio: null, keepPhoto: v.photo_path || null, keepAudio: v.audio_path || null };
+  const [pUrl, aUrl] = await Promise.all([DB.fileUrl(v.photo_path), DB.fileUrl(v.audio_path)]);
+  const starOpts = [1, 2, 3, 4, 5].map(n => `<label class="opt ${v.stars >= n ? 'lit' : ''}"><input type="radio" name="stars" value="${n}" ${v.stars === n ? 'checked' : ''} aria-label="${n} star"><span>★</span></label>`).join('');
+  return `<h1>${c ? t('editTitle') : t('add')}</h1>
+  ${c ? `<div class="ok">${t('editLeft', { h: Math.max(0, Math.floor(hoursLeft(c))) })}</div>` : ''}
+  <form id="cust-form" class="list" novalidate data-id="${c ? esc(c.id) : ''}">
+    <section class="card"><h2>${t('sName')}</h2>
+      ${inp('name', 'name', v.name, 'text', true, 'autocomplete="off"')}
+      ${inp('phone', 'phone', v.phone, 'tel', true, 'inputmode="numeric" maxlength="14" autocomplete="off"')}
+      <div class="grid2">${inp('village', 'village', v.village)}${inp('mandal', 'mandal', v.mandal)}</div>
+      ${inp('district', 'district', v.district)}
+    </section>
+    <section class="card"><h2>${t('sAbout')}</h2>
+      ${fs('occupation', 'occupation', v.occupation)}
+      <div class="${v.occupation === 'other' ? '' : 'hide'}" data-show="occupation=other">${inp('occupation_other', 'occOther', v.occupation_other)}</div>
+      ${fs('education', 'education', v.education)}
+      ${fs('financial_status', 'financial', v.financial_status)}
+      ${fs('children_status', 'children', v.children_status)}
+      <div class="${v.children_status === 'studying' ? '' : 'hide'}" data-show="children_status=studying">${fs('children_place', 'childPlace', v.children_place)}</div>
+      ${fs('source', 'source', v.source)}
+      <div class="${['person', 'other'].includes(v.source) ? '' : 'hide'}" data-show="source=person,other">${inp('source_detail', v.source === 'other' ? 'sourceOther' : 'sourcePerson', v.source_detail)}</div>
+    </section>
+    <section class="card"><h2>${t('sInterest')}</h2>
+      ${fs('interest_items', 'interestItems', v.interest_items, true)}
+      ${fs('buying_interest', 'buying', v.buying_interest)}
+      ${inp('budget', 'budget', v.budget, 'text', false, 'inputmode="numeric"')}
+      ${fs('emi', 'emi', v.emi)}
+      ${fs('payment_mode', 'payment', v.payment_mode)}
+      <div class="${v.payment_mode === 'time' ? '' : 'hide'}" data-show="payment_mode=time">${inp('payment_time', 'paymentTime', v.payment_time, 'text', false, 'placeholder="3 months / 6 months"')}</div>
+      <div class="field"><label for="f-vision">${t('vision')}</label><textarea id="f-vision" name="vision">${esc(v.vision)}</textarea></div>
+      ${fs('feel', 'feel', v.feel)}
+      <fieldset id="fs-stars"><legend>${t('stars')} <span class="req">*</span></legend><div class="starpick">${starOpts}</div><p class="hint">${t('starsHint')}</p></fieldset>
+      ${fs('will_contact', 'willContact', v.will_contact)}
+      ${fs('asked_construction', 'askedConstr', v.asked_construction)}
+    </section>
+    <section class="card"><h2>${t('sNext')}</h2>
+      <div class="grid2">${inp('site_visit_date', 'siteVisit', v.site_visit_date, 'date')}${inp('follow_up_date', 'followUp', v.follow_up_date, 'date')}</div>
+    </section>
+    <section class="card"><h2>${t('sProof')}</h2>
+      <div class="field"><span class="lbl">${t('photo')}</span>
+        <div class="media" id="photo-box">${pUrl ? `<img src="${esc(pUrl)}" alt="">` : ''}</div>
+        <label class="btn ghost block" for="photo-in">${I.cam}<span id="photo-lbl">${pUrl ? t('retake') : t('takePhoto')}</span></label>
+        <input type="file" id="photo-in" accept="image/*" capture="environment" class="hide">
+        <div id="photo-msg" class="hint"></div>
+      </div>
+      <div class="field"><label for="f-note">${t('note')}</label><textarea id="f-note" name="note" placeholder="${t('notePh')}">${esc(v.note)}</textarea></div>
+      <div class="field"><span class="lbl">${t('voiceNote')}</span>
+        <div id="audio-box">${aUrl ? `<audio controls src="${esc(aUrl)}"></audio>` : ''}</div>
+        <button type="button" class="btn ghost block" data-act="rec" id="rec-btn">${I.mic}<span id="rec-lbl">${aUrl ? t('reRec') : t('mic')}</span></button>
+        <label class="btn soft sm hide" for="audio-in" id="audio-pick">${t('pickAudio')}</label>
+        <input type="file" id="audio-in" accept="audio/*" capture class="hide">
+      </div>
+    </section>
+    <div id="form-err"></div>
+    <button class="btn block big" type="submit" id="save-btn">${t('save')}</button>
+  </form>`;
+}
+
+function waLinks(c) {
+  const st = S.settings, p = normPhone(c.phone), office = st.office_phone ? (S.lang === 'te' ? `\nవివరాలకు: ${st.office_phone}` : `\nFor details: ${st.office_phone}`) : '';
+  const nm = c.name.replace(/\s*\(నమూనా\)/, '');
+  const msg = {
+    insta: S.lang === 'te' ? `నమస్కారం ${nm} గారు, గ్రీన్ వ్యాలీ (ఓంకార గ్రూప్స్) నుండి. మా వెంచర్ ఫోటోలు, వీడియోలు ఇక్కడ చూడండి: ${st.instagram_url}${office}` : `Hello ${nm}, greetings from Green Valley (Omkara Groups). See our venture photos and videos here: ${st.instagram_url}${office}`,
+    web: S.lang === 'te' ? `నమస్కారం ${nm} గారు, గ్రీన్ వ్యాలీ కొత్త అప్‌డేట్స్ మా వెబ్‌సైట్‌లో చూడండి: ${st.website_url}${office}` : `Hello ${nm}, see the latest Green Valley updates on our website: ${st.website_url}${office}`,
+    visit: S.lang === 'te' ? `నమస్కారం ${nm} గారు, గ్రీన్ వ్యాలీ సైట్ విజిట్${c.site_visit_date ? ' ' + fmtDate(c.site_visit_date) + ' న' : ''} ఏర్పాటు చేస్తున్నాం. మీకు ఏ టైం వీలవుతుందో చెప్పండి.${office}` : `Hello ${nm}, we are arranging your Green Valley site visit${c.site_visit_date ? ' on ' + fmtDate(c.site_visit_date) : ''}. Please tell us a suitable time.${office}`,
+    follow: S.lang === 'te' ? `నమస్కారం ${nm} గారు, గ్రీన్ వ్యాలీ గురించి ఆలోచించారా? ఏమైనా సందేహాలు ఉంటే మాకు చెప్పండి.${office}` : `Hello ${nm}, have you thought about Green Valley? Let us know if you have any questions.${office}`,
+  };
+  const u = m => `https://wa.me/${p}?text=${encodeURIComponent(m)}`;
+  return { insta: st.instagram_url ? u(msg.insta) : null, web: st.website_url ? u(msg.web) : null, visit: u(msg.visit), follow: u(msg.follow) };
+}
+
+async function viewSaved(id) {
+  const c = await DB.customer(id); if (!c) return `<div class="empty">${t('none')}</div>`;
+  const w = waLinks(c);
+  return `<section class="card soft"><h1>${t('savedTitle')}</h1><p>${esc(c.name)} · <span class="num">${esc(c.phone)}</span></p></section>
+  ${w.insta ? `<a class="btn wa block big" href="${w.insta}" target="_blank" rel="noopener">${I.wa}${t('sendInsta')}</a>` : `<div class="err">${t('noInsta')}</div>`}
+  ${w.web ? `<a class="btn wa block" href="${w.web}" target="_blank" rel="noopener">${I.wa}${t('sendWeb')}</a>` : ''}
+  <a class="btn ghost block" href="#add">${I.plus}${t('addAnother')}</a>
+  <a class="btn ghost block" href="#home">${t('goHome')}</a>`;
+}
+
+function kvRows(c) {
+  const yn = (g, v) => v ? opt(g, v) : '—';
+  const rows = [
+    ['phone', `<span class="num">${esc(c.phone)}</span>`],
+    ['village', esc(c.village || '—')], ['mandal', esc(c.mandal || '—')], ['district', esc(c.district || '—')],
+    ['occupation', esc(c.occupation === 'other' ? (c.occupation_other || opt('occupation', 'other')) : yn('occupation', c.occupation))],
+    ['education', esc(yn('education', c.education))], ['financial', esc(yn('financial_status', c.financial_status))],
+    ['children', esc(yn('children_status', c.children_status) + (c.children_status === 'studying' && c.children_place ? ' – ' + opt('children_place', c.children_place) : ''))],
+    ['source', esc(yn('source', c.source) + (c.source_detail ? ' – ' + c.source_detail : ''))],
+    ['interestItems', esc((c.interest_items || []).map(x => opt('interest_items', x)).join(', ') || '—')],
+    ['buying', esc(yn('buying_interest', c.buying_interest))], ['budget', esc(c.budget ? '₹ ' + c.budget : '—')],
+    ['emi', esc(yn('emi', c.emi))], ['payment', esc(yn('payment_mode', c.payment_mode) + (c.payment_mode === 'time' && c.payment_time ? ' – ' + c.payment_time : ''))],
+    ['vision', esc(c.vision || '—')], ['feel', esc(yn('feel', c.feel))], ['stars', starsView(c.stars)],
+    ['willContact', esc(yn('will_contact', c.will_contact))], ['askedConstr', esc(yn('asked_construction', c.asked_construction))],
+    ['siteVisit', c.site_visit_date ? fmtDate(c.site_visit_date) : '—'], ['followUp', c.follow_up_date ? fmtDate(c.follow_up_date) : '—'],
+    ['note', esc(c.note || '—')],
+  ];
+  return `<div class="kv">${rows.map(([k, v]) => `<div>${t(k)}</div><div>${v}</div>`).join('')}</div>`;
+}
+
+function fmtVal(f, v) {
+  if (v == null || v === '' || (Array.isArray(v) && !v.length)) return '—';
+  if (f === 'interest_items') return v.map(x => opt('interest_items', x)).join(', ');
+  if (OPTS[f]) return opt(f, v);
+  if (f === 'stars') return '★'.repeat(v);
+  if (f.endsWith('_date')) return fmtDate(v);
+  if (f === 'audio_path' || f === 'photo_path') return S.lang === 'te' ? 'ఫైల్' : 'file';
+  return String(v);
+}
+
+async function viewCustomer(id) {
+  const c = await DB.customer(id);
+  if (!c) return `<div class="empty">${t('none')}</div>`;
+  const [pUrl, aUrl, hist, bkHist] = await Promise.all([DB.fileUrl(c.photo_path), DB.fileUrl(c.audio_path), isAdmin() ? DB.history(id) : [], isAdmin() ? DB.bookingHistory(id).catch(() => []) : []]);
+  const w = waLinks(c), hl = hoursLeft(c), mine = c.created_by === S.me.id;
+  let histHtml = '';
+  if (isAdmin()) {
+    const vs = hist.length ? hist : [];
+    const first = vs[0];
+    histHtml = `<section class="card"><h2>${t('history')}</h2><p class="hint">${t('adminOnly')}</p>
+      ${first ? `<div class="ver"><div class="row between"><b>${t('original')}</b><span class="small muted num">${fmtDT(first.saved_at)}</span></div>
+        ${vs.length < 2 ? `<p class="small">${t('noEdits')}</p>` : ''}</div>` : ''}
+      ${vs.slice(1).map((v, i) => {
+        const prev = vs[i].data, cur = v.data;
+        const ch = FIELDS.filter(f => JSON.stringify(prev[f] ?? null) !== JSON.stringify(cur[f] ?? null));
+        return `<div class="ver"><div class="row between"><b>${t('editN', { n: i + 1 })}</b><span class="small muted num">${fmtDT(v.saved_at)}</span></div>
+          <div class="diff"><span class="small muted dh">${t('field')}</span><span class="small muted dh">${t('before')}</span><span class="small muted dh">${t('after')}</span>
+          ${ch.map(f => `<span class="lbl2">${t(FIELD_LABEL[f])}</span><span class="old" data-pre="${t('before')}: ">${esc(fmtVal(f, prev[f]))}</span><span class="new" data-pre="${t('after')}: ">${esc(fmtVal(f, cur[f]))}</span>`).join('')}</div></div>`;
+      }).join('')}
+    </section>`;
+  }
+  return `<div class="row"><a class="btn ghost sm" href="#${isAdmin() ? 'all' : 'list'}">← ${t('back')}</a></div>
+  <section class="card"><div class="row between"><h1>${esc(c.name)}</h1>${starsView(c.stars)}</div>
+    <div class="row">${c.edit_count > 0 ? `<span class="chip warn">${t('edited')} ×${c.edit_count}</span>` : ''}${c.sample ? `<span class="chip plain">${t('sample')}</span>` : ''}</div>
+    ${kvRows(c)}
+    <div class="kv"><div>${t('savedAt')}</div><div class="num">${fmtDT(c.created_at)}</div>${isAdmin() ? `<div>${t('by')}</div><div>${esc(userName(c.created_by))}</div>` : ''}<div>${t('savedLoc')}</div><div>${mapLink(c.saved_lat, c.saved_lng)}</div></div>
+  </section>
+  ${bkCard(c, mine, bkHist)}
+  ${(pUrl || aUrl) ? `<section class="card"><h2>${t('sProof')}</h2>${pUrl ? `<div class="media"><img src="${esc(pUrl)}" alt="${t('photo')}"></div><div class="small">${t('photo')}: ${mapLink(c.photo_lat, c.photo_lng)}</div>` : ''}${aUrl ? `<div class="field"><span class="lbl">${t('voiceNote')}</span><audio controls src="${esc(aUrl)}"></audio></div>` : ''}</section>` : ''}
+  <section class="card"><h2>${t('waTitle')}</h2><div class="grid2">
+    <a class="btn wa" href="${w.visit}" target="_blank" rel="noopener">${I.wa}${t('waVisit')}</a>
+    <a class="btn wa" href="${w.follow}" target="_blank" rel="noopener">${I.wa}${t('waFollow')}</a>
+    ${w.insta ? `<a class="btn wa" href="${w.insta}" target="_blank" rel="noopener">${I.wa}${t('waInsta')}</a>` : ''}
+    ${w.web ? `<a class="btn wa" href="${w.web}" target="_blank" rel="noopener">${I.wa}${t('waWeb')}</a>` : ''}
+  </div>${!w.insta ? `<p class="hint">${t('noInsta')}</p>` : ''}</section>
+  ${mine && !isAdmin() ? (hl > 0 ? `<a class="btn block big" href="#edit-${esc(c.id)}">${t('edit')}</a><p class="hint" style="text-align:center">${t('editLeft', { h: Math.floor(hl) })}</p>` : `<div class="card soft"><b>🔒 ${t('locked')}</b></div>`) : ''}
+  ${histHtml}`;
+}
+
+/* ---------- advance / booking ---------- */
+function bkCard(c, mine, hist) {
+  const b = S.bk[c.id], canEdit = isAdmin() || mine;
+  const btn = canEdit && !S.noBkTable ? `<a class="btn ${b ? 'ghost' : ''} block" href="#pay-${esc(c.id)}">₹ ${b ? t('editAdv') : t('addAdv')}</a>` : '';
+  if (S.noBkTable) return `<section class="card"><h2>${t('sBook')}</h2><div class="err">${t('needSql')}</div></section>`;
+  if (!b) return `<section class="card"><h2>${t('sBook')}</h2><p class="muted">${t('noAdv')}</p>${btn}</section>`;
+  const bal = balOf(b);
+  const rows = [
+    ['bkStatus', `<span class="chip ${b.status === 'cancelled' ? 'danger' : 'pay'}">${esc(opt('bk_status', b.status))}</span>`],
+    ['plotNo', esc(b.plot_no || '—')],
+    ['totalPrice', b.total_price != null ? '₹ ' + money(b.total_price) : '—'],
+    ['advAmt', '₹ ' + money(b.advance_amount)], ['advDate', fmtDate(b.advance_date)],
+    ['balPaid', '₹ ' + money(b.balance_paid || 0)],
+    ['balance', bal == null ? '—' : bal > 0 ? `<span class="balline" style="color:var(--warn)">₹ ${money(bal)}</span>` : `<span class="chip">${t('paidFull')}</span>`],
+    ['balDue', b.balance_due_date ? fmtDate(b.balance_due_date) : '—'],
+    ['regDate', b.registration_date ? fmtDate(b.registration_date) : '—'],
+    ['payNote', esc(b.payment_note || '—')],
+    ['lastUpd', `${esc(userName(b.updated_by || b.created_by))} · <span class="num">${fmtDT(b.updated_at)}</span>`],
+  ];
+  let h = '';
+  if (isAdmin() && hist && hist.length > 1) {
+    h = `<details><summary><b>${t('bkHist')} (${hist.length - 1})</b></summary><div class="list" style="margin-top:8px">${hist.slice(1).map((v, i) => {
+      const prev = hist[i].data, cur = v.data, ch = BK_FIELDS.filter(f => String(prev[f] ?? '') !== String(cur[f] ?? ''));
+      const fv = (f, x) => x == null || x === '' ? '—' : f.endsWith('_date') ? fmtDate(x) : f === 'status' ? opt('bk_status', x) : ['total_price', 'advance_amount', 'balance_paid'].includes(f) ? '₹ ' + money(x) : String(x);
+      return `<div class="ver"><div class="row between"><b>${t('editN', { n: i + 1 })} · ${esc(userName(v.saved_by))}</b><span class="small muted num">${fmtDT(v.saved_at)}</span></div>
+        <div class="diff"><span class="small muted dh">${t('field')}</span><span class="small muted dh">${t('before')}</span><span class="small muted dh">${t('after')}</span>
+        ${ch.map(f => `<span class="lbl2">${t(BK_LABEL[f])}</span><span class="old" data-pre="${t('before')}: ">${esc(fv(f, prev[f]))}</span><span class="new" data-pre="${t('after')}: ">${esc(fv(f, cur[f]))}</span>`).join('')}</div></div>`;
+    }).join('')}</div></details>`;
+  }
+  return `<section class="card"><h2>${t('sBook')}</h2><div class="paybox"><div class="kv">${rows.map(([k, v]) => `<div>${t(k)}</div><div>${v}</div>`).join('')}</div></div>${btn}${h}</section>`;
+}
+
+async function viewPay(id) {
+  const c = await DB.customer(id); if (!c) return `<div class="empty">${t('none')}</div>`;
+  if (!isAdmin() && c.created_by !== S.me.id) return `<div class="empty">${t('none')}</div>`;
+  if (S.noBkTable) return `<div class="err">${t('needSql')}</div>`;
+  const b = S.bk[id] || { status: 'advance', balance_paid: 0 };
+  const n = v => v == null ? '' : String(v);
+  return `<div class="row"><a class="btn ghost sm" href="#c-${esc(id)}">← ${t('back')}</a></div>
+  <h1>${t('sBook')}</h1><p><b>${esc(c.name)}</b> · <span class="num">${esc(c.phone)}</span></p>
+  <form id="pay-form" class="card" novalidate data-id="${esc(id)}">
+    ${fs('bk_status', 'bkStatus', b.status)}
+    ${inp('plot_no', 'plotNo', b.plot_no)}
+    <div class="grid2">${inp('total_price', 'totalPrice', n(b.total_price), 'text', true, 'inputmode="decimal" autocomplete="off"')}${inp('advance_amount', 'advAmt', n(b.advance_amount), 'text', true, 'inputmode="decimal" autocomplete="off"')}</div>
+    <div class="grid2">${inp('advance_date', 'advDate', b.advance_date, 'date', true, `max="${dayStr()}"`)}${inp('registration_date', 'regDate', b.registration_date, 'date')}</div>
+    <div class="grid2">${inp('balance_paid', 'balPaid', n(b.balance_paid ?? 0), 'text', false, 'inputmode="decimal" autocomplete="off"')}${inp('balance_due_date', 'balDue', b.balance_due_date, 'date')}</div>
+    <div class="paybox"><span class="muted">${t('balance')}</span><span class="balline num" id="bal-live">—</span></div>
+    <div class="field"><label for="f-payment_note">${t('payNote')}</label><textarea id="f-payment_note" name="payment_note">${esc(b.payment_note)}</textarea></div>
+    <div id="pay-err"></div>
+    <button class="btn block big" type="submit" id="pay-btn">${t('save')}</button>
+  </form>`;
+}
+function payLive() {
+  const f = $('#pay-form'); if (!f) return;
+  const tot = toNum(f.total_price.value), adv = toNum(f.advance_amount.value) || 0, paid = toNum(f.balance_paid.value) || 0;
+  $('#bal-live').textContent = (tot == null || isNaN(tot)) ? '—' : '₹ ' + money(Math.max(0, tot - adv - paid));
+}
+async function savePay(f) {
+  const g = n => (f[n] && f[n].value || '').trim();
+  const st = (f.querySelector('input[name="bk_status"]:checked') || {}).value || 'advance';
+  const b = { customer_id: f.dataset.id, status: st, plot_no: g('plot_no'), total_price: toNum(g('total_price')), advance_amount: toNum(g('advance_amount')), balance_paid: toNum(g('balance_paid')) || 0,
+    advance_date: g('advance_date') || null, registration_date: g('registration_date') || null, balance_due_date: g('balance_due_date') || null, payment_note: g('payment_note') };
+  const err = $('#pay-err'), fail = (m, id) => { err.innerHTML = `<div class="err" role="alert">${esc(m)}</div>`; const el = $(id); if (el) { el.scrollIntoView({ block: 'center' }); el.focus(); } };
+  if (b.total_price == null || isNaN(b.total_price) || b.total_price <= 0) return fail(t('needTotal'), '#f-total_price');
+  if (b.advance_amount == null || isNaN(b.advance_amount) || b.advance_amount <= 0) return fail(t('needAdv'), '#f-advance_amount');
+  if (isNaN(b.balance_paid) || b.balance_paid < 0) return fail(t('needAdv'), '#f-balance_paid');
+  if (!b.advance_date) return fail(t('needAdvDate'), '#f-advance_date');
+  if (b.advance_date > dayStr()) return fail(t('futureAdv'), '#f-advance_date');
+  if (b.advance_amount + b.balance_paid > b.total_price) return fail(t('tooMuch'), '#f-advance_amount');
+  if (b.registration_date && b.registration_date < b.advance_date) return fail(t('regBefore'), '#f-registration_date');
+  err.innerHTML = '';
+  const btn = $('#pay-btn'); btn.disabled = true; btn.textContent = t('saving');
+  try { await DB.saveBooking(b); toast(t('saved')); location.hash = 'c-' + b.customer_id; }
+  catch (e) { btn.disabled = false; btn.textContent = t('save'); if (e.message === 'BLOCKED') return handleErr(e); err.innerHTML = `<div class="err" role="alert">${esc(errText(e))}</div>`; }
+}
+
+/* ---------- admin ---------- */
+function teamToday(ev, cs, day) {
+  return S.users.filter(u => u.role !== 'admin').map(u => {
+    const e = ev.filter(x => x.user_id === u.id && localDay(x.at) === day);
+    return { u, login: e.filter(x => x.kind === 'login').pop(), start: e.filter(x => x.kind === 'field_start').pop(), end: e.filter(x => x.kind === 'field_end')[0], n: cs.filter(c => c.created_by === u.id && localDay(c.created_at) === day).length };
+  });
+}
+function barsHtml(pairs) {
+  const max = Math.max(1, ...pairs.map(p => p[1]));
+  return `<div class="bars">${pairs.map(([l, n]) => `<div class="bar"><span>${l}</span><div class="track"><div class="fill" style="width:${(n / max) * 100}%"></div></div><b>${n}</b></div>`).join('')}</div>`;
+}
+async function viewDash() {
+  const [cs, ev] = await Promise.all([DB.customers(), DB.events()]); const today = dayStr();
+  const team = teamToday(ev, cs, today);
+  const src = OPTS.source.map(([code]) => [esc(opt('source', code)), cs.filter(c => c.source === code).length]);
+  const st = [5, 4, 3, 2, 1].map(n => [starsView(n), cs.filter(c => c.stars === n).length]);
+  return `<h1>${t('dash')}</h1>
+  <div class="tiles">
+    <a class="tile" href="#all"><b>${cs.filter(c => localDay(c.created_at) === today).length}</b><span>${t('todayCust')}</span></a>
+    <a class="tile" href="#all"><b>${cs.length}</b><span>${t('total')}</span></a>
+    <a class="tile" href="#all"><b>${cs.filter(c => c.stars === 5).length}</b><span>${t('five')}</span></a>
+    <div class="tile"><b>${cs.filter(c => c.follow_up_date === today).length}</b><span>${t('todayFU')}</span></div>
+    <a class="tile" href="#all" data-quick="visit"><b>${cs.filter(c => c.site_visit_date === today).length}</b><span>${t('todaySV')}</span></a>
+    <a class="tile" href="#team-day"><b>${team.filter(x => x.start).length}/${team.length}</b><span>${t('inField')}</span></a>
+  </div>
+  ${S.noBkTable ? `<div class="err">${t('needSql')}</div>` : (() => {
+    const bks = Object.values(S.bk).filter(b => b.status !== 'cancelled'), wk = dayStr(new Date(Date.now() + 7 * 864e5));
+    return `<div class="tiles">
+      <a class="tile" href="#all" data-quick="adv"><b>${bks.length}</b><span>${t('advCount')}</span></a>
+      <a class="tile" href="#all" data-quick="adv"><b>₹${money(bks.reduce((a, b) => a + (+b.advance_amount || 0) + (+b.balance_paid || 0), 0))}</b><span>${t('advSum')}</span></a>
+      <a class="tile" href="#all" data-quick="adv"><b>₹${money(bks.reduce((a, b) => a + (balOf(b) || 0), 0))}</b><span>${t('balSum')}</span></a>
+      <a class="tile" href="#all" data-quick="reg"><b>${bks.filter(b => b.status !== 'registered' && b.registration_date && b.registration_date >= today && b.registration_date <= wk).length}</b><span>${t('regWeek')}</span></a>
+      <a class="tile" href="#all" data-quick="visit"><b>${cs.filter(c => c.site_visit_date === today).length}</b><span>${t('qVisit')}</span></a>
+    </div>`; })()}
+  <section class="card"><div class="row between"><h2>${t('byEmp')}</h2><a href="#team-day">${t('viewAll')} →</a></div>
+    <div class="tablewrap"><table><thead><tr><th>${t('emp')}</th><th>${t('loginAt')}</th><th>${t('fieldStarted')}</th><th>${t('count')}</th></tr></thead><tbody>
+    ${team.map(r => `<tr><td><a href="#staff-${esc(r.u.id)}"><b>${esc(r.u.full_name)}</b></a>${r.u.blocked ? ` <span class="chip danger">${t('isBlocked')}</span>` : ''}</td>
+      <td class="num">${r.login ? fmtTime(r.login.at) + '<br>' + mapLink(r.login.lat, r.login.lng) : `<span class="muted">${t('notLogged')}</span>`}</td>
+      <td class="num">${r.start ? fmtTime(r.start.at) + '<br>' + mapLink(r.start.lat, r.start.lng) : '—'}</td><td class="num"><a href="#allby-${esc(r.u.id)}"><b>${r.n}</b> →</a></td></tr>`).join('')}
+    </tbody></table></div></section>
+  <div class="grid2"><section class="card"><h2>${t('bySource')}</h2>${barsHtml(src)}</section><section class="card"><h2>${t('byStars')}</h2>${barsHtml(st)}</section></div>`;
+}
+
+async function viewAll(empId) {
+  const cs = await DB.customers();
+  S.allCs = cs; S.filtered = null;
+  const today = dayStr(), emp = empId ? S.users.find(u => u.id === empId) : null;
+  const base = emp ? cs.filter(c => c.created_by === empId) : cs;
+  const qn = { visit: base.filter(c => c.site_visit_date === today).length, adv: base.filter(c => S.bk[c.id] && S.bk[c.id].status !== 'cancelled').length, reg: base.filter(c => { const b = S.bk[c.id]; return b && b.status !== 'registered' && b.status !== 'cancelled' && b.registration_date && b.registration_date >= today; }).length };
+  return `${emp ? `<div class="row"><a class="btn ghost sm" href="#users">← ${t('back')}</a></div>` : ''}
+  <div class="row between"><h1>${emp ? esc(t('custOf', { n: emp.full_name })) : t('customers')} <span class="muted num" id="all-n">(${cs.length})</span></h1>
+    ${IN_FRAME ? `<span class="hint">${t('exportNote')}</span>` : `<button class="btn soft sm" data-act="csv">${t('export')}</button>`}</div>
+  <div class="quick" role="group" aria-label="Quick lists">
+    <button type="button" data-act="quick" data-q="" aria-pressed="${!S.quick}">${t('qAll')}</button>
+    <button type="button" data-act="quick" data-q="visit" aria-pressed="${S.quick === 'visit'}">📅 ${t('qVisit')} (${qn.visit})</button>
+    <button type="button" data-act="quick" data-q="adv" aria-pressed="${S.quick === 'adv'}">₹ ${t('qAdv')} (${qn.adv})</button>
+    <button type="button" data-act="quick" data-q="reg" aria-pressed="${S.quick === 'reg'}">📝 ${t('qReg')} (${qn.reg})</button>
+  </div>
+  ${S.noBkTable ? `<div class="err">${t('needSql')}</div>` : ''}
+  <div class="filters card">
+    <input type="search" id="fq" placeholder="${t('search')}" aria-label="${t('search')}">
+    <select id="femp" aria-label="${t('emp')}"><option value="">${t('allEmp')}</option>${S.users.filter(u => u.role !== 'admin').map(u => `<option value="${esc(u.id)}">${esc(u.full_name)}</option>`).join('')}</select>
+    <select id="fstar" aria-label="${t('stars')}"><option value="">${t('allStars')}</option>${[5, 4, 3, 2, 1].map(n => `<option value="${n}">${'★'.repeat(n)}</option>`).join('')}</select>
+    <select id="fsrc" aria-label="${t('source')}"><option value="">${t('allSrc')}</option>${OPTS.source.map(([c]) => `<option value="${c}">${esc(opt('source', c))}</option>`).join('')}</select>
+    <label class="field small"><span>${t('from')}</span><input type="date" id="ffrom"></label>
+    <label class="field small"><span>${t('to')}</span><input type="date" id="fto"></label>
+  </div>
+  <div class="list" id="alist">${cs.map(c => custItem(c)).join('') || `<div class="empty">${t('noCust')}</div>`}</div>`;
+}
+function filterAll() {
+  if (!$('#alist')) return;
+  const q = ($('#fq').value || '').toLowerCase(), e = $('#femp').value, s = $('#fstar').value, src = $('#fsrc').value, f = $('#ffrom').value, to = $('#fto').value;
+  const today = dayStr(), qk = S.quick;
+  const quickOk = c => { const b = S.bk[c.id];
+    if (qk === 'visit') return c.site_visit_date === today;
+    if (qk === 'adv') return !!b && b.status !== 'cancelled';
+    if (qk === 'reg') return !!b && b.status !== 'registered' && b.status !== 'cancelled' && !!b.registration_date && b.registration_date >= today;
+    return true; };
+  let r = S.allCs.filter(c => quickOk(c) && (!q || [c.name, c.phone, c.village, c.mandal, c.district, (S.bk[c.id] || {}).plot_no].join(' ').toLowerCase().includes(q)) && (!e || c.created_by === e) && (!s || String(c.stars) === s) && (!src || c.source === src) && (!qk && f ? localDay(c.created_at) >= f : true) && (!qk && to ? localDay(c.created_at) <= to : true));
+  if (qk === 'reg') r = r.slice().sort((a, b) => S.bk[a.id].registration_date.localeCompare(S.bk[b.id].registration_date));
+  $('#alist').innerHTML = r.map(c => custItem(c, qk === 'visit' ? `<span class="chip">${t('svType')} · ${fmtDate(c.site_visit_date)}</span>` : '')).join('') || `<div class="empty">${t('none')}</div>`;
+  $('#all-n').textContent = `(${r.length})`;
+  S.filtered = r;
+}
+function exportCsv() {
+  const rows = S.filtered || S.allCs;
+  const cols = ['created_at', 'created_by', ...FIELDS.filter(f => !f.endsWith('_path')), 'edit_count', 'saved_lat', 'saved_lng'];
+  const bcols = ['status', 'plot_no', 'total_price', 'advance_amount', 'advance_date', 'balance_paid', 'balance', 'balance_due_date', 'registration_date', 'payment_note'];
+  const head = [...cols.map(c => c === 'created_by' ? t('by') : c === 'created_at' ? t('savedAt') : FIELD_LABEL[c] ? t(FIELD_LABEL[c]) : c), ...bcols.map(c => c === 'balance' ? t('balance') : t(BK_LABEL[c]))];
+  const bval = (c, f) => { const b = S.bk[c.id]; if (!b) return ''; if (f === 'balance') { const v = balOf(b); return v == null ? '' : v; } if (f === 'status') return opt('bk_status', b.status); if (f.endsWith('_date')) return b[f] ? fmtDate(b[f]) : ''; return b[f] ?? ''; };
+  const val0 = (c, f) => f === 'created_by' ? userName(c[f]) : f === 'created_at' ? fmtDT(c[f]) : fmtVal(f, c[f]);
+  const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const csv = '﻿' + [head, ...rows.map(c => [...cols.map(f => val0(c, f)), ...bcols.map(f => bval(c, f))])].map(r => r.map(q).join(',')).join('\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); a.download = `green-valley-customers-${dayStr()}.csv`; a.click();
+}
+
+async function viewTeam() {
+  const [cs, ev] = await Promise.all([DB.customers(), DB.events()]);
+  const day = S.teamDay || dayStr(); const team = teamToday(ev, cs, day);
+  const urls = {}; await Promise.all(team.flatMap(r => [r.start, r.end]).filter(x => x && x.photo_path).map(async x => { urls[x.photo_path] = await DB.fileUrl(x.photo_path); }));
+  const cell = (e, k) => e ? `<div class="row">${e.photo_path && urls[e.photo_path] ? `<img class="thumb" src="${esc(urls[e.photo_path])}" alt="${t('selfie')}">` : ''}<div><b class="num">${t(k)}: ${fmtTime(e.at)}</b><br>${mapLink(e.lat, e.lng)}</div></div>` : '';
+  return `<div class="row between"><h1>${t('team')}</h1><label class="row"><span>${t('date')}</span><input type="date" id="tday" value="${day}" style="width:auto"></label></div>
+  <div class="list">${team.map(r => `<div class="item"><div class="t"><a href="#staff-${esc(r.u.id)}"><b>${esc(r.u.full_name)}</b></a><a class="chip" href="#allby-${esc(r.u.id)}">${r.n} ${t('count')} →</a></div>
+    ${r.login ? `<div><b class="num">${t('loginAt')}: ${fmtTime(r.login.at)}</b> · ${mapLink(r.login.lat, r.login.lng)}</div>` : `<div class="muted">${t('notLogged')}</div>`}
+    ${cell(r.start, 'fieldStarted')}${cell(r.end, 'fieldEnded')}
+    ${r.u.blocked ? `<span class="chip danger">${t('isBlocked')}</span>` : ''}</div>`).join('') || `<div class="empty">${t('none')}</div>`}</div>`;
+}
+
+async function viewStaff(id) {
+  const ev = (await DB.events()).filter(e => e.user_id === id); const u = S.users.find(x => x.id === id) || {};
+  const urls = {}; await Promise.all(ev.filter(x => x.photo_path).slice(0, 60).map(async x => { urls[x.photo_path] = await DB.fileUrl(x.photo_path); }));
+  const k = { login: 'loginAt', field_start: 'fieldStarted', field_end: 'fieldEnded' };
+  return `<div class="row"><a class="btn ghost sm" href="#team-day">← ${t('back')}</a></div><h1>${esc(u.full_name || '')}</h1><p class="muted">${t('log')}</p>
+  <div class="list">${ev.map(e => `<div class="item"><div class="row">${e.photo_path && urls[e.photo_path] ? `<img class="thumb" src="${esc(urls[e.photo_path])}" alt="${t('selfie')}">` : ''}<div><b>${t(k[e.kind])}</b> · <span class="num">${fmtDT(e.at)}</span><br>${mapLink(e.lat, e.lng)}${e.sample ? ` <span class="chip plain">${t('sample')}</span>` : ''}</div></div></div>`).join('') || `<div class="empty">${t('none')}</div>`}</div>`;
+}
+
+async function viewUsers(msg) {
+  const [us, cs] = await Promise.all([DB.users(), DB.customers().catch(() => [])]);
+  S.users = us; const cnt = id => cs.filter(c => c.created_by === id).length;
+  return `<h1>${t('users')}</h1>
+  <form class="card" id="user-form" autocomplete="off"><h2>${t('addUser')}</h2>
+    ${msg ? msg : ''}
+    <div class="grid2">
+      <div class="field"><label for="u-name">${t('fullName')}</label><input type="text" id="u-name" required></div>
+      <div class="field"><label for="u-phone">${t('phone')}</label><input type="tel" id="u-phone" inputmode="numeric"></div>
+      <div class="field"><label for="u-id">${t('loginId')}</label><input type="text" id="u-id" autocapitalize="none" placeholder="gv03" required></div>
+      <div class="field"><label for="u-pw">${t('password')}</label><input type="text" id="u-pw" required></div>
+    </div>
+    <button class="btn block" type="submit">${t('create')}</button>
+  </form>
+  <section class="card"><h2>${t('employees')} <span class="muted num">(${S.users.filter(u => u.role !== 'admin').length})</span></h2>
+  <div class="list">${S.users.map(u => `<div class="item"><div class="t"><b>${esc(u.full_name || u.login_id)}</b>${u.role === 'admin' ? `<span class="chip">${t('admin')}</span>` : u.blocked ? `<span class="chip danger">${t('isBlocked')}</span>` : `<span class="chip">${t('active')}</span>`}</div>
+    <div class="s"><span>ID: ${u.role !== 'admin' ? `<a href="#allby-${esc(u.id)}"><b class="num">${esc(u.login_id)}</b></a>` : `<b class="num">${esc(u.login_id)}</b>`}</span>${u.phone ? `<span class="num">${esc(u.phone)}</span>` : ''}</div>
+    ${u.role !== 'admin' ? `<div class="row"><a class="btn sm" href="#allby-${esc(u.id)}">${t('custList')} (${cnt(u.id)})</a><button class="btn sm ${u.blocked ? '' : 'danger'}" data-act="block" data-id="${esc(u.id)}" data-b="${u.blocked ? 0 : 1}">${u.blocked ? t('unblock') : t('block')}</button><button class="btn sm ghost" data-act="pw" data-id="${esc(u.id)}">${t('resetPw')}</button><a class="btn sm ghost" href="#staff-${esc(u.id)}">${t('log')}</a></div>
+    <div class="row hide" id="pw-${esc(u.id)}"><input type="text" id="pwv-${esc(u.id)}" placeholder="${t('newPw')}" style="flex:1;min-width:0"><button class="btn sm" data-act="pwsave" data-id="${esc(u.id)}">${t('save')}</button></div>` : ''}
+  </div>`).join('')}</div></section>`;
+}
+
+async function viewConfig() {
+  const s = S.settings;
+  return `<h1>${t('config')}</h1>
+  <form class="card" id="cfg-form">
+    <div class="field"><label for="s-insta">${t('cInsta')}</label><input type="url" id="s-insta" value="${esc(s.instagram_url)}" placeholder="https://instagram.com/…"></div>
+    <div class="field"><label for="s-web">${t('cWeb')}</label><input type="url" id="s-web" value="${esc(s.website_url)}" placeholder="https://…"></div>
+    <div class="field"><label for="s-office">${t('cOffice')}</label><input type="tel" id="s-office" value="${esc(s.office_phone)}"></div>
+    <div class="field"><label for="s-company">${t('cCompany')}</label><input type="text" id="s-company" value="${esc(s.company_name)}"></div>
+    <button class="btn block" type="submit">${t('save')}</button>
+  </form>
+  ${!LIVE ? `<section class="card soft"><b>${t('demo')}</b></section>` : ''}`;
+}
+
+/* ---------------- router ---------------- */
+const app = $('#app');
+async function show() {
+  if (!S.me) { app.innerHTML = viewLogin(); return; }
+  let v = (location.hash || '').slice(1) || (isAdmin() ? 'dash' : 'home');
+  const adminViews = ['dash', 'all', 'team-day', 'users', 'a-config'], empViews = ['home', 'add', 'list', 'followups'];
+  if (isAdmin() && empViews.includes(v)) v = 'dash';
+  if (!isAdmin() && (adminViews.includes(v) || v.startsWith('staff-') || v.startsWith('allby-'))) v = 'home';
+  app.innerHTML = shell(v, `<div class="loading">…</div>`);
+  try {
+    await loadBk();
+    let html;
+    if (v === 'home') html = await viewHome();
+    else if (v === 'add') html = await viewForm(null);
+    else if (v === 'list') html = await viewList();
+    else if (v === 'followups') html = await viewFollowups();
+    else if (v.startsWith('c-')) html = await viewCustomer(v.slice(2));
+    else if (v.startsWith('edit-')) { const c = await DB.customer(v.slice(5)); html = (c && c.created_by === S.me.id && hoursLeft(c) > 0) ? await viewForm(c) : `<div class="card soft"><b>🔒 ${t('locked')}</b></div>`; }
+    else if (v.startsWith('saved-')) html = await viewSaved(v.slice(6));
+    else if (v === 'dash') html = await viewDash();
+    else if (v === 'all') html = await viewAll();
+    else if (v.startsWith('allby-')) html = await viewAll(v.slice(6));
+    else if (v.startsWith('pay-')) html = await viewPay(v.slice(4));
+    else if (v === 'team-day') html = await viewTeam();
+    else if (v.startsWith('staff-')) html = await viewStaff(v.slice(6));
+    else if (v === 'users') html = await viewUsers();
+    else if (v === 'a-config') html = await viewConfig();
+    else html = isAdmin() ? await viewDash() : await viewHome();
+    $('#main').innerHTML = html;
+    if (v.startsWith('allby-') && $('#femp')) $('#femp').value = v.slice(6);
+    if ((v === 'all' || v.startsWith('allby-')) && (S.quick || v.startsWith('allby-'))) filterAll();
+    if (v.startsWith('pay-')) payLive();
+    window.scrollTo(0, 0);
+  } catch (e) { handleErr(e); }
+}
+function errText(e) { const m = e && e.message; return m === 'WRONG' ? t('wrong') : m === 'BLOCKED' ? t('blocked') : m === 'EDIT_WINDOW_CLOSED' ? t('locked') : m === 'ID_TAKEN' ? t('idTaken') : m === 'NET' || /fetch|network/i.test(m || '') ? t('netErr') : (m || t('netErr')); }
+async function handleErr(e) {
+  if (e && e.message === 'BLOCKED') { await DB.logout().catch(() => {}); S.me = null; app.innerHTML = viewLogin(t('blocked')); return; }
+  const m = $('#main'); if (m) m.innerHTML = `<div class="err" role="alert">${esc(errText(e))}</div>`; else toast(errText(e));
+}
+async function afterLogin() {
+  S.users = await DB.users().catch(() => [S.me]);
+  S.settings = await DB.settings().catch(() => ({}));
+}
+
+/* ---------------- events ---------------- */
+document.addEventListener('click', async ev => {
+  const qa = ev.target.closest('[data-quick]'); if (qa) S.quick = qa.dataset.quick; else if (ev.target.closest('.bottomnav a, a[href^="#allby-"]')) S.quick = '';
+  const b = ev.target.closest('[data-act]'); if (!b) return;
+  const act = b.dataset.act;
+  if (act === 'lang') { ev.preventDefault(); S.lang = b.dataset.v; try { localStorage.setItem('gvcrm-lang', S.lang); } catch (e) {} document.documentElement.lang = S.lang; if (!S.me) app.innerHTML = viewLogin(); else if (!$('#cust-form')) show(); else toast(S.lang === 'te' ? 'ఫారం సేవ్ అయ్యాక భాష మారుతుంది' : 'Language changes after you save this form'); return; }
+  if (act === 'logout') { await DB.logout(); S.me = null; location.hash = ''; app.innerHTML = viewLogin(); return; }
+  if (act === 'rec') return toggleRec();
+  if (act === 'csv') return exportCsv();
+  if (act === 'quick') { S.quick = b.dataset.q; document.querySelectorAll('.quick button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); filterAll(); return; }
+  if (act === 'block') {
+    const u = S.users.find(x => x.id === b.dataset.id), blk = b.dataset.b === '1';
+    if (!(await confirmBox(t(blk ? 'confirmBlock' : 'confirmUnblock', { n: u.full_name })))) return;
+    try { await DB.setBlocked(u.id, blk); toast(blk ? t('isBlocked') : t('active')); $('#main').innerHTML = await viewUsers(); } catch (e) { toast(errText(e)); }
+    return;
+  }
+  if (act === 'pw') { $('#pw-' + b.dataset.id).classList.toggle('hide'); return; }
+  if (act === 'pwsave') {
+    const v = $('#pwv-' + b.dataset.id).value.trim(); if (v.length < 6) return toast(t('pwShort'));
+    try { await DB.resetPassword(b.dataset.id, v); toast(t('saved')); $('#pw-' + b.dataset.id).classList.add('hide'); } catch (e) { toast(errText(e)); }
+  }
+});
+
+document.addEventListener('input', ev => {
+  if (ev.target.id === 'q') { const q = ev.target.value.toLowerCase(); document.querySelectorAll('#clist .item').forEach(el => { el.classList.toggle('hide', !el.textContent.toLowerCase().includes(q)); }); }
+  if (['fq', 'femp', 'fstar', 'fsrc', 'ffrom', 'fto'].includes(ev.target.id)) filterAll();
+  if (ev.target.closest('#pay-form')) payLive();
+});
+
+document.addEventListener('change', async ev => {
+  const el = ev.target;
+  if (el.id === 'tday') { S.teamDay = el.value; $('#main').innerHTML = await viewTeam(); return; }
+  // conditional fields
+  if (el.closest('#cust-form') && el.type === 'radio') {
+    document.querySelectorAll('[data-show]').forEach(box => {
+      const [n, vals] = box.dataset.show.split('='); const cur = (document.querySelector(`#cust-form input[name="${n}"]:checked`) || {}).value;
+      box.classList.toggle('hide', !vals.split(',').includes(cur));
+    });
+    if (el.name === 'source') { const l = $('label[for="f-source_detail"]'); if (l) l.textContent = t(el.value === 'other' ? 'sourceOther' : 'sourcePerson'); }
+    if (el.name === 'stars') document.querySelectorAll('.starpick .opt').forEach((o, i) => o.classList.toggle('lit', i < +el.value));
+  }
+  if (el.id === 'selfie-in' && el.files[0]) {
+    const msg = $('#selfie-msg'); msg.innerHTML = `<div class="ok">${t('gettingLoc')}</div>`;
+    const geo = await getGeo();
+    if (!geo && LIVE) { msg.innerHTML = `<div class="err">${t('needGps')}</div>`; el.value = ''; return; }
+    try {
+      msg.innerHTML = `<div class="ok">${t('saving')}</div>`;
+      const blob = await stampPhoto(el.files[0], geo, S.me.full_name);
+      const path = await DB.upload('selfie', blob);
+      await DB.addEvent(el.dataset.kind, geo, path);
+      toast(t('saved')); show();
+    } catch (e) { msg.innerHTML = `<div class="err">${esc(errText(e))}</div>`; }
+    return;
+  }
+  if (el.id === 'photo-in' && el.files[0]) {
+    $('#photo-msg').textContent = t('gettingLoc');
+    const geo = await getGeo();
+    const blob = await stampPhoto(el.files[0], geo, S.me.full_name);
+    S.draft.photo = { blob, geo, time: new Date().toISOString() };
+    $('#photo-box').innerHTML = `<img src="${URL.createObjectURL(blob)}" alt="">`;
+    $('#photo-lbl').textContent = t('retake');
+    $('#photo-msg').innerHTML = geo ? mapLink(geo.lat, geo.lng) : `<span class="chip warn">${t('noLoc')}</span>`;
+    return;
+  }
+  if (el.id === 'audio-in' && el.files[0]) { setAudio(el.files[0]); return; }
+});
+
+function setAudio(blob) {
+  S.draft.audio = blob;
+  $('#audio-box').innerHTML = `<audio controls src="${URL.createObjectURL(blob)}"></audio>`;
+  $('#rec-lbl').textContent = t('reRec');
+}
+async function toggleRec() {
+  const btn = $('#rec-btn');
+  if (S.rec) { S.rec.stop(); return; }
+  try {
+    if (!navigator.mediaDevices || !window.MediaRecorder) throw new Error('no');
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const type = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4'].find(x => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(x)) || '';
+    const r = new MediaRecorder(stream, type ? { mimeType: type } : undefined); const parts = []; let secs = 0;
+    const tick = setInterval(() => { secs++; const l = $('#rec-lbl'); if (l) l.textContent = `${t('stop')}  ${Math.floor(secs / 60)}:${pad(secs % 60)}`; }, 1000);
+    r.ondataavailable = e => e.data.size && parts.push(e.data);
+    r.onstop = () => { clearInterval(tick); stream.getTracks().forEach(x => x.stop()); S.rec = null; btn.classList.remove('rec-on'); const old = btn.querySelector('.dot'); if (old) old.remove(); if (parts.length) setAudio(new Blob(parts, { type: r.mimeType || 'audio/webm' })); else $('#rec-lbl').textContent = t('mic'); };
+    r.start(); S.rec = r;
+    btn.classList.add('rec-on'); btn.insertAdjacentHTML('afterbegin', '<span class="dot" aria-hidden="true"></span>'); $('#rec-lbl').textContent = `${t('stop')}  0:00`;
+  } catch (e) {
+    toast(t('micDenied')); $('#audio-pick').classList.remove('hide');
+  }
+}
+
+document.addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const f = ev.target, fid = f.getAttribute('id');
+  if (fid === 'login-form') {
+    const btn = $('#l-btn'); btn.disabled = true; btn.textContent = '…';
+    try {
+      S.me = await DB.login($('#l-id').value, $('#l-pw').value);
+      await afterLogin();
+      btn.textContent = t('gettingLoc');
+      const geo = await getGeo(8000);
+      await DB.addEvent('login', geo, null).catch(() => {});
+      location.hash = isAdmin() ? 'dash' : 'home'; show();
+      if (!geo) setTimeout(() => toast(t('noLoc') + ' – ' + t('needGps'), 4000), 300);
+    } catch (e) { S.me = null; app.innerHTML = viewLogin(errText(e)); }
+    return;
+  }
+  if (fid === 'cust-form') return saveCustomer(f);
+  if (fid === 'pay-form') return savePay(f);
+  if (fid === 'user-form') {
+    const id = $('#u-id').value.trim().toLowerCase(), pw = $('#u-pw').value.trim(), name = $('#u-name').value.trim();
+    let err = !/^[a-z0-9_.-]{2,30}$/.test(id) ? t('badId') : pw.length < 6 ? t('pwShort') : !name ? t('needName').replace(S.lang === 'te' ? 'కస్టమర్ ' : 'customer ', '') : '';
+    if (err) return toast(err);
+    try { await DB.createUser({ login_id: id, password: pw, full_name: name, phone: $('#u-phone').value.trim() }); $('#main').innerHTML = await viewUsers(`<div class="ok">${t('userCreated')}<br>ID: <b>${esc(id)}</b> · ${t('password')}: <b>${esc(pw)}</b></div>`); }
+    catch (e) { toast(errText(e)); }
+    return;
+  }
+  if (fid === 'cfg-form') {
+    const s = { instagram_url: $('#s-insta').value.trim(), website_url: $('#s-web').value.trim(), office_phone: $('#s-office').value.trim(), company_name: $('#s-company').value.trim() };
+    try { await DB.saveSettings(s); S.settings = { ...S.settings, ...s }; toast(t('configSaved')); } catch (e) { toast(errText(e)); }
+  }
+});
+
+async function saveCustomer(f) {
+  const fd = new FormData(f), g = n => (fd.get(n) || '').toString().trim();
+  const rec = {};
+  ['name', 'phone', 'village', 'mandal', 'district', 'occupation', 'occupation_other', 'education', 'financial_status', 'children_status', 'children_place', 'source', 'source_detail', 'buying_interest', 'budget', 'emi', 'payment_mode', 'payment_time', 'vision', 'feel', 'will_contact', 'asked_construction', 'note'].forEach(n => rec[n] = g(n));
+  rec.interest_items = fd.getAll('interest_items');
+  rec.stars = g('stars') ? +g('stars') : null;
+  rec.site_visit_date = g('site_visit_date') || null; rec.follow_up_date = g('follow_up_date') || null;
+  if (rec.occupation !== 'other') rec.occupation_other = '';
+  if (rec.children_status !== 'studying') rec.children_place = '';
+  if (!['person', 'other'].includes(rec.source)) rec.source_detail = '';
+  if (rec.payment_mode !== 'time') rec.payment_time = '';
+  const digits = rec.phone.replace(/\D/g, '').replace(/^91(?=\d{10}$)/, '');
+  const errBox = $('#form-err');
+  const fail = (msg, id) => { errBox.innerHTML = `<div class="err" role="alert">${esc(msg)}</div>`; const el = $(id); if (el) { el.scrollIntoView({ block: 'center' }); if (el.focus) el.focus(); } };
+  if (!rec.name) return fail(t('needName'), '#f-name');
+  if (digits.length !== 10) return fail(t('needPhone'), '#f-phone');
+  if (!rec.stars) return fail(t('needStars'), '#fs-stars');
+  rec.phone = digits;
+  errBox.innerHTML = '';
+  const btn = $('#save-btn'); btn.disabled = true; btn.textContent = t('saving');
+  try {
+    const id = f.dataset.id;
+    const geo = await getGeo(8000);
+    if (S.draft.photo) { rec.photo_path = await DB.upload('customer-photo', S.draft.photo.blob); rec.photo_lat = S.draft.photo.geo ? S.draft.photo.geo.lat : null; rec.photo_lng = S.draft.photo.geo ? S.draft.photo.geo.lng : null; rec.photo_time = S.draft.photo.time; }
+    if (S.draft.audio) rec.audio_path = await DB.upload('voice-note', S.draft.audio);
+    if (!id) { rec.saved_lat = geo ? geo.lat : null; rec.saved_lng = geo ? geo.lng : null; }
+    const c = id ? await DB.updateCustomer(id, rec) : await DB.addCustomer(rec);
+    S.draft = {};
+    toast(t('saved'));
+    location.hash = id ? 'c-' + c.id : 'saved-' + c.id;
+  } catch (e) {
+    btn.disabled = false; btn.textContent = t('save');
+    if (e.message === 'BLOCKED') return handleErr(e);
+    errBox.innerHTML = `<div class="err" role="alert">${esc(errText(e))}</div>`;
+  }
+}
+
+window.addEventListener('hashchange', show);
+
+/* ---------------- start ---------------- */
+(async () => {
+  document.documentElement.lang = S.lang;
+  try {
+    if (LIVE) await Live.init(); else Demo.init();
+    S.me = await DB.restore();
+    if (S.me) await afterLogin();
+  } catch (e) { S.me = null; }
+  show();
+})();
+window.__gv = { S, DB, LIVE };
+})();
+</script>
+
 </body>
 </html>
