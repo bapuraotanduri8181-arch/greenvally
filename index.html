@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F0F8F1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Green Valley CRM">
+<title>Green Valley CRM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Noto+Sans+Telugu:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F0F8F1;--card:#FFFFFF;--maroon:#1E5A34;--maroon2:#15291C;--gold:#A9DDB6;--ink:#15291C;--muted:#4C6855;--line:#CDE5D3;--ok:#1E5A34;--warn:#7A5200;--bad:#A8261C;--soft:#E2F2E6;--btn:#A9DDB6;--btnp:#93D2A4}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:600 16px/1.5 Inter,"Noto Sans Telugu",system-ui,sans-serif}
+button,input,select,textarea{font:inherit}
+.hidden{display:none!important}
+header{position:sticky;top:0;z-index:20;background:var(--card);color:var(--maroon);border-bottom:3px solid var(--btn);padding:12px 16px;padding-top:max(12px,env(safe-area-inset-top));display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px #1e5a3414}
+header .brand{flex:1;line-height:1.15}
+header .brand b{font-size:18px;display:block}
+header .brand small{opacity:.85;font-size:12px}
+.hbtn{background:var(--soft);color:var(--maroon);border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-height:40px;cursor:pointer}
+main{max-width:860px;margin:0 auto;padding:16px 14px 110px}
+nav.tabs{position:fixed;bottom:0;left:0;right:0;z-index:20;background:var(--card);border-top:2px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+nav.tabs button{flex:1;background:none;border:0;padding:8px 2px 10px;color:var(--muted);font-size:12px;cursor:pointer;min-height:58px;display:flex;flex-direction:column;align-items:center;gap:2px}
+nav.tabs button svg{width:24px;height:24px}
+nav.tabs button.on{color:var(--maroon);font-weight:600}
+h2{font-size:22px;margin:4px 0 12px;color:var(--maroon2)}
+h3{font-size:17px;margin:18px 0 8px;color:var(--maroon2)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 1px 3px #7a1f2b14}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.stat{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--maroon);border-radius:14px;padding:12px}
+.stat b{font-size:28px;color:var(--maroon);display:block;line-height:1.1}
+.stat span{font-size:13px;color:var(--muted)}
+label{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
+input,select,textarea{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:12px;background:#fff;font-size:16px;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--btn);color:var(--maroon2);border:0;border-radius:12px;padding:12px 18px;min-height:48px;font-weight:600;cursor:pointer;text-decoration:none}
+.btn:active{transform:scale(.98);background:var(--btnp)}
+.btn.full{width:100%}
+.btn.ghost{background:#fff;color:var(--maroon);border:1.5px solid var(--maroon)}
+.btn.wa{background:#25A35A;color:#fff}
+.btn.gold{background:var(--soft);color:var(--maroon);border:1.5px solid var(--btn)}
+.btn:disabled{opacity:.55}
+.list .item{display:flex;gap:12px;align-items:center;padding:12px;border-bottom:1px solid var(--line);cursor:pointer}
+.list .item:last-child{border-bottom:0}
+.avatar{width:44px;height:44px;border-radius:50%;background:var(--soft);color:var(--maroon);border:2px solid var(--btn);display:grid;place-items:center;font-weight:700;flex:none}
+.item .main{flex:1}
+.item .main b{display:block}
+.item .main small{color:var(--muted)}
+.pill{display:inline-block;font-size:12px;padding:3px 9px;border-radius:99px;background:var(--soft);color:var(--maroon2);white-space:nowrap}
+.pill.hot{background:#fde0dc;color:var(--bad)}.pill.warm{background:#fff0cc;color:var(--warn)}.pill.cold{background:#e3eef9;color:#1d4f8a}
+.pill.ok{background:var(--soft);color:var(--ok)}
+.search{display:flex;gap:8px;margin-bottom:10px}
+.toast{position:fixed;left:50%;bottom:86px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;z-index:60;max-width:90vw;text-align:center}
+.sheet{position:fixed;inset:0;background:#0006;z-index:40;display:flex;align-items:flex-end;justify-content:center}
+.sheet .panel{background:var(--bg);width:100%;max-width:720px;max-height:92vh;overflow:auto;border-radius:20px 20px 0 0;padding:18px 16px calc(24px + env(safe-area-inset-bottom))}
+.sheet .top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.x{background:none;border:0;font-size:28px;line-height:1;color:var(--maroon);cursor:pointer;min-width:44px;min-height:44px}
+dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;margin:8px 0}
+dt{color:var(--muted);font-size:13px}dd{margin:0;font-weight:500;overflow-wrap:anywhere}
+.btns{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-top:10px}
+.login{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(160deg,var(--soft) 0 38%,var(--bg) 38%)}
+.login .card{width:100%;max-width:400px;padding:26px}
+.logo{width:70px;height:70px;border-radius:18px;background:var(--btn);display:grid;place-items:center;margin:0 auto 10px}
+.center{text-align:center}
+.muted{color:var(--muted);font-size:14px}
+.selfie{width:100%;max-width:260px;border-radius:14px;display:block;margin:10px auto;border:3px solid var(--gold)}
+.thumb{width:56px;height:56px;border-radius:10px;object-fit:cover;flex:none;background:#eee}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.gallery a{display:block;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;color:var(--ink);text-decoration:none;font-size:13px}
+.gallery img{width:100%;height:120px;object-fit:cover;display:block}
+.gallery .pdf{height:120px;display:grid;place-items:center;background:var(--soft);color:var(--maroon);font-weight:700;font-size:22px}
+.gallery span{display:block;padding:6px 8px}
+.empty{text-align:center;color:var(--muted);padding:24px 10px}
+.seg{display:flex;gap:6px;overflow-x:auto;margin-bottom:10px}
+.seg button{border:1.5px solid var(--line);background:#fff;color:var(--maroon);border-radius:99px;padding:6px 14px;white-space:nowrap;cursor:pointer;min-height:38px}
+.seg button.on{background:var(--btn);color:var(--maroon2);border-color:var(--btn)}
+@media(max-width:420px){.row{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<section id="loginView" class="login hidden">
+  <div class="card">
+    <div class="logo"><svg width="40" height="40" viewBox="0 0 40 40"><path d="M20 4 34 16v18H6V16z" fill="#FFFFFF"/><path d="M15 34V23h10v11" fill="#1E5A34"/></svg></div>
+    <h2 class="center" style="margin-bottom:0">Green Valley</h2>
+    <p class="center muted" style="margin-top:2px" data-t="tagline"></p>
+    <form id="loginForm">
+      <label data-t="email"></label>
+      <input id="lEmail" type="email" autocomplete="username" required>
+      <label data-t="password"></label>
+      <input id="lPass" type="password" autocomplete="current-password" required>
+      <button class="btn full" style="margin-top:16px" id="lBtn" data-t="login"></button>
+      <p id="lErr" class="center" style="color:var(--bad);font-size:14px"></p>
+    </form>
+    <p class="center"><button class="hbtn" onclick="toggleLang()">తెలుగు / English</button></p>
+  </div>
+</section>
+
+<!-- APP -->
+<section id="appView" class="hidden">
+  <header>
+    <div class="brand"><b>Green Valley CRM</b><small id="who"></small></div>
+    <button class="hbtn" onclick="toggleLang()">తె/En</button>
+    <button class="hbtn" onclick="logout()" data-t="logout"></button>
+  </header>
+  <main id="page"></main>
+  <nav class="tabs" id="tabs"></nav>
+</section>
+
+<div id="sheet" class="sheet hidden"><div class="panel" id="sheetPanel"></div></div>
+<div id="toast" class="toast hidden"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
+<script>
+{
+const SUPABASE_URL = 'https://lbyfvmfhsqdzoszvcmgd.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_vOW0L2eMXzYYAjh_YPLJYw_9ZUR_Fji';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* ---------- Language ---------- */
+const T = {
+ te:{tagline:'ఓంకార గ్రూప్స్ – ఓపెన్ ప్లాట్స్',email:'ఈమెయిల్',password:'పాస్‌వర్డ్',login:'లాగిన్',logout:'లాగౌట్',
+  home:'హోమ్',customers:'కస్టమర్లు',followups:'ఫాలో-అప్',attendance:'హాజరు',team:'టీమ్',files:'ఫైల్స్',
+  hello:'నమస్కారం',metToday:'ఈరోజు కలిసినవారు',dueToday:'ఈరోజు ఫాలో-అప్',hotLeads:'హాట్ లీడ్స్',totalCust:'మొత్తం కస్టమర్లు',
+  checkedIn:'హాజరు నమోదైంది',notCheckedIn:'ఇంకా హాజరు వేయలేదు',checkInNow:'సెల్ఫీతో హాజరు వేయండి',
+  addCustomer:'+ కొత్త కస్టమర్',name:'పేరు',phone:'ఫోన్ నంబర్',village:'ఊరు',profession:'వృత్తి',fin:'ఆర్థిక స్థితి',
+  interest:'ఆసక్తి',level:'ఆసక్తి స్థాయి',visitDate:'సైట్ విజిట్ తేదీ',notes:'నోట్స్',save:'సేవ్ చేయండి',status:'స్థితి',
+  low:'తక్కువ',middle:'మధ్యస్థ',good:'బాగుంది',high:'ఎక్కువ',plot:'ప్లాట్',flat:'ఫ్లాట్',both:'రెండూ',not_interested:'ఆసక్తి లేదు',undecided:'ఇంకా తేల్చలేదు',
+  hot:'హాట్',warm:'వార్మ్',cold:'కోల్డ్',new:'కొత్త',follow_up:'ఫాలో-అప్',site_visit_scheduled:'విజిట్ ఫిక్స్',site_visited:'విజిట్ అయింది',booked:'బుక్ అయింది',lost:'పోయింది',
+  search:'పేరు / ఊరు / ఫోన్ వెతకండి',all:'అన్నీ',waVisit:'సైట్ విజిట్ ఆహ్వానం',waResched:'విజిట్ మార్పు',waFollow:'ఫాలో-అప్ మెసేజ్',
+  when:'తేదీ & సమయం',nextFollow:'తర్వాత ఫాలో-అప్ తేదీ',setReminder:'రిమైండర్ పెట్టండి',done:'పూర్తయింది',noData:'ఇంకా ఏమీ లేదు',
+  takeSelfie:'సెల్ఫీ తీయండి',gettingLoc:'లొకేషన్ తీసుకుంటోంది…',locNeeded:'లొకేషన్ అనుమతి ఇవ్వండి – హాజరుకు తప్పనిసరి',
+  saved:'సేవ్ అయింది ✓',err:'సమస్య వచ్చింది: ',owner:'ఉద్యోగి',met:'కలిసిన తేదీ',map:'మ్యాప్',upload:'అప్‌లోడ్',
+  plot_photo:'ప్లాట్ ఫోటోలు',progress_photo:'డెవలప్‌మెంట్ ఫోటోలు',document:'PDF / డాక్యుమెంట్లు',title:'పేరు / వివరణ',plotNo:'ప్లాట్ నంబర్',
+  rename:'పేరు మార్చు',today:'ఈరోజు',overdue:'ఆలస్యం',wrongLogin:'ఈమెయిల్ లేదా పాస్‌వర్డ్ తప్పు',chooseFile:'ఫైల్ ఎంచుకోండి',edit:'మార్చు',
+  msgVisit:(c,d,e)=>`నమస్కారం ${c} గారు 🙏\nGreen Valley ఓపెన్ ప్లాట్స్ (గోలేట్, ఆసిఫాబాద్) సైట్ విజిట్ ${d} న ఏర్పాటు చేశాం. దయచేసి రండి.\n– ${e}, ఓంకార గ్రూప్స్`,
+  msgResched:(c,d,e)=>`నమస్కారం ${c} గారు 🙏\nమీ Green Valley సైట్ విజిట్ ను ${d} కి మార్చాం. మీకు అనుకూలమేనా?\n– ${e}, ఓంకార గ్రూప్స్`,
+  msgFollow:(c,e)=>`నమస్కారం ${c} గారు 🙏\nGreen Valley ఓపెన్ ప్లాట్స్ గురించి మీకు ఇంకా ఏమైనా వివరాలు కావాలా? ప్లాట్లు వేగంగా బుక్ అవుతున్నాయి.\n– ${e}, ఓంకార గ్రూప్స్`},
+ en:{tagline:'Omkara Groups – Open Plots',email:'Email',password:'Password',login:'Login',logout:'Logout',
+  home:'Home',customers:'Customers',followups:'Follow-ups',attendance:'Attendance',team:'Team',files:'Files',
+  hello:'Hello',metToday:'Met today',dueToday:'Follow-ups today',hotLeads:'Hot leads',totalCust:'Total customers',
+  checkedIn:'Checked in',notCheckedIn:'Not checked in yet',checkInNow:'Check in with selfie',
+  addCustomer:'+ New customer',name:'Name',phone:'Phone number',village:'Village',profession:'Profession',fin:'Financial status',
+  interest:'Interest',level:'Interest level',visitDate:'Site visit date',notes:'Notes',save:'Save',status:'Status',
+  low:'Low',middle:'Middle',good:'Good',high:'High',plot:'Plot',flat:'Flat',both:'Both',not_interested:'Not interested',undecided:'Undecided',
+  hot:'Hot',warm:'Warm',cold:'Cold',new:'New',follow_up:'Follow-up',site_visit_scheduled:'Visit fixed',site_visited:'Visited',booked:'Booked',lost:'Lost',
+  search:'Search name / village / phone',all:'All',waVisit:'Site visit invite',waResched:'Reschedule visit',waFollow:'Follow-up message',
+  when:'Date & time',nextFollow:'Next follow-up date',setReminder:'Set reminder',done:'Done',noData:'Nothing yet',
+  takeSelfie:'Take selfie',gettingLoc:'Getting location…',locNeeded:'Allow location – required for attendance',
+  saved:'Saved ✓',err:'Problem: ',owner:'Employee',met:'Met on',map:'Map',upload:'Upload',
+  plot_photo:'Plot photos',progress_photo:'Development photos',document:'PDFs / documents',title:'Title',plotNo:'Plot number',
+  rename:'Rename',today:'Today',overdue:'Overdue',wrongLogin:'Wrong email or password',chooseFile:'Choose file',edit:'Edit',
+  msgVisit:(c,d,e)=>`Namaskaram ${c} garu 🙏\nYour site visit to Green Valley open plots (Golet, Asifabad) is fixed for ${d}. Looking forward to seeing you.\n– ${e}, Omkara Groups`,
+  msgResched:(c,d,e)=>`Namaskaram ${c} garu 🙏\nWe have moved your Green Valley site visit to ${d}. Is that convenient for you?\n– ${e}, Omkara Groups`,
+  msgFollow:(c,e)=>`Namaskaram ${c} garu 🙏\nDo you need any more details about Green Valley open plots? Plots are getting booked fast.\n– ${e}, Omkara Groups`}
+};
+let lang='te'; try{lang=localStorage.getItem('gv_lang')||'te'}catch(e){}
+const t=k=>T[lang][k]??k;
+function applyStatic(){document.querySelectorAll('[data-t]').forEach(el=>el.textContent=t(el.dataset.t))}
+window.toggleLang=()=>{lang=lang==='te'?'en':'te';try{localStorage.setItem('gv_lang',lang)}catch(e){}applyStatic();if(me){renderTabs();go(cur)}};
+
+/* ---------- Helpers ---------- */
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const todayStr=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const startOfDay=()=>{const d=new Date();d.setHours(0,0,0,0);return d.toISOString()};
+const endOfDay=()=>{const d=new Date();d.setHours(23,59,59,999);return d.toISOString()};
+const fmtDT=s=>s?new Date(s).toLocaleString(lang==='te'?'te-IN':'en-IN',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}):'';
+const fmtD=s=>s?new Date(s+(s.length===10?'T00:00':'')).toLocaleDateString(lang==='te'?'te-IN':'en-IN',{day:'numeric',month:'short',year:'numeric'}):'';
+function toast(msg){const el=$('toast');el.textContent=msg;el.classList.remove('hidden');clearTimeout(toast._t);toast._t=setTimeout(()=>el.classList.add('hidden'),2800)}
+const fail=e=>{console.error(e);toast(t('err')+(e?.message||e))};
+const initials=n=>esc((n||'?').trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase());
+function waLink(phone,msg){let p=String(phone||'').replace(/\D/g,'');if(p.length===10)p='91'+p;if(p.length===11&&p[0]==='0')p='91'+p.slice(1);return 'https://wa.me/'+p+'?text='+encodeURIComponent(msg)}
+function openSheet(html){$('sheetPanel').innerHTML=html;$('sheet').classList.remove('hidden')}
+window.closeSheet=()=>$('sheet').classList.add('hidden');
+$('sheet').addEventListener('click',e=>{if(e.target.id==='sheet')closeSheet()});
+const opt=(list,sel)=>list.map(v=>`<option value="${v}" ${v===sel?'selected':''}>${esc(t(v))}</option>`).join('');
+async function shrinkImage(file,max=1280,q=.78){
+  const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=URL.createObjectURL(file)});
+  const s=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement('canvas');
+  c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+  return await new Promise(r=>c.toBlob(r,'image/jpeg',q));
+}
+const icons={home:'<path d="M3 11 12 3l9 8v10h-6v-6H9v6H3z"/>',customers:'<circle cx="9" cy="8" r="4"/><path d="M1 21c0-4 4-7 8-7s8 3 8 7z"/><circle cx="18" cy="7" r="3"/>',
+ followups:'<path d="M12 2a10 10 0 1 0 .01 0zM11 6h2v6l4 2-1 2-5-3z"/>',attendance:'<path d="M9 3h6l2 3h4v14H3V6h4zM12 9a4 4 0 1 0 .01 0z"/>',
+ team:'<path d="M4 4h16v4H4zM4 10h16v4H4zM4 16h16v4H4z"/>',files:'<path d="M3 5h7l2 2h9v12H3z"/>'};
+
+/* ---------- Auth ---------- */
+let me=null,cur='home';
+async function boot(){
+  applyStatic();
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){$('loginView').classList.remove('hidden');$('appView').classList.add('hidden');return}
+  const {data,error}=await sb.from('profiles').select('*').eq('id',session.user.id).single();
+  if(error||!data){fail(error||'profile missing');return}
+  if(!data.is_active){await sb.auth.signOut();$('lErr').textContent='Account disabled';$('loginView').classList.remove('hidden');return}
+  me=data;me.email=session.user.email;me.isAdmin=data.role==='admin';
+  $('who').textContent=(me.full_name||me.email)+(me.isAdmin?' • Admin':'');
+  $('loginView').classList.add('hidden');$('appView').classList.remove('hidden');
+  renderTabs();go('home');
+}
+$('loginForm').addEventListener('submit',async e=>{
+  e.preventDefault();$('lErr').textContent='';$('lBtn').disabled=true;
+  const {error}=await sb.auth.signInWithPassword({email:$('lEmail').value.trim(),password:$('lPass').value});
+  $('lBtn').disabled=false;if(error){$('lErr').textContent=t('wrongLogin');return}boot();
+});
+window.logout=async()=>{await sb.auth.signOut();me=null;location.reload()};
+
+/* ---------- Navigation ---------- */
+function tabList(){return me.isAdmin?['home','customers','followups','team','files']:['home','customers','followups','attendance','files']}
+function renderTabs(){$('tabs').innerHTML=tabList().map(k=>`<button data-k="${k}" class="${k===cur?'on':''}"><svg viewBox="0 0 24 24" fill="currentColor">${icons[k]}</svg>${esc(t(k))}</button>`).join('')}
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)go(b.dataset.k)});
+window.go=k=>{cur=k;renderTabs();window.scrollTo(0,0);({home:pHome,customers:pCustomers,followups:pFollowups,attendance:pAttendance,team:pTeam,files:pFiles})[k]().catch(fail)};
+const own=q=>me.isAdmin?q:q.eq('owner_id',me.id);
+
+/* ---------- Home ---------- */
+async function pHome(){
+  const page=$('page');page.innerHTML=`<p class="muted">…</p>`;
+  const [met,due,hot,tot,att]=await Promise.all([
+    own(sb.from('customers').select('id',{count:'exact',head:true})).eq('met_on',todayStr()),
+    own(sb.from('follow_ups').select('id',{count:'exact',head:true})).eq('status','pending').lte('scheduled_at',endOfDay()),
+    own(sb.from('customers').select('id',{count:'exact',head:true})).eq('interest_level','hot').not('status','in','(booked,lost)'),
+    own(sb.from('customers').select('id',{count:'exact',head:true})),
+    sb.from('attendance').select('check_in_at').eq('user_id',me.id).gte('check_in_at',startOfDay()).order('check_in_at').limit(1)
+  ]);
+  const a=att.data?.[0];
+  page.innerHTML=`<h2>${esc(t('hello'))}, ${esc(me.full_name||'')} 🙏</h2>
+  ${me.isAdmin?'':`<div class="card" style="display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap">
+    <div><b>${esc(t('attendance'))}</b><br>${a?`<span class="pill ok">${esc(t('checkedIn'))} • ${esc(fmtDT(a.check_in_at))}</span>`:`<span class="pill hot">${esc(t('notCheckedIn'))}</span>`}</div>
+    ${a?'':`<button class="btn" onclick="go('attendance')">${esc(t('checkInNow'))}</button>`}</div>`}
+  <div class="stats">
+    <div class="stat"><b>${met.count??0}</b><span>${esc(t('metToday'))}</span></div>
+    <div class="stat"><b>${due.count??0}</b><span>${esc(t('dueToday'))}</span></div>
+    <div class="stat"><b>${hot.count??0}</b><span>${esc(t('hotLeads'))}</span></div>
+    <div class="stat"><b>${tot.count??0}</b><span>${esc(t('totalCust'))}</span></div>
+  </div>
+  <button class="btn full" onclick="customerForm()">${esc(t('addCustomer'))}</button>
+  ${me.isAdmin?`<button class="btn ghost full" style="margin-top:8px" onclick="go('team')">${esc(t('team'))} →</button>`:''}`;
+}
+
+/* ---------- Customers ---------- */
+let custCache=[],custFilter='all',profilesMap={};
+async function loadProfiles(){if(!me.isAdmin)return;const {data}=await sb.from('profiles').select('id,full_name,role,is_active').order('full_name');profilesMap={};(data||[]).forEach(p=>profilesMap[p.id]=p);return data||[]}
+async function pCustomers(){
+  const page=$('page');page.innerHTML=`<p class="muted">…</p>`;
+  await loadProfiles();
+  const {data,error}=await own(sb.from('customers').select('*')).order('created_at',{ascending:false}).limit(1000);
+  if(error)throw error;custCache=data||[];
+  page.innerHTML=`<h2>${esc(t('customers'))} (${custCache.length})</h2>
+  <button class="btn full" style="margin-bottom:10px" onclick="customerForm()">${esc(t('addCustomer'))}</button>
+  <div class="search"><input id="cq" placeholder="${esc(t('search'))}"></div>
+  <div class="seg" id="cseg">${['all','hot','warm','cold','site_visit_scheduled','booked'].map(k=>`<button data-k="${k}" class="${k===custFilter?'on':''}">${esc(t(k))}</button>`).join('')}</div>
+  <div class="card list" id="clist" style="padding:4px"></div>`;
+  $('cq').addEventListener('input',drawCust);
+  $('cseg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;custFilter=b.dataset.k;[...$('cseg').children].forEach(x=>x.classList.toggle('on',x===b));drawCust()});
+  drawCust();
+}
+function drawCust(){
+  const q=($('cq')?.value||'').toLowerCase();
+  const rows=custCache.filter(c=>(custFilter==='all'||c.interest_level===custFilter||c.status===custFilter)&&(!q||[c.name,c.village,c.phone,c.profession].join(' ').toLowerCase().includes(q)));
+  $('clist').innerHTML=rows.length?rows.map(c=>`<div class="item" data-id="${esc(c.id)}"><div class="avatar">${initials(c.name)}</div>
+   <div class="main"><b>${esc(c.name)}</b><small>${esc(c.village||'')} • ${esc(c.phone)}${me.isAdmin&&profilesMap[c.owner_id]?' • '+esc(profilesMap[c.owner_id].full_name):''}</small></div>
+   <div style="text-align:right">${c.interest_level?`<span class="pill ${esc(c.interest_level)}">${esc(t(c.interest_level))}</span><br>`:''}<small class="muted">${esc(t(c.status))}</small></div></div>`).join(''):`<div class="empty">${esc(t('noData'))}</div>`;
+  $('clist').onclick=e=>{const it=e.target.closest('.item');if(it)customerView(it.dataset.id)};
+}
+window.customerForm=(id)=>{
+  const c=custCache.find(x=>x.id===id)||{};
+  openSheet(`<div class="top"><h2>${esc(id?t('edit'):t('addCustomer'))}</h2><button class="x" onclick="closeSheet()">×</button></div>
+  <form id="cf">
+   <label>${esc(t('name'))} *</label><input name="name" required value="${esc(c.name)}">
+   <div class="row"><div><label>${esc(t('phone'))} *</label><input name="phone" type="tel" inputmode="numeric" required value="${esc(c.phone)}"></div>
+   <div><label>${esc(t('village'))}</label><input name="village" value="${esc(c.village)}"></div></div>
+   <div class="row"><div><label>${esc(t('profession'))}</label><input name="profession" value="${esc(c.profession)}"></div>
+   <div><label>${esc(t('fin'))}</label><select name="financial_status"><option value=""></option>${opt(['low','middle','good','high'],c.financial_status)}</select></div></div>
+   <div class="row"><div><label>${esc(t('interest'))}</label><select name="interest"><option value=""></option>${opt(['plot','flat','both','undecided','not_interested'],c.interest)}</select></div>
+   <div><label>${esc(t('level'))}</label><select name="interest_level"><option value=""></option>${opt(['hot','warm','cold'],c.interest_level)}</select></div></div>
+   <div class="row"><div><label>${esc(t('visitDate'))}</label><input name="site_visit_date" type="date" value="${esc(c.site_visit_date)}"></div>
+   <div><label>${esc(t('status'))}</label><select name="status">${opt(['new','follow_up','site_visit_scheduled','site_visited','booked','lost'],c.status||'new')}</select></div></div>
+   <label>${esc(t('notes'))}</label><textarea name="notes" rows="3">${esc(c.notes)}</textarea>
+   <button class="btn full" style="margin-top:14px">${esc(t('save'))}</button>
+  </form>`);
+  $('cf').addEventListener('submit',async e=>{
+    e.preventDefault();const f=Object.fromEntries(new FormData(e.target));
+    for(const k in f)if(f[k]==='')f[k]=null;
+    if(f.site_visit_date&&(!id||!c.site_visit_date)&&f.status==='new')f.status='site_visit_scheduled';
+    const r=id?await sb.from('customers').update(f).eq('id',id).select().single():await sb.from('customers').insert(f).select().single();
+    if(r.error)return fail(r.error);
+    toast(t('saved'));closeSheet();if(cur==='customers')pCustomers();else go(cur);
+  });
+};
+window.customerView=async id=>{
+  const c=custCache.find(x=>x.id===id)||(await sb.from('customers').select('*').eq('id',id).single()).data;if(!c)return;
+  if(!custCache.find(x=>x.id===id))custCache.push(c);
+  const {data:fu}=await sb.from('follow_ups').select('*').eq('customer_id',id).order('created_at',{ascending:false}).limit(20);
+  const d=(k,v)=>v?`<dt>${esc(t(k))}</dt><dd>${esc(v)}</dd>`:'';
+  openSheet(`<div class="top"><h2>${esc(c.name)}</h2><button class="x" onclick="closeSheet()">×</button></div>
+  <div class="card"><dl>${d('phone',c.phone)}${d('village',c.village)}${d('profession',c.profession)}${d('fin',c.financial_status&&t(c.financial_status))}
+   ${d('interest',c.interest&&t(c.interest))}${d('level',c.interest_level&&t(c.interest_level))}${d('visitDate',fmtD(c.site_visit_date))}${d('status',t(c.status))}
+   ${d('met',fmtD(c.met_on))}${me.isAdmin&&profilesMap[c.owner_id]?d('owner',profilesMap[c.owner_id].full_name):''}${d('notes',c.notes)}</dl>
+   <button class="btn ghost" onclick="customerForm('${esc(c.id)}')">✎ ${esc(t('edit'))}</button></div>
+  <h3>WhatsApp</h3>
+  <div class="card"><label>${esc(t('when'))}</label><input id="waWhen" type="datetime-local">
+   <div class="btns"><button class="btn wa" onclick="sendWA('${esc(c.id)}','site_visit')">${esc(t('waVisit'))}</button>
+   <button class="btn wa" onclick="sendWA('${esc(c.id)}','reschedule')">${esc(t('waResched'))}</button></div>
+   <div class="btns"><button class="btn wa" onclick="sendWA('${esc(c.id)}','follow_up')">${esc(t('waFollow'))}</button></div></div>
+  <h3>${esc(t('nextFollow'))}</h3>
+  <div class="card"><input id="nfDate" type="date"><button class="btn gold full" style="margin-top:8px" onclick="setReminder('${esc(c.id)}')">${esc(t('setReminder'))}</button></div>
+  <h3>${esc(t('followups'))}</h3>
+  <div class="card list" style="padding:4px">${(fu||[]).length?fu.map(f=>`<div class="item" style="cursor:default"><div class="main"><b>${esc(t(f.kind==='site_visit'?'waVisit':f.kind==='reschedule'?'waResched':'waFollow'))}</b>
+   <small>${esc(fmtDT(f.scheduled_at||f.created_at))}</small></div><span class="pill ${f.status==='done'?'ok':''}">${esc(f.status==='done'?t('done'):f.status)}</span></div>`).join(''):`<div class="empty">${esc(t('noData'))}</div>`}</div>`);
+};
+window.sendWA=async(id,kind)=>{
+  const c=custCache.find(x=>x.id===id);const when=$('waWhen').value;
+  if(kind!=='follow_up'&&!when){$('waWhen').focus();toast(t('when')+' ?');return}
+  const dTxt=when?fmtDT(new Date(when).toISOString()):'';const emp=me.full_name||'Green Valley';
+  const msg=kind==='site_visit'?T[lang].msgVisit(c.name,dTxt,emp):kind==='reschedule'?T[lang].msgResched(c.name,dTxt,emp):T[lang].msgFollow(c.name,emp);
+  window.open(waLink(c.phone,msg),'_blank');
+  const row={customer_id:id,owner_id:c.owner_id,kind,message:msg,scheduled_at:when?new Date(when).toISOString():new Date().toISOString(),status:kind==='follow_up'?'done':'pending'};
+  const r=await sb.from('follow_ups').insert(row);if(r.error)return fail(r.error);
+  if(kind!=='follow_up'){const upd={site_visit_date:when.slice(0,10),status:'site_visit_scheduled'};await sb.from('customers').update(upd).eq('id',id);Object.assign(c,upd)}
+  else if(c.status==='new'){await sb.from('customers').update({status:'follow_up'}).eq('id',id);c.status='follow_up'}
+  toast(t('saved'));
+};
+window.setReminder=async id=>{
+  const c=custCache.find(x=>x.id===id);const d=$('nfDate').value;if(!d){$('nfDate').focus();return}
+  const r=await sb.from('follow_ups').insert({customer_id:id,owner_id:c.owner_id,kind:'follow_up',scheduled_at:new Date(d+'T10:00').toISOString(),status:'pending'});
+  if(r.error)return fail(r.error);toast(t('saved'));customerView(id);
+};
+
+/* ---------- Follow-ups ---------- */
+async function pFollowups(){
+  const page=$('page');page.innerHTML=`<p class="muted">…</p>`;await loadProfiles();
+  const {data,error}=await own(sb.from('follow_ups').select('*,customers(name,phone,village)')).eq('status','pending').order('scheduled_at').limit(300);
+  if(error)throw error;const now=Date.now(),eod=new Date(endOfDay()).getTime();
+  page.innerHTML=`<h2>${esc(t('followups'))}</h2><div class="card list" style="padding:4px">${(data||[]).length?data.map(f=>{const ts=new Date(f.scheduled_at).getTime();
+   const tag=ts<now-864e5/2&&ts<new Date(startOfDay()).getTime()?`<span class="pill hot">${esc(t('overdue'))}</span>`:ts<=eod?`<span class="pill warm">${esc(t('today'))}</span>`:'';
+   return `<div class="item" data-c="${esc(f.customer_id)}"><div class="avatar">${initials(f.customers?.name)}</div><div class="main"><b>${esc(f.customers?.name)}</b>
+   <small>${esc(t(f.kind==='site_visit'?'waVisit':f.kind==='reschedule'?'waResched':'follow_up'))} • ${esc(fmtDT(f.scheduled_at))}${me.isAdmin&&profilesMap[f.owner_id]?' • '+esc(profilesMap[f.owner_id].full_name):''}</small><br>${tag}</div>
+   <button class="btn ghost" style="padding:8px 12px;min-height:40px" data-done="${esc(f.id)}">✓ ${esc(t('done'))}</button></div>`}).join(''):`<div class="empty">${esc(t('noData'))}</div>`}</div>`;
+  page.querySelector('.list').onclick=async e=>{
+    const b=e.target.closest('[data-done]');
+    if(b){const r=await sb.from('follow_ups').update({status:'done'}).eq('id',b.dataset.done);if(r.error)return fail(r.error);toast(t('saved'));return pFollowups()}
+    const it=e.target.closest('.item');if(it)customerView(it.dataset.c);
+  };
+}
+
+/* ---------- Attendance (employee) ---------- */
+async function pAttendance(){
+  const page=$('page');
+  const {data}=await sb.from('attendance').select('*').eq('user_id',me.id).order('check_in_at',{ascending:false}).limit(15);
+  const today=(data||[]).find(a=>a.check_in_at>=startOfDay());
+  page.innerHTML=`<h2>${esc(t('attendance'))}</h2>
+  <div class="card center">${today?`<p><span class="pill ok">${esc(t('checkedIn'))} • ${esc(fmtDT(today.check_in_at))}</span></p>
+    <p class="muted">📍 ${esc(today.latitude?.toFixed(5))}, ${esc(today.longitude?.toFixed(5))}</p>`:
+   `<p class="muted">${esc(t('notCheckedIn'))}</p>
+    <label class="btn full" style="margin:0">📷 ${esc(t('takeSelfie'))}<input id="selfieIn" type="file" accept="image/*" capture="user" hidden></label>
+    <img id="selfiePrev" class="selfie hidden" alt=""><p id="attMsg" class="muted"></p>`}</div>
+  <h3>${esc(t('attendance'))}</h3><div class="card list" style="padding:4px">${(data||[]).map(a=>`<div class="item" style="cursor:default"><div class="main"><b>${esc(fmtDT(a.check_in_at))}</b>
+   <small>📍 ${esc(a.latitude?.toFixed(4))}, ${esc(a.longitude?.toFixed(4))}</small></div></div>`).join('')||`<div class="empty">${esc(t('noData'))}</div>`}</div>`;
+  const inp=$('selfieIn');if(!inp)return;
+  inp.addEventListener('change',async()=>{
+    const file=inp.files[0];if(!file)return;
+    $('selfiePrev').src=URL.createObjectURL(file);$('selfiePrev').classList.remove('hidden');$('attMsg').textContent=t('gettingLoc');
+    let pos;try{pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{enableHighAccuracy:true,timeout:20000,maximumAge:0}))}
+    catch(e){$('attMsg').textContent=t('locNeeded');return}
+    try{
+      const blob=await shrinkImage(file,900,.75);const path=`${me.id}/${Date.now()}.jpg`;
+      const up=await sb.storage.from('selfies').upload(path,blob,{contentType:'image/jpeg'});if(up.error)throw up.error;
+      const r=await sb.from('attendance').insert({latitude:pos.coords.latitude,longitude:pos.coords.longitude,selfie_path:path});if(r.error)throw r.error;
+      toast(t('saved'));pAttendance();
+    }catch(e){fail(e);$('attMsg').textContent=''}
+  });
+}
+
+/* ---------- Team (admin) ---------- */
+async function pTeam(){
+  const page=$('page');page.innerHTML=`<p class="muted">…</p>`;
+  const people=await loadProfiles();
+  const [att,cust]=await Promise.all([
+    sb.from('attendance').select('*').gte('check_in_at',startOfDay()).order('check_in_at'),
+    sb.from('customers').select('owner_id,met_on,interest_level,status')]);
+  const attBy={};(att.data||[]).forEach(a=>{if(!attBy[a.user_id])attBy[a.user_id]=a});
+  const paths=Object.values(attBy).map(a=>a.selfie_path).filter(Boolean);let urls={};
+  if(paths.length){const {data}=await sb.storage.from('selfies').createSignedUrls(paths,3600);(data||[]).forEach(u=>{if(u.signedUrl)urls[u.path]=u.signedUrl})}
+  const st=id=>{const mine=(cust.data||[]).filter(c=>c.owner_id===id);return{today:mine.filter(c=>c.met_on===todayStr()).length,total:mine.length,booked:mine.filter(c=>c.status==='booked').length,hot:mine.filter(c=>c.interest_level==='hot').length}};
+  const present=people.filter(p=>attBy[p.id]).length,staff=people.filter(p=>p.role!=='admin').length;
+  page.innerHTML=`<h2>${esc(t('team'))} – ${esc(t('today'))}</h2>
+  <div class="stats"><div class="stat"><b>${present}/${staff}</b><span>${esc(t('checkedIn'))}</span></div>
+   <div class="stat"><b>${(cust.data||[]).filter(c=>c.met_on===todayStr()).length}</b><span>${esc(t('metToday'))}</span></div></div>
+  <div class="card list" style="padding:4px">${people.map(p=>{const a=attBy[p.id],s=st(p.id),img=a&&urls[a.selfie_path];
+   return `<div class="item" style="cursor:default">${img?`<a href="${esc(img)}" target="_blank" rel="noopener"><img class="thumb" src="${esc(img)}" alt=""></a>`:`<div class="avatar">${initials(p.full_name)}</div>`}
+   <div class="main"><b>${esc(p.full_name)}${p.role==='admin'?' • Admin':''}</b>
+   <small>${a?`✅ ${esc(fmtDT(a.check_in_at))} • <a href="https://maps.google.com/?q=${esc(a.latitude)},${esc(a.longitude)}" target="_blank" rel="noopener">📍 ${esc(t('map'))}</a>`:(p.role==='admin'?'':'❌ '+esc(t('notCheckedIn')))}</small><br>
+   <small>${esc(t('metToday'))}: <b>${s.today}</b> • ${esc(t('hot'))}: ${s.hot} • ${esc(t('booked'))}: ${s.booked} • ${esc(t('totalCust'))}: ${s.total}</small></div>
+   <button class="btn ghost" style="padding:6px 10px;min-height:38px" data-rn="${esc(p.id)}">${esc(t('rename'))}</button></div>`}).join('')}</div>
+  <div id="rnBox"></div>`;
+  page.querySelector('.list').onclick=e=>{const b=e.target.closest('[data-rn]');if(!b)return;const p=profilesMap[b.dataset.rn];
+    $('rnBox').innerHTML=`<div class="card"><label>${esc(t('name'))}</label><input id="rnIn" value="${esc(p.full_name)}"><button class="btn full" style="margin-top:8px" id="rnSave">${esc(t('save'))}</button></div>`;
+    $('rnIn').focus();$('rnSave').onclick=async()=>{const r=await sb.from('profiles').update({full_name:$('rnIn').value.trim()}).eq('id',p.id);if(r.error)return fail(r.error);
+      if(p.id===me.id){me.full_name=$('rnIn').value.trim();$('who').textContent=me.full_name+' • Admin'}toast(t('saved'));pTeam()}};
+}
+
+/* ---------- Files ---------- */
+let fileCat='plot_photo';
+async function pFiles(){
+  const page=$('page');page.innerHTML=`<p class="muted">…</p>`;
+  const bucket={plot_photo:'plot-photos',progress_photo:'progress-photos',document:'documents'};
+  const {data,error}=await sb.from('media_files').select('*').eq('category',fileCat).order('created_at',{ascending:false}).limit(200);if(error)throw error;
+  const urls={};const byB={};(data||[]).forEach(f=>(byB[f.bucket]=byB[f.bucket]||[]).push(f.path));
+  for(const b in byB){const r=await sb.storage.from(b).createSignedUrls(byB[b],3600);(r.data||[]).forEach(u=>{if(u.signedUrl)urls[b+'/'+u.path]=u.signedUrl})}
+  page.innerHTML=`<h2>${esc(t('files'))}</h2>
+  <div class="seg" id="fseg">${Object.keys(bucket).map(k=>`<button data-k="${k}" class="${k===fileCat?'on':''}">${esc(t(k))}</button>`).join('')}</div>
+  ${me.isAdmin?`<div class="card"><div class="row"><div><label>${esc(t('title'))}</label><input id="fTitle"></div><div><label>${esc(t('plotNo'))}</label><input id="fPlot"></div></div>
+   <label class="btn gold full" style="margin-top:10px">⬆ ${esc(t('upload'))}<input id="fIn" type="file" accept="${fileCat==='document'?'application/pdf,image/*':'image/*'}" multiple hidden></label><p id="fMsg" class="muted"></p></div>`:''}
+  <div class="gallery">${(data||[]).map(f=>{const u=urls[f.bucket+'/'+f.path];const isPdf=/\.pdf$/i.test(f.path);
+   return `<a href="${esc(u||'#')}" target="_blank" rel="noopener">${isPdf?'<div class="pdf">PDF</div>':`<img src="${esc(u||'')}" alt="" loading="lazy">`}<span>${esc(f.title||'')}${f.plot_number?' • #'+esc(f.plot_number):''}<br><small class="muted">${esc(fmtD(f.created_at.slice(0,10)))}</small></span></a>`}).join('')||`<div class="empty">${esc(t('noData'))}</div>`}</div>`;
+  $('fseg').onclick=e=>{const b=e.target.closest('button');if(b){fileCat=b.dataset.k;pFiles().catch(fail)}};
+  const inp=$('fIn');if(!inp)return;
+  inp.onchange=async()=>{
+    const files=[...inp.files];let n=0;
+    for(const file of files){
+      $('fMsg').textContent=`${++n}/${files.length}…`;
+      try{const isPdf=file.type==='application/pdf';const blob=isPdf?file:await shrinkImage(file,1800,.82);
+        const path=`${Date.now()}_${Math.random().toString(36).slice(2,7)}.${isPdf?'pdf':'jpg'}`;
+        const up=await sb.storage.from(bucket[fileCat]).upload(path,blob,{contentType:isPdf?'application/pdf':'image/jpeg'});if(up.error)throw up.error;
+        const r=await sb.from('media_files').insert({category:fileCat,bucket:bucket[fileCat],path,title:$('fTitle').value.trim()||file.name,plot_number:$('fPlot').value.trim()||null});if(r.error)throw r.error;
+      }catch(e){fail(e)}
+    }
+    toast(t('saved'));pFiles().catch(fail);
+  };
+}
+
+sb.auth.onAuthStateChange((ev)=>{if(ev==='SIGNED_OUT'&&me){me=null;location.reload()}});
+boot().catch(fail);
+}
+</script>
+</body>
+</html>
